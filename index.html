@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f1f4f8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e151e" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Energie">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Energieversorgung Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one centred column (max 760px) — header with tabs, then the active view (inicio · sesión · fallos). Detail from the subject: PE green-yellow stripe for progress, CEE blue/red for the two voltage worlds. */
+:root {
+  --bg: #f1f4f8;
+  --surface: #ffffff;
+  --surface-2: #e8edf3;
+  --ink: #152130;
+  --muted: #586678;
+  --line: #d4dbe4;
+  --accent: #1c5dcc;
+  --accent-soft: #e2ebfb;
+  --on-accent: #ffffff;
+  --red: #c4362c;
+  --red-soft: #fbe7e5;
+  --good: #1d7f47;
+  --good-soft: #e1f3e8;
+  --warn: #a96a00;
+  --pe-green: #2f9a43;
+  --pe-yellow: #e2c200;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e151e; --surface: #16202c; --surface-2: #1d2937; --ink: #e4eaf2; --muted: #95a3b4; --line: #2b3847;
+    --accent: #6a9cf2; --accent-soft: #1c2c47; --on-accent: #0e151e; --red: #ef7266; --red-soft: #3a1f1d;
+    --good: #55c487; --good-soft: #17322a; --warn: #e3a43a; --pe-green: #3fb457; --pe-yellow: #d8bb12; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e151e; --surface: #16202c; --surface-2: #1d2937; --ink: #e4eaf2; --muted: #95a3b4; --line: #2b3847;
+  --accent: #6a9cf2; --accent-soft: #1c2c47; --on-accent: #0e151e; --red: #ef7266; --red-soft: #3a1f1d;
+  --good: #55c487; --good-soft: #17322a; --warn: #e3a43a; --pe-green: #3fb457; --pe-yellow: #d8bb12; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 40px;
+}
+.wrap { max-width: 760px; margin: 0 auto; display: grid; gap: 20px; }
+header.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding-block: 14px 10px; border-bottom: 1px solid var(--line);
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.brand { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+.brand h1 { font-family: var(--font-display); font-weight: 700; font-size: 26px; letter-spacing: 0.01em; margin: 0; line-height: 1; text-wrap: balance; }
+.brand .tag { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+nav.tabs { display: flex; gap: 4px; background: var(--surface-2); padding: 4px; border-radius: 999px; }
+nav.tabs button { border: 0; background: transparent; color: var(--muted); font: 500 14px var(--font-body); padding: 6px 14px; border-radius: 999px; cursor: pointer; }
+nav.tabs button[aria-current="page"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+nav.tabs .badge { display: inline-block; min-width: 20px; padding: 0 6px; margin-left: 6px; border-radius: 999px; background: var(--red); color: #fff; font-size: 12px; line-height: 20px; text-align: center; }
+button:focus-visible, input:focus-visible, .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+h2 { font-family: var(--font-display); font-weight: 700; font-size: 24px; margin: 0; line-height: 1.15; text-wrap: balance; }
+h3 { font-family: var(--font-display); font-weight: 600; font-size: 19px; margin: 0; line-height: 1.2; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; }
+.stat b { display: block; font-family: var(--font-display); font-size: 28px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.stat span { font-size: 13px; color: var(--muted); }
+.stat.alert b { color: var(--red); }
+
+.section { display: grid; gap: 12px; }
+.modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.mode {
+  text-align: left; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: var(--radius);
+  padding: 14px 16px; cursor: pointer; display: grid; gap: 4px; font: inherit; position: relative; overflow: hidden;
+}
+.mode:hover:not(:disabled) { border-color: var(--accent); }
+.mode:disabled { opacity: 0.45; cursor: default; }
+.mode .code { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--accent); }
+.mode strong { font-family: var(--font-display); font-size: 20px; font-weight: 600; line-height: 1.15; }
+.mode small { color: var(--muted); font-size: 13px; line-height: 1.4; }
+.mode.wide { grid-column: 1 / -1; background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.mode.wide .code, .mode.wide small { color: var(--on-accent); opacity: 0.85; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 5px 12px;
+  font: 500 13px var(--font-body); cursor: pointer;
+}
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.btn {
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 9px 16px;
+  font: 600 14px var(--font-body); cursor: pointer;
+}
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.danger { color: var(--red); border-color: var(--red); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+.lenpick { display: flex; gap: 6px; align-items: center; font-size: 13px; color: var(--muted); }
+
+/* Session */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 16px; min-width: 0; }
+.prog { display: grid; gap: 6px; }
+.prog .bar { height: 8px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.prog .fill { height: 100%; background: repeating-linear-gradient(135deg, var(--pe-green) 0 8px, var(--pe-yellow) 8px 16px); transition: width .3s ease; }
+.prog .meta { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.qtopic { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.pill { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.05em; padding: 3px 8px; border-radius: 4px; background: var(--surface-2); color: var(--muted); text-transform: uppercase; }
+.pill.type { background: var(--accent-soft); color: var(--accent); }
+.question { font-size: 18px; font-weight: 500; line-height: 1.45; }
+.opts { display: grid; gap: 8px; }
+.opt {
+  text-align: left; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 10px;
+  padding: 11px 14px; font: inherit; cursor: pointer; display: flex; gap: 10px; align-items: flex-start;
+}
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt .k { font-family: var(--font-mono); font-size: 12px; color: var(--muted); padding-top: 2px; min-width: 14px; }
+.opt.correct { border-color: var(--good); background: var(--good-soft); }
+.opt.wrong { border-color: var(--red); background: var(--red-soft); }
+.opt:disabled { cursor: default; }
+.gaptext { font-size: 18px; line-height: 1.9; }
+.blank { display: inline-block; min-width: 90px; border-bottom: 2px solid var(--accent); text-align: center; font-weight: 600; padding: 0 6px; color: var(--accent); }
+.blank.ok { color: var(--good); border-color: var(--good); }
+.blank.bad { color: var(--red); border-color: var(--red); }
+.answer-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.answer-row input {
+  flex: 1 1 220px; min-width: 0; border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 8px;
+  padding: 10px 12px; font: 500 16px var(--font-body);
+}
+.answer-row .unit { align-self: center; font-family: var(--font-mono); color: var(--muted); }
+.formula { font-family: var(--font-mono); font-size: 14px; background: var(--surface-2); border-radius: 6px; padding: 2px 6px; }
+
+.match { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+.match .col { display: grid; gap: 8px; align-content: start; }
+.mitem {
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 9px 11px; font: inherit;
+  text-align: left; cursor: pointer; font-size: 14px; line-height: 1.35; display: flex; gap: 8px; align-items: flex-start;
+}
+.mitem .tagn { font-family: var(--font-mono); font-size: 11px; min-width: 18px; height: 18px; border-radius: 4px; display: inline-grid; place-items: center; background: var(--surface-2); color: var(--muted); }
+.mitem.sel { border-color: var(--accent); background: var(--accent-soft); }
+.mitem.paired .tagn { background: var(--ink); color: var(--bg); }
+.mitem.ok { border-color: var(--good); background: var(--good-soft); }
+.mitem.bad { border-color: var(--red); background: var(--red-soft); }
+
+.order { display: grid; gap: 14px; }
+.slots { display: grid; gap: 6px; min-height: 48px; border: 1px dashed var(--line); border-radius: 10px; padding: 8px; }
+.slots .ph { color: var(--muted); font-size: 13px; padding: 6px; }
+.oitem { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 9px 12px; font: inherit; text-align: left; cursor: pointer; display: flex; gap: 10px; }
+.oitem .n { font-family: var(--font-mono); color: var(--accent); min-width: 18px; }
+.oitem.ok { border-color: var(--good); background: var(--good-soft); }
+.oitem.bad { border-color: var(--red); background: var(--red-soft); }
+
+.flash { border: 1px solid var(--line); border-radius: 12px; padding: 22px; background: var(--surface-2); display: grid; gap: 10px; min-height: 140px; align-content: center; }
+.flash .back { border-top: 1px solid var(--line); padding-top: 12px; font-weight: 600; font-size: 18px; }
+
+.feedback { border-radius: 12px; padding: 14px 16px; display: grid; gap: 8px; border: 1px solid; }
+.feedback.ok { background: var(--good-soft); border-color: var(--good); }
+.feedback.bad { background: var(--red-soft); border-color: var(--red); }
+.feedback .verdict { font-weight: 600; display: flex; gap: 8px; align-items: center; }
+.feedback.ok .verdict { color: var(--good); }
+.feedback.bad .verdict { color: var(--red); }
+.feedback .sol { font-size: 14px; }
+.feedback .ex { font-size: 14px; line-height: 1.55; }
+.feedback .ex b { font-weight: 600; }
+
+.result-score { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.result-score b { font-family: var(--font-display); font-size: 52px; line-height: 1; font-variant-numeric: tabular-nums; }
+.list { display: grid; gap: 8px; }
+.li { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: grid; gap: 2px; background: var(--surface); }
+.li .t { font-size: 12px; color: var(--muted); }
+.topics { display: grid; gap: 10px; }
+.trow { display: grid; grid-template-columns: minmax(0, 1fr) 120px 52px; gap: 10px; align-items: center; font-size: 14px; }
+.trow .tb { height: 8px; background: var(--surface-2); border-radius: 999px; overflow: hidden; }
+.trow .tb i { display: block; height: 100%; border-radius: 999px; }
+.trow .pct { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--font-mono); font-size: 13px; }
+.advice { border-left: 3px solid var(--warn); background: var(--surface); border-radius: 0 10px 10px 0; padding: 12px 14px; display: grid; gap: 6px; }
+.advice.calm { border-left-color: var(--good); }
+.empty { text-align: center; padding: 26px 12px; color: var(--muted); display: grid; gap: 10px; justify-items: center; }
+.confirm { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 14px; }
+.savestate { font-size: 12px; color: var(--muted); }
+
+@media (max-width: 560px) {
+  .modes { grid-template-columns: minmax(0, 1fr); }
+  .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .stat b { font-size: 22px; }
+  .match { grid-template-columns: minmax(0, 1fr); }
+  .trow { grid-template-columns: minmax(0, 1fr) 70px 44px; }
+  .card { padding: 16px; }
+  .question, .gaptext { font-size: 17px; }
+}
+@media (max-width: 640px) {
+  header.top { position: static; padding-block: 12px 8px; }
+  nav.tabs {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; border-radius: 0; gap: 6px;
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    background: var(--surface); border-top: 1px solid var(--line);
+    padding: 8px max(12px, env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
+  }
+  nav.tabs button { padding: 11px 6px; font-size: 15px; border-radius: 10px; }
+  nav.tabs button[aria-current="page"] { background: var(--accent-soft); color: var(--accent); box-shadow: none; }
+  body { padding-block: 0 calc(88px + env(safe-area-inset-bottom, 0px)); }
+  .opt { padding: 14px; min-height: 52px; }
+  .chip { padding: 8px 14px; font-size: 14px; }
+  .mitem, .oitem { padding: 12px; min-height: 48px; }
+  .btn { padding: 12px 18px; font-size: 15px; }
+  #nextBtn, #mCheck, #oCheck, #fYes, #flip { flex: 1 1 auto; }
+  .answer-row .btn { flex: 1 1 100%; }
+  .feedback + .row { position: sticky; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (prefers-reduced-motion: reduce) { .prog .fill { transition: none; } }
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><h1>Energie-Trainer</h1><span class="tag">FaVT · Kap. 7</span></div>
+    <nav class="tabs" aria-label="Secciones">
+      <button id="tab-home" data-view="home" aria-current="page">Inicio</button>
+      <button id="tab-fails" data-view="fails">Fallos <span class="badge" id="failBadge" hidden>0</span></button>
+      <button id="tab-progress" data-view="progress">Progreso</button>
+    </nav>
+  </header>
+  <main id="view"></main>
+</div>
+
+<script>
+// ---------- Content ----------
+const TOPICS = {
+  1: "Grundgrößen", 2: "Spannungsarten", 3: "Netzsysteme", 4: "Reihe & Parallel", 5: "Gefährdungen",
+  6: "Schutzmaßnahmen", 7: "Schleifenimpedanz", 8: "Prüfungen", 9: "Leitungsdimensionierung",
+  10: "Lastverteilung", 11: "Stern & Dreieck"
+};
+const TYPE_LABEL = { mc: "Quiz", tf: "Richtig/Falsch", gap: "Lückentext", type: "Begriff", calc: "Rechnen", match: "Zuordnen", order: "Reihenfolge", flash: "Karteikarte" };
+
+const Q = [];
+const mc = (id, t, q, opts, a, ex) => Q.push({ id, t, type: "mc", q, opts, a: opts[a], ex });
+const tf = (id, t, q, a, ex) => Q.push({ id, t, type: "tf", q, opts: ["Richtig", "Falsch"], a: a ? "Richtig" : "Falsch", ex });
+const gap = (id, t, text, opts, a, ex) => Q.push({ id, t, type: "gap", text, opts, a, ex });
+const ty = (id, t, q, answers, ex) => Q.push({ id, t, type: "type", q, answers, ex });
+const mt = (id, t, q, pairs, ex) => Q.push({ id, t, type: "match", q, pairs, ex });
+const od = (id, t, q, items, ex) => Q.push({ id, t, type: "order", q, items, ex });
+
+// 1 Grundgrößen
+mc("g1", 1, "Welche Einheit hat der elektrische Widerstand?", ["Volt", "Ampere", "Ohm", "Watt"], 2, "Widerstand R wird in <b>Ohm (Ω)</b> angegeben. Volt = Spannung, Ampere = Strom, Watt = Leistung.");
+mc("g2", 1, "Wie wird die Spannung an einem Verbraucher gemessen?", ["In Reihe zum Verbraucher", "Parallel zum Verbraucher", "Nur mit der Stromzange", "Im Schutzleiter"], 1, "Der Spannungsmesser wird <b>parallel</b> angeschlossen, weil die Spannung zwischen zwei Punkten anliegt.");
+mc("g3", 1, "Wie misst man den Strom, ohne den Stromkreis aufzutrennen?", ["Mit dem Spannungsprüfer", "Mit der Stromzange", "Mit dem Isolationsmessgerät", "Gar nicht"], 1, "Die <b>Stromzange</b> misst das Magnetfeld um den Leiter. Sonst wird der Strommesser <b>in Reihe</b> geschaltet.");
+mc("g4", 1, "Welche Formel für die Leistung ist richtig?", ["P = U / I", "P = U × I", "P = R / I", "P = I / U"], 1, "<span class='formula'>P = U × I = I² × R = U² / R</span>");
+mc("g5", 1, "Was misst der Stromzähler?", ["Die Leistung in W", "Die Arbeit in kWh", "Die Spannung in V", "Den Strom in A"], 1, "Der Zähler misst die <b>elektrische Arbeit</b> W = P × t, meist in kWh.");
+mc("g6", 1, "Eine Leitung wird doppelt so lang. Was passiert mit ihrem Widerstand?", ["Er halbiert sich", "Er bleibt gleich", "Er verdoppelt sich", "Er vervierfacht sich"], 2, "<span class='formula'>R = l / (κ × A)</span> – R ist proportional zur Länge l.");
+mc("g7", 1, "Was passiert mit dem Leitungswiderstand bei größerem Querschnitt?", ["Er steigt", "Er sinkt", "Er bleibt gleich", "Er wird negativ"], 1, "A steht im Nenner: <span class='formula'>R = l / (κ × A)</span>. Dicke Leitung = kleiner Widerstand = weniger Spannungsfall.");
+mc("g8", 1, "Was ist der Leitwert G?", ["R × U", "1 / R", "U / I", "I² × R"], 1, "Der Leitwert ist der <b>Kehrwert des Widerstands</b>: G = 1/R, Einheit Siemens (S).");
+tf("g9", 1, "Bei Metallen steigt der Widerstand mit der Temperatur.", true, "Richtig. Metalle sind <b>Kaltleiter</b>: warm = höherer Widerstand. Deshalb die ⅔-Regel bei der Schleifenimpedanz.");
+tf("g10", 1, "Die technische Stromrichtung geht von Minus nach Plus.", false, "Falsch. Die <b>technische Stromrichtung</b> geht von + nach −. Die Elektronen fließen von − nach +.");
+gap("g11", 1, "Das Ohmsche Gesetz lautet U = R × ___.", ["I", "P", "W", "G"], "I", "U = R × I. Merkhilfe: Dreieck mit U oben, R und I unten.");
+gap("g12", 1, "Die elektrische Arbeit berechnet man mit W = P × ___.", ["t", "U", "R", "I"], "t", "Arbeit = Leistung × Zeit, z. B. 2 kW × 6 h = 12 kWh.");
+gap("g13", 1, "Die Leitfähigkeit von Kupfer beträgt etwa κ = ___ m/(Ω·mm²).", ["56", "35", "230", "0,0178"], "56", "κ(Cu) ≈ 56 m/(Ω·mm²). 0,0178 ist der spezifische Widerstand ρ (der Kehrwert), 35 gilt für Aluminium.");
+ty("g14", 1, "Wie heißt die Einheit der elektrischen Leistung?", ["Watt", "W"], "Leistung P in <b>Watt (W)</b>.");
+ty("g15", 1, "Welches Formelzeichen hat die Stromstärke?", ["I"], "Stromstärke = <b>I</b>, Einheit Ampere.");
+ty("g16", 1, "Messgerät, mit dem man den Strom misst, ohne den Stromkreis aufzutrennen?", ["Stromzange", "Zangenamperemeter", "Zangenstrommesser"], "Die <b>Stromzange</b> wird um einen einzelnen Leiter gelegt.");
+ty("g17", 1, "Wie heißt der Kehrwert des Widerstands?", ["Leitwert", "elektrischer Leitwert"], "<b>Leitwert</b> G = 1/R in Siemens.");
+mt("g18", 1, "Ordne jeder Größe ihre Einheit zu.", [["Spannung", "Volt"], ["Strom", "Ampere"], ["Widerstand", "Ohm"], ["Leistung", "Watt"], ["Arbeit", "Kilowattstunde"], ["Leitwert", "Siemens"]], "U in V · I in A · R in Ω · P in W · W in kWh · G in S.");
+
+// 2 Spannungsarten
+mc("s1", 2, "Welchen Effektivwert hat die Netzspannung (Außenleiter gegen N) in Deutschland?", ["325 V", "230 V", "400 V", "110 V"], 1, "<b>230 V</b> effektiv. 400 V liegen zwischen zwei Außenleitern, 325 V ist der Scheitelwert.");
+mc("s2", 2, "Wie groß ist der Scheitelwert der 230-V-Netzspannung?", ["230 V", "≈ 325 V", "400 V", "≈ 163 V"], 1, "<span class='formula'>Û = U × √2 = 230 V × 1,414 ≈ 325 V</span>");
+mc("s3", 2, "Wie lange dauert eine Periode bei 50 Hz?", ["2 ms", "20 ms", "50 ms", "1 s"], 1, "<span class='formula'>T = 1 / f = 1 / 50 Hz = 0,02 s = 20 ms</span>");
+mc("s4", 2, "Was zeigt ein Multimeter bei Wechselspannung an?", ["Den Scheitelwert", "Den Effektivwert", "Den Spitze-Spitze-Wert", "Den Mittelwert 0 V"], 1, "Multimeter zeigen den <b>Effektivwert</b> – den Wert, der dieselbe Wärme erzeugt wie Gleichspannung.");
+mc("s5", 2, "Nach welcher Leistung wird ein Stromerzeuger bemessen?", ["Wirkleistung in W", "Scheinleistung in VA", "Blindleistung in var", "Arbeit in kWh"], 1, "Generatoren und Trafos werden nach der <b>Scheinleistung (kVA)</b> bemessen, weil auch der Blindstrom die Wicklungen belastet.");
+mc("s6", 2, "Was bedeutet cos φ = 1?", ["Rein ohmsche Last", "Rein induktive Last", "Keine Leistung", "Kurzschluss"], 0, "Bei rein ohmscher Last (Halogen, Heizlüfter) sind Strom und Spannung in Phase: P = S.");
+mc("s7", 2, "Wo liegt die Grenze der Kleinspannung bei Wechselspannung?", ["12 V", "25 V", "50 V", "120 V"], 2, "Kleinspannung: höchstens <b>50 V AC</b> bzw. <b>120 V DC</b>.");
+tf("s8", 2, "Akkus und Batterien liefern Gleichspannung.", true, "Richtig. Gleichspannung hat konstanten Wert und feste Polarität.");
+tf("s9", 2, "Blindleistung verrichtet nutzbare Arbeit.", false, "Falsch. Blindleistung pendelt zwischen Netz und Gerät. Sie belastet die Leitungen, verrichtet aber keine Arbeit.");
+gap("s10", 2, "Effektivwert: U = Û / ___", ["√2", "√3", "2", "π"], "√2", "U = Û / √2 ≈ 0,707 × Û. √3 ist der Verkettungsfaktor im Drehstrom.");
+gap("s11", 2, "Die Netzfrequenz in Deutschland beträgt ___ Hz.", ["50", "60", "230", "400"], "50", "50 Hz in Europa, 60 Hz z. B. in den USA.");
+gap("s12", 2, "Die Einheit der Scheinleistung ist ___.", ["VA", "W", "var", "kWh"], "VA", "S in VA, P in W, Q in var.");
+ty("s13", 2, "Wie heißt der Höchstwert einer Sinusspannung?", ["Scheitelwert", "Amplitude", "Spitzenwert"], "<b>Scheitelwert</b> Û (Amplitude), bei 230 V ≈ 325 V.");
+ty("s14", 2, "Wie heißt die Leistung, die zwischen Netz und Gerät hin und her pendelt?", ["Blindleistung"], "<b>Blindleistung</b> Q in var.");
+ty("s15", 2, "Wie nennt man das Verhältnis P / S?", ["Leistungsfaktor", "cos phi", "cosphi", "cos φ"], "<b>Leistungsfaktor</b> cos φ = P / S.");
+
+// 3 Netzsysteme
+mc("n1", 3, "Welches Netzsystem ist hinter dem Speisepunkt in der Veranstaltungstechnik vorgeschrieben?", ["TN-C", "TN-S", "IT", "TT"], 1, "<b>TN-S</b>: N und PE getrennt, RCD einsetzbar, PE führt keinen Betriebsstrom.");
+mc("n2", 3, "Was bedeutet der erste Buchstabe „T“ in TN-S?", ["Die Geräte sind geerdet", "Der Sternpunkt der Quelle ist direkt geerdet", "N und PE sind getrennt", "Es gibt einen Transformator"], 1, "1. Buchstabe = Erdung der <b>Quelle</b> (T = terre = Erde, I = isoliert).");
+mc("n3", 3, "Was bedeutet „C“ in TN-C?", ["N und PE sind im PEN-Leiter kombiniert", "Kupferleiter", "LS-Charakteristik C", "Kein Schutzleiter vorhanden"], 0, "C = combiné: N und PE in <b>einem</b> Leiter, dem PEN-Leiter.");
+mc("n4", 3, "Warum ist das TN-C-System in mobilen Anlagen verboten?", ["Es ist zu teuer", "Bei PEN-Unterbrechung können Gehäuse Spannung führen, und ein RCD ist nicht möglich", "Es hat zu viele Leiter", "Wegen EMV-Problemen"], 1, "Bricht der PEN, liegt das Gehäuse über den Verbraucher an 230 V. Ein RCD funktioniert nicht, weil N und PE nicht getrennt sind.");
+mc("n5", 3, "Welches Netzsystem schaltet beim ersten Fehler nicht ab?", ["TN-S", "TT", "IT", "TN-C-S"], 2, "Im <b>IT-System</b> ist die Quelle nicht geerdet: Der erste Fehler hat keinen Rückweg. Deshalb braucht es eine Isolationsüberwachung.");
+mc("n6", 3, "Was ist im TT-System für die Abschaltung praktisch immer nötig?", ["Nur ein LS", "Ein RCD", "Eine Isolationsüberwachung", "Nichts"], 1, "Der Fehlerstrom fließt über das Erdreich und ist klein. Ein LS würde nicht auslösen, ein <b>RCD</b> schon.");
+mc("n7", 3, "Wie viele Leiter hat eine Drehstromleitung im TN-S-System?", ["3", "4", "5", "6"], 2, "L1, L2, L3, N und PE = <b>5 Leiter</b>, z. B. H07RN-F 5G6.");
+tf("n8", 3, "Nach dem Aufteilungspunkt im TN-C-S-System dürfen N und PE wieder verbunden werden.", false, "Falsch. Nach der Aufteilung werden N und PE <b>nie wieder</b> verbunden, sonst fließt Betriebsstrom über den PE.");
+tf("n9", 3, "Ein IT-System braucht eine Isolationsüberwachung.", true, "Richtig. Der erste Fehler wird nur gemeldet, damit er behoben wird, bevor ein zweiter Fehler auftritt.");
+gap("n10", 3, "Der kombinierte Leiter aus N und PE heißt ___-Leiter.", ["PEN", "PE", "NPE", "Erd"], "PEN", "PEN = Protective Earth + Neutral.");
+gap("n11", 3, "Im ___-System hat jedes Gerät einen eigenen Anlagenerder.", ["TT", "TN-S", "TN-C", "IT"], "TT", "2. Buchstabe T = Körper an eigenem Erder.");
+ty("n12", 3, "Wie heißt der grün-gelbe Leiter?", ["Schutzleiter", "PE"], "<b>Schutzleiter (PE)</b>, immer grün-gelb.");
+ty("n13", 3, "Netzsystem, in dem N und PE durchgehend getrennt sind?", ["TN-S", "TNS"], "<b>TN-S</b> (S = séparé).");
+mt("n14", 3, "Ordne die Netzsysteme ihrer Beschreibung zu.", [["TN-S", "N und PE durchgehend getrennt"], ["TN-C", "N und PE im PEN-Leiter"], ["TN-C-S", "Erst PEN, dann getrennt"], ["TT", "Geräte an eigenem Anlagenerder"], ["IT", "Quelle nicht geerdet"]], "Merke: 1. Buchstabe = Quelle, 2. Buchstabe = Geräte, 3. Buchstabe = S (getrennt) oder C (kombiniert).");
+
+// 4 Reihe & Parallel
+mc("r1", 4, "Was ist in einer Reihenschaltung überall gleich?", ["Die Spannung", "Der Strom", "Die Leistung", "Der Widerstand"], 1, "Es gibt nur einen Weg, also fließt überall <b>derselbe Strom</b>. Die Spannung teilt sich auf.");
+mc("r2", 4, "Was ist in einer Parallelschaltung überall gleich?", ["Der Strom", "Die Spannung", "Der Widerstand", "Die Leistung"], 1, "Alle Zweige hängen an denselben zwei Punkten: <b>gleiche Spannung</b>. Der Strom teilt sich auf.");
+mc("r3", 4, "Wie groß ist der Gesamtwiderstand einer Parallelschaltung?", ["Größer als der größte Einzelwiderstand", "Kleiner als der kleinste Einzelwiderstand", "Die Summe aller Widerstände", "Gleich dem größten Widerstand"], 1, "Jeder zusätzliche Zweig ist ein weiterer Weg für den Strom: Rges wird <b>kleiner als der kleinste</b> Einzelwiderstand.");
+mc("r4", 4, "Was besagt die Maschenregel?", ["Die Summe der Teilspannungen ist gleich der Quellenspannung", "Zufließende Ströme = abfließende Ströme", "U = R × I", "P = U × I"], 0, "2. Kirchhoffsches Gesetz: <span class='formula'>Σ U = 0</span>, also Uges = U1 + U2 + …");
+mc("r5", 4, "Was besagt die Knotenpunktregel?", ["Die Summe der Spannungen ist null", "Die Summe der zufließenden Ströme ist gleich der Summe der abfließenden", "Der Widerstand ist im Knoten null", "Der Strom ist überall gleich"], 1, "1. Kirchhoffsches Gesetz: <span class='formula'>Σ I zu = Σ I ab</span>. Darauf beruht auch der RCD.");
+mc("r6", 4, "Wie sind die Verbraucher an Steckdosen geschaltet?", ["In Reihe", "Parallel", "Im Dreieck", "Gemischt"], 1, "<b>Parallel</b>: Jeder Verbraucher bekommt 230 V und läuft unabhängig von den anderen.");
+tf("r7", 4, "Fällt in einer Reihenschaltung ein Verbraucher aus, laufen die anderen weiter.", false, "Falsch. Der einzige Stromweg ist unterbrochen: <b>alle</b> gehen aus (alte Lichterketten).");
+gap("r8", 4, "In der Reihenschaltung addieren sich die ___.", ["Spannungen", "Ströme", "Leitwerte", "Frequenzen"], "Spannungen", "U = U1 + U2 + … (Maschenregel). In der Parallelschaltung addieren sich die Ströme.");
+gap("r9", 4, "Zwei parallele Widerstände: R = (R1 × R2) / (R1 ___ R2)", ["+", "−", "×", "/"], "+", "Produkt durch Summe: <span class='formula'>R = (R1 × R2) / (R1 + R2)</span>");
+ty("r10", 4, "Wie heißt das 2. Kirchhoffsche Gesetz?", ["Maschenregel", "Maschensatz"], "<b>Maschenregel</b>: Σ U = 0.");
+ty("r11", 4, "Wie heißt das 1. Kirchhoffsche Gesetz?", ["Knotenpunktregel", "Knotenregel", "Knotensatz", "Knotenpunktsatz"], "<b>Knotenpunktregel</b>: Σ I zu = Σ I ab.");
+
+// 5 Gefährdungen
+mc("h1", 5, "Ab welchem Körperstrom (AC, länger als 1 s) besteht die Gefahr von Herzkammerflimmern?", ["0,5 mA", "10 mA", "ca. 50 mA", "3 A"], 2, "Ab etwa <b>50 mA</b> kann das Herz flimmern. 0,5 mA = Wahrnehmbarkeit, 10 mA = Loslassschwelle.");
+mc("h2", 5, "Was ist die Loslassschwelle?", ["Der Strom, ab dem man ihn spürt", "Der Strom, ab dem man den Leiter nicht mehr loslassen kann (ca. 10 mA)", "Die Auslöseschwelle des RCD", "Die Grenze für Kleinspannung"], 1, "Ab ca. <b>10 mA</b> verkrampfen die Muskeln – man kann nicht mehr loslassen.");
+mc("h3", 5, "Womit stellt man die Spannungsfreiheit fest?", ["Mit dem Phasenprüfer", "Mit einem zweipoligen Spannungsprüfer", "Mit dem Multimeter im Ohm-Bereich", "Mit dem Isolationsmessgerät"], 1, "Nur der <b>zweipolige Spannungsprüfer</b> ist dafür zugelassen. Ein Phasenprüfer (Schraubendreher) ist unzuverlässig.");
+mc("h4", 5, "Wer darf eine mobile Anlage errichten und die Verantwortung dafür übernehmen?", ["Ein Laie", "Eine EuP", "Eine Elektrofachkraft", "Jeder mit Erfahrung"], 2, "Nur die <b>Elektrofachkraft (EFK)</b> kann die Gefahren selbst beurteilen und die Verantwortung tragen.");
+mc("h5", 5, "Was darf eine elektrotechnisch unterwiesene Person (EuP)?", ["Selbstständig Anlagen errichten", "Einfache Arbeiten unter Leitung und Aufsicht einer EFK", "Gar nichts Elektrisches", "Prüfprotokolle allein unterschreiben"], 1, "Die EuP wird von einer EFK unterwiesen und arbeitet unter deren <b>Leitung und Aufsicht</b>.");
+mc("h6", 5, "Wie hoch ist die dauerhaft zulässige Berührungsspannung bei Wechselspannung?", ["25 V", "50 V", "120 V", "230 V"], 1, "<b>50 V AC</b> bzw. 120 V DC.");
+mc("h7", 5, "Was ist bei einem Stromunfall zuerst zu tun?", ["Die Person sofort wegziehen", "Eigenschutz: Stromkreis unterbrechen", "Wasser geben", "Abwarten"], 1, "<b>Eigenschutz zuerst</b>: Stecker ziehen, LS oder NOT-AUS. Wer die Person anfasst, wird selbst durchströmt.");
+mc("h8", 5, "Wie groß ist der Körperwiderstand ungefähr (Hand–Fuß)?", ["10 Ω", "1000 Ω", "1 MΩ", "50 Ω"], 1, "Etwa <b>1000 Ω</b>. Bei 230 V fließen also rund 230 mA – lebensgefährlich.");
+tf("h9", 5, "Nach einem Stromunfall muss die Person immer zum Arzt, auch wenn es ihr gut geht.", true, "Richtig. Herzrhythmusstörungen können noch Stunden später auftreten.");
+tf("h10", 5, "Die 5 Sicherheitsregeln werden nach der Arbeit in derselben Reihenfolge aufgehoben.", false, "Falsch. Sie werden in <b>umgekehrter Reihenfolge</b> aufgehoben (5 → 1).");
+gap("h11", 5, "Sicherheitsregel 2: Gegen ___ sichern.", ["Wiedereinschalten", "Berühren", "Kurzschluss", "Absturz"], "Wiedereinschalten", "Schloss, Schild „Nicht schalten“, Sicherungen entnehmen.");
+gap("h12", 5, "Sicherheitsregel 4: Erden und ___.", ["kurzschließen", "abdecken", "freischalten", "messen"], "kurzschließen", "Erden und kurzschließen – Pflicht bei Hochspannung, in Niederspannung bei Rückspeisegefahr (Generator).");
+ty("h13", 5, "Wie lautet die 3. Sicherheitsregel?", ["Spannungsfreiheit feststellen", "Spannungsfreiheit pruefen", "Spannungsfreiheit allpolig feststellen"], "<b>Spannungsfreiheit feststellen</b> – zweipolig, an allen Polen.");
+ty("h14", 5, "Abkürzung für die Person, die nur unter Leitung und Aufsicht einer EFK arbeitet?", ["EuP", "elektrotechnisch unterwiesene Person"], "<b>EuP</b> = elektrotechnisch unterwiesene Person.");
+ty("h15", 5, "Wie lautet die 1. Sicherheitsregel?", ["Freischalten"], "<b>Freischalten</b> = allpolig trennen.");
+od("h16", 5, "Bringe die 5 Sicherheitsregeln in die richtige Reihenfolge.", ["Freischalten", "Gegen Wiedereinschalten sichern", "Spannungsfreiheit feststellen", "Erden und kurzschließen", "Benachbarte, unter Spannung stehende Teile abdecken"], "Eselsbrücke: <b>F</b>reie <b>G</b>eister <b>S</b>prechen <b>E</b>rnst <b>A</b>b.");
+od("h17", 5, "Erste Hilfe bei einem Stromunfall: richtige Reihenfolge?", ["Eigenschutz beachten", "Stromkreis unterbrechen", "Notruf 112 absetzen", "Atmung prüfen, ggf. HLW und AED", "Person zum Arzt bringen lassen"], "Erst sich selbst schützen und den Strom abschalten, dann Notruf und Erste Hilfe. Immer ärztlich untersuchen lassen.");
+mt("h18", 5, "Ordne den Körperstrom seiner Wirkung zu.", [["0,5 mA", "Wahrnehmbarkeitsschwelle"], ["10 mA", "Loslassschwelle"], ["30 mA", "Auslösung RCD (Zusatzschutz)"], ["50 mA", "Herzkammerflimmern möglich"]], "Wichtig: Der RCD löst bei 30 mA aus – noch bevor Herzkammerflimmern droht.");
+
+// 6 Schutzmaßnahmen
+mc("p1", 6, "Welches Symbol steht für Schutzklasse II?", ["Das Erdungszeichen", "Ein doppeltes Quadrat", "Eine Raute mit III", "Ein Blitz"], 1, "<b>Doppeltes Quadrat</b> = doppelte oder verstärkte Isolierung, kein Schutzleiter.");
+mc("p2", 6, "Was bedeutet Schutzklasse I?", ["Das Gehäuse ist mit dem Schutzleiter verbunden", "Doppelte Isolierung", "Betrieb mit Kleinspannung", "Wasserdicht"], 0, "SK I: Metallgehäuse am <b>PE</b>. Im Fehlerfall fließt der Strom über den PE und die Sicherung löst aus.");
+mc("p3", 6, "Was ist Basisschutz?", ["Schutz gegen direktes Berühren aktiver Teile", "Abschaltung im Fehlerfall", "Zusatzschutz durch RCD", "Potenzialausgleich"], 0, "Basisschutz = Isolierung, Gehäuse, Abdeckung: Aktive Teile sind im Normalbetrieb <b>nicht berührbar</b>.");
+mc("p4", 6, "Wie schnell muss in Endstromkreisen bis 32 A im TN-System (230 V) abgeschaltet werden?", ["0,1 s", "0,2 s", "0,4 s", "5 s"], 2, "Höchstens <b>0,4 s</b> (Verteilerstromkreise: 5 s).");
+mc("p5", 6, "Wodurch unterscheidet sich SELV von PELV?", ["SELV hat eine höhere Spannung", "SELV hat keine Erdverbindung", "SELV ist nur Gleichspannung", "SELV braucht einen RCD"], 1, "<b>SELV</b> = ohne Erdverbindung, <b>PELV</b> = mit Erdverbindung. Beide max. 50 V AC / 120 V DC.");
+mc("p6", 6, "Was gilt nach der Nennstromregel?", ["In ≤ Ib ≤ Iz", "Ib ≤ In ≤ Iz", "Iz ≤ In ≤ Ib", "In = Iz"], 1, "<span class='formula'>Ib ≤ In ≤ Iz</span> – Betriebsstrom ≤ Nennstrom LS ≤ Strombelastbarkeit der Leitung.");
+mc("p7", 6, "Was schützt der Leitungsschutzschalter in erster Linie?", ["Das Gerät", "Die Leitung", "Die Person", "Den Generator"], 1, "Der LS schützt die <b>Leitung</b> vor Überhitzung. Personenschutz übernimmt der RCD.");
+mc("p8", 6, "Bei welchem Vielfachen von In löst ein B-LS unverzögert aus?", ["1–3 × In", "3–5 × In", "5–10 × In", "10–20 × In"], 1, "B: 3–5 × In · C: 5–10 × In · D: 10–20 × In.");
+mc("p9", 6, "Welche Charakteristik wählt man für Geräte mit hohen Einschaltströmen wie Schaltnetzteile?", ["B", "C", "Nur einen RCD", "Keine"], 1, "<b>C</b> verträgt Einschaltspitzen bis 5–10 × In, ohne auszulösen.");
+mc("p10", 6, "Was bedeutet Selektivität?", ["Alle Schutzeinrichtungen lösen gleichzeitig aus", "Nur die dem Fehler am nächsten liegende Schutzeinrichtung löst aus", "Der RCD löst immer vor dem LS aus", "Es gibt nur eine Sicherung"], 1, "Nur der Kreis mit dem Fehler geht aus, der Rest der Show läuft weiter.");
+mc("p11", 6, "Welcher RCD-Typ erfasst auch glatte Gleichfehlerströme?", ["Typ AC", "Typ A", "Typ F", "Typ B"], 3, "<b>Typ B</b> – nötig bei Frequenzumrichtern, E-Ladegeräten und vielen großen Netzteilen.");
+mc("p12", 6, "Welcher Bemessungsdifferenzstrom gilt für den Zusatzschutz?", ["10 mA", "30 mA", "300 mA", "500 mA"], 1, "<b>30 mA</b> – unterhalb der Gefahr von Herzkammerflimmern.");
+mc("p13", 6, "Wovor schützt ein RCD NICHT?", ["Vor Fehlerstrom über eine Person zur Erde", "Vor Überlast und Kurzschluss", "Vor Körperschluss mit Fehlerstrom", "Vor Isolationsfehlern zur Erde"], 1, "Der RCD misst nur die Differenz. Gegen <b>Überlast und Kurzschluss</b> hilft nur der LS. Auch wer L und N gleichzeitig berührt, ist nicht geschützt.");
+mc("p14", 6, "Was macht ein RCM?", ["Er schaltet bei 30 mA ab", "Er überwacht den Differenzstrom und meldet nur", "Er misst die Spannung", "Er ersetzt den LS"], 1, "Ein <b>RCM</b> warnt, schaltet aber <b>nicht</b> ab.");
+mc("p15", 6, "Was ist ein Körperschluss?", ["Ein Außenleiter berührt das leitfähige Gehäuse", "L und N sind direkt verbunden", "Ein Leiter berührt die Erde", "Ein Verbraucher ist überbrückt"], 0, "Körperschluss = aktiver Leiter am <b>Gehäuse</b>. L–N direkt = Kurzschluss, Leiter an Erde = Erdschluss.");
+mc("p16", 6, "Warum braucht man einen Potenzialausgleich an Traversen und Bühnen?", ["Wegen des Gewichts", "Damit zwischen gleichzeitig berührbaren Metallteilen keine gefährliche Spannung auftritt", "Für besseres Licht", "Wegen EMV beim Video"], 1, "Alle berührbaren Metallteile werden auf <b>ein Potenzial</b> gebracht.");
+mc("p17", 6, "Welcher RCD wird vorgeschaltet, damit Selektivität entsteht?", ["Typ S (selektiv, verzögert)", "Typ AC", "Ein zweiter 30-mA-RCD", "Gar keiner"], 0, "Vorgeschaltet z. B. <b>300 mA Typ S</b>, nachgeschaltet 30 mA.");
+tf("p18", 6, "Ein RCD vergleicht den hinfließenden mit dem zurückfließenden Strom.", true, "Richtig. Fehlt eine Differenz (z. B. 30 mA über eine Person), schaltet er ab.");
+tf("p19", 6, "Sicherungen sind selektiv, wenn die vorgeschaltete mindestens den 1,6-fachen Nennstrom hat.", true, "Richtig, z. B. 63 A vor 35/40 A.");
+tf("p20", 6, "Geräte der Schutzklasse II haben einen Schutzleiter.", false, "Falsch. SK II hat <b>doppelte Isolierung</b> und keinen Schutzleiteranschluss.");
+gap("p21", 6, "Nennstromregel: Ib ≤ In ≤ ___", ["Iz", "Ia", "Ik", "I2"], "Iz", "Iz = Strombelastbarkeit der Leitung.");
+gap("p22", 6, "Der LS hat einen thermischen Auslöser für ___ und einen magnetischen für Kurzschluss.", ["Überlast", "Erdschluss", "Fehlerstrom", "Spannungsfall"], "Überlast", "Bimetall = Überlast (verzögert), Spule = Kurzschluss (sofort).");
+ty("p23", 6, "Abkürzung der Fehlerstrom-Schutzeinrichtung?", ["RCD", "FI", "FI-Schalter"], "<b>RCD</b> (früher FI-Schalter).");
+ty("p24", 6, "Wie heißt die Verbindung eines aktiven Leiters mit dem leitfähigen Gehäuse?", ["Körperschluss"], "<b>Körperschluss</b>.");
+ty("p25", 6, "Schutzmaßnahme mit einem Trenntransformator?", ["Schutztrennung"], "<b>Schutztrennung</b> – grundsätzlich ein Verbraucher pro Trenntrafo.");
+ty("p26", 6, "Kleinspannung ohne Erdverbindung (Abkürzung)?", ["SELV"], "<b>SELV</b> = Safety Extra Low Voltage.");
+mt("p27", 6, "Ordne die RCD-Typen zu.", [["Typ AC", "Nur sinusförmiger Wechselfehlerstrom"], ["Typ A", "+ pulsierender Gleichfehlerstrom"], ["Typ F", "+ Mischfrequenzen"], ["Typ B", "+ glatter Gleichfehlerstrom"]], "Jeder Typ kann alles, was der vorige kann, plus etwas mehr. In mobilen Verteilern wird Typ B empfohlen.");
+mt("p28", 6, "Ordne die Auslösecharakteristik dem Bereich der sofortigen Auslösung zu.", [["B", "3–5 × In"], ["C", "5–10 × In"], ["D", "10–20 × In"], ["Thermischer Auslöser", "Überlast, verzögert"]], "Je höher der Bereich, desto mehr Einschaltstrom verträgt der LS – aber desto kleiner muss die Schleifenimpedanz sein.");
+mt("p29", 6, "Ordne die Fehlerarten zu.", [["Kurzschluss", "L direkt mit N oder anderem L verbunden"], ["Körperschluss", "L berührt das Metallgehäuse"], ["Erdschluss", "L berührt Erde oder geerdetes Teil"], ["Leiterschluss", "Verbindung über einen Verbraucher"]], "Leiterschluss: Das Gerät schaltet sich z. B. von selbst ein, weil der Schalter überbrückt ist.");
+mt("p30", 6, "Ordne die Schutzklassen zu.", [["Schutzklasse I", "Gehäuse am Schutzleiter"], ["Schutzklasse II", "Doppelte Isolierung"], ["Schutzklasse III", "Kleinspannung SELV/PELV"]], "SK I: Scheinwerfer, Endstufen · SK II: Laptop-Netzteile · SK III: Akkuleuchten.");
+
+// 7 Schleifenimpedanz
+mc("z1", 7, "Was ist die Schleifenimpedanz Zs?", ["Der Widerstand der gesamten Fehlerstromschleife", "Der Isolationswiderstand", "Der Körperwiderstand", "Der Erdungswiderstand"], 0, "Zs = alle Widerstände, die der Fehlerstrom durchläuft: Trafo, Außenleiter, Schutzleiter.");
+mc("z2", 7, "Warum darf der gemessene Wert nur etwa 2/3 des rechnerischen Höchstwertes betragen?", ["Wegen der Messgerätetoleranz", "Weil sich die Leitungen im Fehlerfall erwärmen und ihr Widerstand steigt", "Weil die Norm Gleichstrom vorschreibt", "Wegen des RCD"], 1, "Beim Messen sind die Leitungen kalt. Im Fehlerfall werden sie warm, R steigt (<b>Kaltleiter</b>).");
+mc("z3", 7, "Was hilft, wenn die Schleifenimpedanz zu groß ist?", ["Eine längere Leitung", "Ein kleinerer Querschnitt", "Größerer Querschnitt, kürzere Leitung, B statt C oder ein RCD", "C statt B verwenden"], 2, "Kleineres Zs durch dickere/kürzere Leitungen, oder eine Schutzeinrichtung, die bei kleinerem Strom auslöst.");
+mc("z4", 7, "Wie groß darf der Messwert von Zs bei einem LS C16 (230 V) höchstens sein?", ["0,48 Ω", "0,96 Ω", "1,44 Ω", "2,87 Ω"], 1, "Ia = 10 × 16 A = 160 A → Zs = 230 / 160 = 1,44 Ω → × 2/3 ≈ <b>0,96 Ω</b>.");
+mc("z5", 7, "Wann wird die Schleifenimpedanz in der Veranstaltungstechnik gemessen?", ["Nie", "Bei der Übergabe des Speisepunktes und am Ende der eigenen Leitungen", "Nur bei Gewitter", "Nur einmal im Jahr"], 1, "Erst die Netzimpedanz der Spielstätte, dann am entferntesten Punkt der eigenen Verteilung.");
+tf("z6", 7, "Je länger die Leitung, desto größer die Schleifenimpedanz.", true, "Richtig. Mehr Länge = mehr Widerstand = kleinerer Kurzschlussstrom.");
+gap("z7", 7, "Kurzschlussstrom: Ik = U0 / ___", ["Zs", "Ia", "In", "R"], "Zs", "<span class='formula'>Ik = U0 / Zs</span>, U0 = 230 V.");
+ty("z8", 7, "Wie heißt der Strom, der bei einem Kurzschluss fließt?", ["Kurzschlussstrom", "Ik"], "<b>Kurzschlussstrom Ik</b>.");
+od("z9", 7, "Bringe den Weg des Fehlerstroms (TN-S) in die richtige Reihenfolge.", ["Transformator / Generator", "Außenleiter L mit LS", "Körperschluss im Gerät", "Schutzleiter PE", "Zurück zum Sternpunkt"], "Die Fehlerschleife: Quelle → L → Gehäuse → PE → Quelle. Alle Widerstände auf dem Weg ergeben Zs.");
+
+// 8 Prüfungen
+mc("q1", 8, "Nach welcher Norm wird eine mobile Anlage vor der Inbetriebnahme geprüft?", ["DIN VDE 0100-600", "DIN VDE 0105-100", "DIN EN 50699", "DGUV V3"], 0, "<b>DIN VDE 0100-600</b> = Erstprüfung. In der Veranstaltungstechnik nach jedem Aufbau.");
+mc("q2", 8, "In welcher Reihenfolge wird geprüft?", ["Messen – Erproben – Besichtigen", "Besichtigen – Erproben – Messen", "Erproben – Messen – Besichtigen", "Nur Messen"], 1, "Erst <b>schauen</b>, dann <b>probieren</b>, dann <b>messen</b> – und dokumentieren.");
+mc("q3", 8, "Wie groß muss der Isolationswiderstand einer 230/400-V-Anlage mindestens sein?", ["0,5 MΩ", "1 MΩ", "2 MΩ", "10 MΩ"], 1, "Mindestens <b>1 MΩ</b>, gemessen mit 500 V DC.");
+mc("q4", 8, "Mit welcher Prüfspannung wird der Isolationswiderstand in 230/400-V-Anlagen gemessen?", ["230 V AC", "500 V DC", "50 V AC", "1000 V AC"], 1, "<b>500 V Gleichspannung</b>.");
+mc("q5", 8, "Welcher Richtwert gilt für die Prüfung ortsveränderlicher Geräte (DGUV V3)?", ["1 Monat", "6 Monate", "2 Jahre", "4 Jahre"], 1, "<b>6 Monate</b> (Baustelle 3 Monate). Bei Fehlerquote unter 2 % verlängerbar.");
+mc("q6", 8, "Wie oft wird die Prüftaste eines RCD in nichtstationären Anlagen betätigt?", ["Arbeitstäglich", "Monatlich", "Halbjährlich", "Jährlich"], 0, "<b>Arbeitstäglich</b> – in festen Anlagen alle 6 Monate.");
+mc("q7", 8, "Wie groß darf der Schutzleiterwiderstand eines Geräts mit bis zu 5 m Leitung sein?", ["0,1 Ω", "0,3 Ω", "1 Ω", "3 Ω"], 1, "<b>0,3 Ω</b> bis 5 m, + 0,1 Ω je weitere 7,5 m, max. 1 Ω.");
+mc("q8", 8, "Welchen Isolationswiderstand muss ein Gerät der Schutzklasse II mindestens haben?", ["0,25 MΩ", "1 MΩ", "2 MΩ", "10 MΩ"], 2, "SK I ≥ 1 MΩ · <b>SK II ≥ 2 MΩ</b> · SK III ≥ 0,25 MΩ.");
+mc("q9", 8, "Wie groß darf der Schutzleiterstrom eines Geräts der Schutzklasse I höchstens sein?", ["0,5 mA", "3,5 mA", "30 mA", "10 mA"], 1, "<b>3,5 mA</b>. Der Berührungsstrom bei SK II höchstens 0,5 mA.");
+mc("q10", 8, "Welche Norm gilt für die Wiederholungsprüfung von Geräten?", ["DIN EN 50699 (VDE 0702)", "DIN EN 50678 (VDE 0701)", "DIN VDE 0100-600", "DIN VDE 0105-100"], 0, "50699 = Wiederholungsprüfung, 50678 = nach Reparatur.");
+mc("q11", 8, "Wie lange darf ein normaler RCD bei IΔn höchstens bis zur Auslösung brauchen?", ["40 ms", "300 ms", "0,4 s", "5 s"], 1, "Höchstens <b>300 ms</b> (Typ S: 130–500 ms).");
+mc("q12", 8, "Wer legt die Prüffristen fest?", ["Der Hersteller", "Der Unternehmer über die Gefährdungsbeurteilung", "Die IHK", "Der VDE"], 1, "Die DGUV V3 nennt Richtwerte, festgelegt werden sie in der <b>Gefährdungsbeurteilung</b> (BetrSichV).");
+tf("q13", 8, "Eine EuP darf mit geeigneten Messgeräten unter Leitung und Aufsicht einer EFK prüfen.", true, "Richtig. Die Verantwortung bleibt bei der EFK.");
+gap("q14", 8, "Der Isolationswiderstand einer Anlage muss mindestens ___ MΩ betragen.", ["1", "0,5", "2", "10"], "1", "≥ 1 MΩ bei 500 V DC.");
+ty("q15", 8, "Mit welchem Dokument übergibt die EFK eine mobile Anlage?", ["Errichterbescheinigung"], "<b>Errichterbescheinigung</b> plus Prüfprotokoll.");
+ty("q16", 8, "Wie heißt der Aufkleber mit dem nächsten Prüftermin?", ["Prüfplakette", "Pruefplakette", "Prüfaufkleber"], "<b>Prüfplakette</b>.");
+od("q17", 8, "Bringe den Ablauf der Erstprüfung in die richtige Reihenfolge.", ["Besichtigen", "Erproben", "Messen", "Dokumentieren"], "Erst ohne Spannung schauen, dann Funktionen probieren, dann messen, zum Schluss das Protokoll.");
+mt("q18", 8, "Ordne die Norm ihrer Anwendung zu.", [["DIN VDE 0100-600", "Erstprüfung einer Anlage"], ["DIN VDE 0105-100", "Wiederkehrende Prüfung von Anlagen"], ["DIN EN 50678", "Gerät nach Reparatur"], ["DIN EN 50699", "Wiederholungsprüfung von Geräten"], ["DGUV Vorschrift 3", "Unfallverhütungsvorschrift Elektrik"]], "DGUV V3 sagt, <b>dass</b> geprüft wird. Die VDE-Normen sagen, <b>wie</b>.");
+
+// 9 Leitungsdimensionierung
+mc("l1", 9, "Welche Leitung ist Standard in der Veranstaltungstechnik?", ["H05VV-F", "H07RN-F", "NYM-J", "H03VV-F"], 1, "<b>H07RN-F</b>: Gummischlauchleitung, robust, für außen, ölbeständig.");
+mc("l2", 9, "Was bedeutet die Angabe 5G2,5?", ["5 Adern mit grün-gelbem Leiter, je 2,5 mm²", "5 m lang, 2,5 A", "5 Leitungen à 2,5 m", "5 kW bei 2,5 mm²"], 0, "5 Adern, <b>G</b> = mit grün-gelbem Schutzleiter, 2,5 mm² Querschnitt.");
+mc("l3", 9, "Welcher Spannungsfall wird höchstens empfohlen?", ["1 %", "3 %", "10 %", "15 %"], 1, "<b>3 %</b> vom Speisepunkt bis zum Verbraucher (max. 5 %).");
+mc("l4", 9, "Welcher Reduktionsfaktor gilt ungefähr für eine Leitung mit 5 aufgewickelten Lagen?", ["0,8", "0,61", "0,38", "0,1"], 2, "Ca. <b>0,38</b> – die Leitung darf nur noch gut ein Drittel des Stroms führen.");
+mc("l5", 9, "Was bedeutet das „R“ in H07RN-F?", ["Rund", "Gummiisolierung", "Rot", "Reduziert"], 1, "R = <b>Gummi</b> (rubber), N = Polychloropren-Mantel, F = feindrähtig.");
+mc("l6", 9, "Welcher Faktor beeinflusst die Strombelastbarkeit NICHT?", ["Umgebungstemperatur", "Häufung", "Verlegeart", "Farbe des Mantels"], 3, "Temperatur, Häufung, Verlegeart und Aufwicklung zählen – die Farbe nicht.");
+mc("l7", 9, "Welcher Querschnitt ist für einen CEE 32 A typisch?", ["1,5 mm²", "2,5 mm²", "6 mm²", "35 mm²"], 2, "Typisch <b>6 mm²</b> (kurze Strecken auch 4 mm²).");
+mc("l8", 9, "Welche Länge setzt man in die einphasige Spannungsfall-Formel ein?", ["Die doppelte Länge", "Die einfache Leitungslänge – die 2 steht schon in der Formel", "Die halbe Länge", "Die Länge in km"], 1, "<span class='formula'>ΔU = (2 × l × I × cos φ) / (κ × A)</span> – die 2 berücksichtigt Hin- und Rückleiter.");
+tf("l9", 9, "H05VV-F ist für den rauen Einsatz im Freien geeignet.", false, "Falsch. PVC-Leitung, nur innen und ohne mechanische Beanspruchung.");
+tf("l10", 9, "Kabeltrommeln müssen vor der Belastung vollständig abgerollt werden.", true, "Richtig. Aufgewickelt kann sich die Leitung nicht abkühlen und überhitzt.");
+gap("l11", 9, "ΔU = (2 × l × I × cos φ) / (κ × ___)", ["A", "U", "R", "P"], "A", "A = Querschnitt in mm².");
+gap("l12", 9, "Für einen CEE 63 A verwendet man typisch ___ mm².", ["16", "6", "2,5", "95"], "16", "CEE 63 A → 16 mm², CEE 125 A → 35 mm².");
+ty("l13", 9, "Wie heißt der Strom, den eine Leitung dauerhaft führen darf?", ["Strombelastbarkeit", "Iz"], "<b>Strombelastbarkeit Iz</b>.");
+ty("l14", 9, "Kurzzeichen der Standard-Gummischlauchleitung?", ["H07RN-F", "H07RNF"], "<b>H07RN-F</b>.");
+mt("l15", 9, "Ordne Querschnitt und typische Absicherung zu.", [["2,5 mm²", "16 A"], ["6 mm²", "32 A"], ["16 mm²", "63 A"], ["35 mm²", "125 A"]], "Praxiswerte für H07RN-F, abgerollt, 30 °C. Genaue Werte: DIN VDE 0298-4.");
+
+// 10 Lastverteilung
+mc("v1", 10, "Warum verteilt man Lasten symmetrisch auf L1, L2 und L3?", ["Wegen der Optik", "Damit keine Phase überlastet wird, der N entlastet ist und die volle Leistung nutzbar ist", "Weil es billiger ist", "Wegen der Kabelfarben"], 1, "Gleich belastete Phasen = kein Außenleiter überlastet, Ströme heben sich im N auf.");
+mc("v2", 10, "Was passiert im Neutralleiter bei vielen LED-Lasten?", ["Der Strom wird null", "Oberschwingungen 3. Ordnung addieren sich, der N kann stärker belastet sein als die Außenleiter", "Die Spannung steigt auf 400 V", "Nichts"], 1, "Deshalb wird der Neutralleiter <b>nie kleiner</b> gewählt als die Außenleiter.");
+mc("v3", 10, "Welche Leistung liefert ein CEE 32 A (400 V, cos φ = 1) ungefähr?", ["7 kW", "11 kW", "22 kW", "43 kW"], 2, "<span class='formula'>P = √3 × 400 V × 32 A ≈ 22 kW</span>");
+mc("v4", 10, "Welche Leistung liefert ein CEE 16 A (400 V, cos φ = 1) ungefähr?", ["3,7 kW", "11 kW", "16 kW", "22 kW"], 1, "<span class='formula'>√3 × 400 V × 16 A ≈ 11 kW</span>");
+mc("v5", 10, "Was ist der Gleichzeitigkeitsfaktor?", ["Ein Faktor dafür, dass nicht alle Verbraucher gleichzeitig unter Volllast laufen", "Der cos φ", "Der Reduktionsfaktor der Kabeltrommel", "Die Frequenz"], 0, "Er senkt den berechneten Bedarf, wenn nicht alles gleichzeitig voll läuft (z. B. Endstufen).");
+mc("v6", 10, "Warum legt man den Ton auf einen eigenen Außenleiter?", ["Um Störungen durch Dimmer und Licht zu vermeiden", "Weil es Vorschrift ist", "Für mehr Leistung", "Wegen der Kosten"], 0, "Getrennte Phasen reduzieren Brummen und Störgeräusche aus der Lichttechnik.");
+tf("v7", 10, "Bei gleicher ohmscher Last auf L1, L2 und L3 ist der Neutralleiterstrom nahezu null.", true, "Richtig. Die drei um 120° verschobenen Ströme heben sich im N auf.");
+tf("v8", 10, "Bei LED-Lasten darf der Neutralleiter kleiner gewählt werden.", false, "Falsch. Oberschwingungen addieren sich im N – er kann sogar stärker belastet sein.");
+gap("v9", 10, "Strom pro Außenleiter = P pro Außenleiter / ___ V", ["230", "400", "325", "50"], "230", "Jede Phase gegen N hat 230 V.");
+od("v10", 10, "Bringe die Schritte der Strombedarfsermittlung in die richtige Reihenfolge.", ["Verbraucherliste mit Leistungen erstellen", "Gleichzeitigkeitsfaktor und cos φ berücksichtigen", "Reserve einplanen (ca. 20 %)", "Strom pro Außenleiter berechnen", "Anschluss wählen (CEE 16/32/63/125 A)"], "Erst sammeln, dann realistisch machen, Reserve dazu, rechnen – und zum Schluss den Anschluss wählen.");
+ty("v11", 10, "Wie nennt man eine ungleiche Belastung der drei Außenleiter?", ["Schieflast", "unsymmetrische Last", "Unsymmetrie"], "<b>Schieflast</b> – schadet vor allem Stromerzeugern.");
+
+// 11 Stern & Dreieck
+mc("d1", 11, "Welche Strangspannung liegt in der Sternschaltung an?", ["230 V", "400 V", "325 V", "690 V"], 0, "<span class='formula'>UStr = U / √3 = 400 V / 1,73 = 230 V</span>");
+mc("d2", 11, "Welche Strangspannung liegt in der Dreieckschaltung an?", ["230 V", "400 V", "325 V", "115 V"], 1, "Jede Last liegt zwischen zwei Außenleitern: <b>400 V</b>.");
+mc("d3", 11, "Wie groß ist der Leiterstrom in der Dreieckschaltung?", ["I = IStr", "I = √3 × IStr", "I = IStr / √3", "I = 3 × IStr"], 1, "Im Dreieck teilen sich zwei Stränge einen Außenleiter: <span class='formula'>I = √3 × IStr</span>");
+mc("d4", 11, "Drei gleiche Widerstände: Wie verhält sich die Leistung im Dreieck zum Stern?", ["Gleich", "Doppelt so groß", "Dreimal so groß", "Halb so groß"], 2, "Im Dreieck liegt √3-mal mehr Spannung an jedem Widerstand → P ~ U² → <b>3-fach</b>.");
+mc("d5", 11, "Wozu dient der Stern-Dreieck-Anlauf?", ["Den Anlaufstrom zu verringern", "Die Drehrichtung zu ändern", "Die Frequenz zu ändern", "Den Neutralleiter zu sparen"], 0, "Im Stern anlaufen (ca. 1/3 des Stroms), dann auf Dreieck umschalten.");
+mc("d6", 11, "Was passiert bei Unterbrechung des Neutralleiters in einer Sternschaltung mit ungleicher Last?", ["Nichts", "Der Sternpunkt verschiebt sich, manche Geräte bekommen fast 400 V", "Alle Geräte gehen aus", "Der RCD löst immer aus"], 1, "<b>Sternpunktverschiebung</b> – Geräte können zerstört werden. Den N nie einzeln absichern.");
+mc("d7", 11, "Wie groß ist der Verkettungsfaktor im Drehstromnetz?", ["√2", "√3", "2", "3"], 1, "<span class='formula'>400 V = √3 × 230 V</span>");
+tf("d8", 11, "In der Dreieckschaltung gibt es keinen Neutralleiter.", true, "Richtig. Alle Lasten liegen zwischen den Außenleitern.");
+gap("d9", 11, "400 V = √3 × ___ V", ["230", "325", "400", "110"], "230", "Außenleiterspannung = √3 × Strangspannung (Stern).");
+ty("d10", 11, "Wie heißt die Schaltung, bei der jede Last zwischen zwei Außenleitern liegt?", ["Dreieckschaltung", "Dreieck"], "<b>Dreieckschaltung (Δ)</b>.");
+ty("d11", 11, "Wie heißt die Schaltung, bei der jede Last zwischen Außenleiter und N liegt?", ["Sternschaltung", "Stern"], "<b>Sternschaltung (Y)</b>.");
+
+// ---------- Calculation generators ----------
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const de = (x, d = 2) => Number(x).toLocaleString("de-DE", { maximumFractionDigits: d, minimumFractionDigits: 0 });
+const CALC = [
+  { id: "c_ohm", t: 1, gen() { const R = pick([23, 46, 26.5, 57.5, 115]); const I = 230 / R; return { q: `Ein Heizlüfter mit R = ${de(R)} Ω wird an 230 V betrieben. Wie groß ist der Strom?`, a: I, unit: "A", ex: `<span class='formula'>I = U / R = 230 V / ${de(R)} Ω = ${de(I)} A</span>` }; } },
+  { id: "c_power", t: 1, gen() { const n = pick([4, 6, 8, 10, 12]); const P = pick([300, 500, 575, 650]); const I = n * P / 230; return { q: `${n} Scheinwerfer mit je ${P} W hängen an einem 230-V-Stromkreis. Wie groß ist der Gesamtstrom?`, a: I, unit: "A", ex: `<span class='formula'>P = ${n} × ${P} W = ${n * P} W → I = P / U = ${n * P} W / 230 V = ${de(I)} A</span>` }; } },
+  { id: "c_energy", t: 1, gen() { const P = pick([1.5, 2, 3, 4.5, 6]); const h = pick([3, 4, 5, 8]); return { q: `Eine Lichtanlage nimmt ${de(P)} kW auf und läuft ${h} Stunden. Wie viel Energie wird verbraucht?`, a: P * h, unit: "kWh", ex: `<span class='formula'>W = P × t = ${de(P)} kW × ${h} h = ${de(P * h)} kWh</span>` }; } },
+  { id: "c_ueff", t: 2, gen() { const U = pick([12, 24, 48, 230, 400]); const Uh = U * Math.SQRT2; return { q: `Das Oszilloskop zeigt einen Scheitelwert von ${de(Uh, 1)} V. Welchen Effektivwert zeigt das Multimeter?`, a: U, unit: "V", ex: `<span class='formula'>U = Û / √2 = ${de(Uh, 1)} V / 1,414 ≈ ${de(U)} V</span>` }; } },
+  { id: "c_kva", t: 2, gen() { const P = pick([20, 30, 40, 45, 60]); const c = pick([0.8, 0.85, 0.9]); return { q: `Gesamtwirkleistung ${P} kW, cos φ = ${de(c)}. Welche Scheinleistung muss der Stromerzeuger mindestens haben (ohne Reserve)?`, a: P / c, unit: "kVA", ex: `<span class='formula'>S = P / cos φ = ${P} kW / ${de(c)} = ${de(P / c, 1)} kVA</span> – in der Praxis noch ca. 20 % Reserve dazu.` }; } },
+  { id: "c_series", t: 4, gen() { const R1 = pick([4, 6, 10, 20]); const R2 = pick([8, 12, 30, 40]); const U = pick([12, 24, 48]); const I = U / (R1 + R2); return { q: `R1 = ${R1} Ω und R2 = ${R2} Ω sind in Reihe an ${U} V geschaltet. Wie groß ist der Strom?`, a: I, unit: "A", ex: `<span class='formula'>Rges = ${R1} + ${R2} = ${R1 + R2} Ω → I = ${U} V / ${R1 + R2} Ω = ${de(I)} A</span>. Der Strom ist überall gleich.` }; } },
+  { id: "c_parallel", t: 4, gen() { const R1 = pick([6, 12, 20, 30, 60]); const R2 = pick([3, 6, 12, 20, 40]); const R = R1 * R2 / (R1 + R2); return { q: `R1 = ${R1} Ω und R2 = ${R2} Ω sind parallel geschaltet. Wie groß ist der Ersatzwiderstand?`, a: R, unit: "Ω", ex: `<span class='formula'>R = (R1 × R2) / (R1 + R2) = (${R1} × ${R2}) / (${R1} + ${R2}) = ${de(R)} Ω</span> – kleiner als der kleinste Einzelwiderstand.` }; } },
+  { id: "c_knoten", t: 4, gen() { const a = pick([3, 4, 5, 6]), b = pick([2, 5, 7, 8]), c = pick([1, 3, 4, 6]); return { q: `Ein Unterverteiler hat drei Abgänge mit ${a} A, ${b} A und ${c} A. Welcher Strom fließt in der Zuleitung?`, a: a + b + c, unit: "A", ex: `Knotenpunktregel: <span class='formula'>I = ${a} + ${b} + ${c} = ${a + b + c} A</span>` }; } },
+  { id: "c_body", t: 5, gen() { const U = pick([50, 120, 230, 400]); const I = U / 1000 * 1000; return { q: `Eine Person (Körperwiderstand 1000 Ω) berührt ${U} V. Wie groß ist der Körperstrom in mA?`, a: I, unit: "mA", ex: `<span class='formula'>I = U / R = ${U} V / 1000 Ω = ${de(U / 1000, 3)} A = ${de(I)} mA</span>${I >= 50 ? " – Lebensgefahr (ab ca. 50 mA)." : "."}` }; } },
+  { id: "c_ik", t: 7, gen() { const Z = pick([0.4, 0.6, 0.8, 1.15, 1.5, 2.3]); return { q: `Gemessene Schleifenimpedanz Zs = ${de(Z)} Ω bei U0 = 230 V. Wie groß ist der Kurzschlussstrom Ik?`, a: 230 / Z, unit: "A", ex: `<span class='formula'>Ik = U0 / Zs = 230 V / ${de(Z)} Ω = ${de(230 / Z, 0)} A</span>` }; } },
+  { id: "c_zsmax", t: 7, gen() { const ch = pick(["B", "C"]); const In = pick([16, 20, 32]); const k = ch === "B" ? 5 : 10; const Z = 230 / (k * In); return { q: `Wie groß darf die Schleifenimpedanz für einen LS ${ch}${In} rechnerisch höchstens sein (U0 = 230 V)?`, a: Z, unit: "Ω", ex: `${ch}: sofortige Auslösung bei ${k} × In = ${k * In} A. <span class='formula'>Zs ≤ 230 V / ${k * In} A = ${de(Z)} Ω</span>. Gemessen höchstens ⅔ davon ≈ ${de(Z * 2 / 3)} Ω.` }; } },
+  { id: "c_du", t: 9, gen() { const l = pick([20, 30, 40, 50]); const I = pick([10, 16]); const A = pick([1.5, 2.5, 4]); const dU = 2 * l * I / (56 * A); const pct = dU / 230 * 100; return { q: `${l} m H07RN-F 3G${de(A)}, 230 V, I = ${I} A, cos φ = 1. Wie groß ist der Spannungsfall in Prozent?`, a: pct, unit: "%", ex: `<span class='formula'>ΔU = (2 × ${l} × ${I}) / (56 × ${de(A)}) = ${de(dU)} V</span> → <span class='formula'>${de(dU)} / 230 × 100 = ${de(pct)} %</span> ${pct > 3 ? "→ über 3 %: Querschnitt erhöhen." : "→ unter 3 %: in Ordnung."}` }; } },
+  { id: "c_amin", t: 9, gen() { const l = pick([40, 50, 60, 80]); const I = pick([16, 20]); const dU = 6.9; const A = 2 * l * I / (56 * dU); return { q: `Welcher Querschnitt ist rechnerisch mindestens nötig? ${l} m, 230 V, ${I} A, cos φ = 1, max. 3 % (6,9 V).`, a: A, unit: "mm²", ex: `<span class='formula'>A = (2 × ${l} × ${I}) / (56 × 6,9) = ${de(A)} mm²</span> → nächster Normquerschnitt: ${A <= 1.5 ? "1,5" : A <= 2.5 ? "2,5" : A <= 4 ? "4" : A <= 6 ? "6" : A <= 10 ? "10" : "16"} mm².` }; } },
+  { id: "c_drum", t: 9, gen() { const Iz = pick([20, 25, 32]); const f = pick([[1, 0.8], [2, 0.61], [3, 0.49], [5, 0.38]]); return { q: `Eine Leitung darf abgerollt ${Iz} A führen. Sie liegt mit ${f[0]} ${f[0] === 1 ? "Lage" : "Lagen"} auf der Trommel (Faktor ${de(f[1])}). Welcher Strom ist noch zulässig?`, a: Iz * f[1], unit: "A", ex: `<span class='formula'>Iz = ${Iz} A × ${de(f[1])} = ${de(Iz * f[1], 1)} A</span> – deshalb Trommeln immer ganz abrollen.` }; } },
+  { id: "c_phase", t: 10, gen() { const P = pick([9000, 13800, 16500, 20700]); const I = P / 3 / 230; return { q: `Eine Gesamtlast von ${de(P, 0)} W wird symmetrisch auf L1, L2 und L3 verteilt. Wie groß ist der Strom pro Außenleiter?`, a: I, unit: "A", ex: `<span class='formula'>${de(P, 0)} W / 3 = ${de(P / 3, 0)} W pro Phase → I = ${de(P / 3, 0)} W / 230 V = ${de(I, 1)} A</span> ${I <= 16 ? "→ CEE 16 A reicht." : I <= 32 ? "→ CEE 32 A nötig." : "→ CEE 63 A nötig."}` }; } },
+  { id: "c_star", t: 11, gen() { const R = pick([23, 46, 92]); const P = 3 * 230 * 230 / R; return { q: `Drei Heizwiderstände mit je ${R} Ω sind im Stern an 400 V geschaltet. Wie groß ist die Gesamtleistung?`, a: P, unit: "W", ex: `<span class='formula'>UStr = 230 V → IStr = 230 / ${R} = ${de(230 / R)} A → P = 3 × 230 V × ${de(230 / R)} A = ${de(P, 0)} W</span>` }; } },
+  { id: "c_delta", t: 11, gen() { const R = pick([46, 92, 115]); const Is = 400 / R; const P = 3 * 400 * Is; return { q: `Drei Widerstände mit je ${R} Ω sind im Dreieck an 400 V geschaltet. Wie groß ist der Leiterstrom?`, a: Math.sqrt(3) * Is, unit: "A", ex: `<span class='formula'>IStr = 400 V / ${R} Ω = ${de(Is)} A → I = √3 × IStr = ${de(Math.sqrt(3) * Is)} A</span> (P ≈ ${de(P, 0)} W).` }; } }
+];
+const CALC_NAME = { c_ohm: "Ohmsches Gesetz: Strom berechnen", c_power: "Gesamtstrom mehrerer Scheinwerfer", c_energy: "Elektrische Arbeit in kWh", c_ueff: "Effektivwert aus Scheitelwert", c_kva: "Scheinleistung des Stromerzeugers", c_series: "Reihenschaltung: Strom berechnen", c_parallel: "Parallelschaltung: Ersatzwiderstand", c_knoten: "Knotenpunktregel: Zuleitungsstrom", c_body: "Körperstrom bei Berührung", c_ik: "Kurzschlussstrom aus Zs", c_zsmax: "Maximale Schleifenimpedanz eines LS", c_du: "Spannungsfall in Prozent", c_amin: "Mindestquerschnitt nach Spannungsfall", c_drum: "Strombelastbarkeit auf der Kabeltrommel", c_phase: "Strom pro Außenleiter bei symmetrischer Last", c_star: "Leistung in der Sternschaltung", c_delta: "Leiterstrom in der Dreieckschaltung" };
+CALC.forEach(c => Q.push({ id: c.id, t: c.t, type: "calc", gen: c.gen, label: CALC_NAME[c.id] }));
+const BY_ID = Object.fromEntries(Q.map(x => [x.id, x]));
+
+// ---------- Progress storage ----------
+const LS_KEY = "energie-trainer-v1";
+let progress = { stats: {}, updated: 0 };
+let db = null, docRef = null, saveState = "local";
+function readLocal() { try { const raw = localStorage.getItem(LS_KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; } }
+function writeLocal() { try { localStorage.setItem(LS_KEY, JSON.stringify(progress)); } catch (e) { } }
+const local = readLocal(); if (local && local.stats) progress = local;
+let saveTimer = null, saving = false, pendingSave = false;
+function scheduleSave() {
+  progress.updated = Date.now(); writeLocal();
+  if (!docRef) return;
+  clearTimeout(saveTimer); saveTimer = setTimeout(flushSave, 600);
+}
+async function flushSave() {
+  if (!docRef) return;
+  if (saving) { pendingSave = true; return; }
+  saving = true;
+  try { await docRef.set({ stats: progress.stats, updated: progress.updated }); saveState = "cloud"; }
+  catch (e) { saveState = "local"; }
+  saving = false; updateSaveLabel();
+  if (pendingSave) { pendingSave = false; flushSave(); }
+}
+async function connectStore() {
+  try {
+    if (!window.claude || !window.claude.use) return;
+    const [dbNs, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+    if (!dbNs || !user) return;
+    const uid = await user.id(); if (!uid) return;
+    db = dbNs; docRef = db.collection("data/users/" + uid).doc("progress");
+    const snap = await docRef.get();
+    if (snap.exists) {
+      const d = snap.data() || {};
+      if (d.stats && (d.updated || 0) > (progress.updated || 0)) { progress = { stats: d.stats, updated: d.updated }; writeLocal(); }
+      else if ((progress.updated || 0) > (d.updated || 0)) { flushSave(); }
+    } else if (Object.keys(progress.stats).length) { flushSave(); }
+    saveState = "cloud"; updateFailBadge(); updateSaveLabel();
+    if (current.view !== "session") render();
+  } catch (e) { /* stays local */ }
+}
+function updateSaveLabel() { const el = document.getElementById("saveLabel"); if (el) el.textContent = saveState === "cloud" ? "Progreso guardado en tu cuenta" : "Progreso guardado en este navegador"; }
+
+function record(id, ok) {
+  const s = progress.stats[id] || { c: 0, w: 0, s: 0 };
+  if (ok) { s.c++; s.s = (s.s || 0) + 1; } else { s.w++; s.s = 0; }
+  s.at = Date.now(); progress.stats[id] = s; scheduleSave(); updateFailBadge();
+}
+const isFail = id => { const s = progress.stats[id]; return !!s && s.w > 0 && (s.s || 0) < 2; };
+const failIds = () => Object.keys(progress.stats).filter(id => BY_ID[id] && isFail(id));
+function updateFailBadge() { const n = failIds().length; const b = document.getElementById("failBadge"); b.hidden = n === 0; b.textContent = n; }
+function topicStats() {
+  const out = {}; for (const k of Object.keys(TOPICS)) out[k] = { c: 0, w: 0, fails: 0, seen: 0 };
+  for (const [id, s] of Object.entries(progress.stats)) { const q = BY_ID[id]; if (!q) continue; const o = out[q.t]; o.c += s.c; o.w += s.w; o.seen++; if (isFail(id)) o.fails++; }
+  return out;
+}
+
+// ---------- Helpers ----------
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = a => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+const norm = s => String(s).toLowerCase().replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss").replace(/φ/g, "phi").replace(/[\s\-_.()/,]/g, "");
+const num = s => { const v = parseFloat(String(s).replace(/\s/g, "").replace(",", ".")); return isNaN(v) ? null : v; };
+
+// ---------- App state ----------
+const current = { view: "home", topics: new Set(Object.keys(TOPICS)), len: 10 };
+let session = null;
+
+const MODES = [
+  { key: "mix", code: "MIX", name: "Prüfungsmix", desc: "Todo mezclado, como en el examen: quiz, huecos, cálculo, ordenar…", wide: true },
+  { key: "mc", code: "QUIZ", name: "Quiz", desc: "Opción múltiple y verdadero/falso.", types: ["mc", "tf"] },
+  { key: "gap", code: "LÜCKE", name: "Lückentext", desc: "Completa la frase con la palabra correcta.", types: ["gap"] },
+  { key: "type", code: "TIPPEN", name: "Begriffe schreiben", desc: "Escribe tú el término técnico en alemán.", types: ["type"] },
+  { key: "calc", code: "RECHNEN", name: "Rechenaufgaben", desc: "Ohm, potencia, Spannungsfall, Zs… con valores nuevos cada vez.", types: ["calc"] },
+  { key: "match", code: "PAARE", name: "Zuordnen", desc: "Une cada concepto con su pareja.", types: ["match"] },
+  { key: "order", code: "ABLAUF", name: "Reihenfolge", desc: "Ordena los pasos: 5 reglas, Prüfablauf…", types: ["order"] },
+  { key: "flash", code: "KARTEN", name: "Karteikarten", desc: "Repaso rápido: piensa la respuesta y gira la tarjeta.", types: ["type"] }
+];
+
+function poolFor(types, topics) { return Q.filter(q => topics.has(String(q.t)) && (!types || types.includes(q.type))); }
+
+function instantiate(q, asFlash) {
+  if (q.type === "calc") { const g = q.gen(); return { ...q, ...g }; }
+  if (asFlash) return { ...q, type: "flash" };
+  return { ...q };
+}
+
+function startSession(modeKey, opts = {}) {
+  const mode = MODES.find(m => m.key === modeKey);
+  let base;
+  if (opts.ids) base = opts.ids.map(id => BY_ID[id]).filter(Boolean);
+  else base = poolFor(mode && mode.types, current.topics);
+  if (!base.length) { render(); return; }
+  let items = shuffle(base);
+  if (!opts.ids) {
+    if (modeKey === "mix") {
+      // balance types a bit
+      const byType = {}; items.forEach(q => (byType[q.type] = byType[q.type] || []).push(q));
+      const out = []; let i = 0; const keys = Object.keys(byType);
+      while (out.length < current.len && keys.some(k => byType[k].length)) { const k = keys[i % keys.length]; if (byType[k].length) out.push(byType[k].shift()); i++; }
+      items = shuffle(out);
+    } else items = items.slice(0, current.len);
+  }
+  session = { mode: modeKey, title: opts.title || (mode ? mode.name : "Sesión"), items: items.map(q => instantiate(q, modeKey === "flash")), i: 0, results: [], answered: false };
+  setView("session");
+}
+
+// ---------- Views ----------
+function setView(v) {
+  current.view = v;
+  document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-current", b.dataset.view === v ? "page" : "false"));
+  render(); window.scrollTo({ top: 0 });
+}
+document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));
+
+function render() {
+  const v = current.view; const el = $("#view");
+  if (v === "home") el.innerHTML = homeHTML();
+  else if (v === "fails") el.innerHTML = failsHTML();
+  else if (v === "progress") el.innerHTML = progressHTML();
+  else if (v === "session") { el.innerHTML = sessionHTML(); mountQuestion(); }
+  bindView(); updateSaveLabel();
+}
+
+function homeHTML() {
+  const ids = Object.keys(progress.stats).filter(id => BY_ID[id]);
+  let c = 0, w = 0; ids.forEach(id => { c += progress.stats[id].c; w += progress.stats[id].w; });
+  const acc = c + w ? Math.round(c / (c + w) * 100) : null;
+  const fails = failIds().length;
+  const chips = Object.entries(TOPICS).map(([k, n]) => `<button class="chip" data-topic="${k}" aria-pressed="${current.topics.has(k)}">${k}. ${esc(n)}</button>`).join("");
+  const modes = MODES.map(m => { const cnt = m.key === "mix" ? poolFor(null, current.topics).length : poolFor(m.types, current.topics).length; return `<button class="mode ${m.wide ? "wide" : ""}" data-mode="${m.key}" ${cnt ? "" : "disabled"}><span class="code">${m.code} · ${cnt} ${cnt === 1 ? "ejercicio" : "ejercicios"}</span><strong>${m.name}</strong><small>${m.desc}</small></button>`; }).join("");
+  return `<div class="wrap" style="gap:22px">
+    <div class="section">
+      <span class="eyebrow">Sicherstellen der Energieversorgung · IHK Abschlussprüfung</span>
+      <h2>Practica los 11 puntos de tu Lernverzeichnis</h2>
+      <p class="muted">Las preguntas están en alemán, como en el examen. Después de cada respuesta verás una explicación corta antes de pasar a la siguiente.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>${ids.length}</b><span>de ${Q.length} ejercicios vistos</span></div>
+      <div class="stat"><b>${acc === null ? "–" : acc + " %"}</b><span>aciertos</span></div>
+      <div class="stat ${fails ? "alert" : ""}"><b>${fails}</b><span>fallos pendientes</span></div>
+    </div>
+    ${fails ? `<button class="btn primary" data-act="repeat-all">Repetir mis ${fails} fallos</button>` : ""}
+    <div class="section">
+      <div class="row" style="justify-content:space-between"><h3>Temas</h3><div class="row"><button class="chip" data-act="all-topics">Todos</button><button class="chip" data-act="no-topics">Ninguno</button></div></div>
+      <div class="chips">${chips}</div>
+    </div>
+    <div class="section">
+      <div class="row" style="justify-content:space-between"><h3>Modos de estudio</h3>
+        <label class="lenpick" for="lenSel">Preguntas por ronda
+          <select id="lenSel" class="chip">${[5, 10, 15, 20, 30].map(n => `<option value="${n}" ${n === current.len ? "selected" : ""}>${n}</option>`).join("")}</select>
+        </label>
+      </div>
+      <div class="modes">${modes}</div>
+    </div>
+    <p class="savestate" id="saveLabel"></p>
+  </div>`;
+}
+
+function weakTopics() {
+  const ts = topicStats();
+  return Object.entries(ts).filter(([, o]) => o.c + o.w > 0).map(([k, o]) => ({ k, ...o, acc: Math.round(o.c / (o.c + o.w) * 100) }))
+    .filter(o => o.fails > 0 || o.acc < 75).sort((a, b) => (b.fails - a.fails) || (a.acc - b.acc));
+}
+
+function failsHTML() {
+  const ids = failIds();
+  if (!ids.length) {
+    const seen = Object.keys(progress.stats).length;
+    return `<div class="card"><div class="empty"><h2>${seen ? "Sin fallos pendientes" : "Todavía no hay fallos"}</h2><p>${seen ? "Todo lo que fallaste lo has acertado dos veces seguidas. Buen trabajo." : "Haz una ronda en Inicio. Lo que falles aparecerá aquí para repetirlo."}</p><button class="btn primary" data-act="go-home">Ir a Inicio</button></div></div>`;
+  }
+  const weak = weakTopics();
+  const advice = weak.length ? weak.slice(0, 3).map(o => `<li><b>${o.k}. ${esc(TOPICS[o.k])}</b> – ${o.acc} % de aciertos, ${o.fails} ${o.fails === 1 ? "fallo pendiente" : "fallos pendientes"}. Repasa el punto ${o.k} de tu Lernunterlage.</li>`).join("") : "";
+  const groups = {}; ids.forEach(id => (groups[BY_ID[id].t] = groups[BY_ID[id].t] || []).push(id));
+  const blocks = Object.keys(groups).sort((a, b) => a - b).map(t => `<div class="section"><div class="row" style="justify-content:space-between"><h3>${t}. ${esc(TOPICS[t])}</h3><button class="btn" data-act="repeat-topic" data-topic="${t}">Repetir estos (${groups[t].length})</button></div><div class="list">${groups[t].map(id => { const q = BY_ID[id], s = progress.stats[id]; return `<div class="li"><span class="t">${TYPE_LABEL[q.type]} · ${s.w}× falsch${s.s ? ` · ${s.s}× seguido bien` : ""}</span><span>${esc(q.q || q.text || q.label || "")}</span></div>`; }).join("")}</div></div>`).join("");
+  return `<div class="wrap" style="gap:22px">
+    <div class="section"><span class="eyebrow">Fehler wiederholen</span><h2>${ids.length} ${ids.length === 1 ? "ejercicio pendiente" : "ejercicios pendientes"}</h2><p class="muted">Un ejercicio sale de esta lista cuando lo aciertas dos veces seguidas. En los de cálculo cambian los números.</p></div>
+    ${advice ? `<div class="advice"><b>Lo que tienes que estudiar más</b><ul style="margin:0;padding-left:18px;display:grid;gap:4px">${advice}</ul></div>` : ""}
+    <button class="btn primary" data-act="repeat-all">Repetir todos los fallos</button>
+    ${blocks}
+  </div>`;
+}
+
+function progressHTML() {
+  const ts = topicStats();
+  const rows = Object.entries(TOPICS).map(([k, n]) => {
+    const o = ts[k], tot = o.c + o.w, total = Q.filter(q => String(q.t) === k).length;
+    const acc = tot ? Math.round(o.c / tot * 100) : null;
+    const col = acc === null ? "var(--line)" : acc >= 80 ? "var(--good)" : acc >= 60 ? "var(--warn)" : "var(--red)";
+    return `<div class="trow"><span>${k}. ${esc(n)} <span class="muted" style="font-size:12px">· ${o.seen}/${total} vistos</span></span><span class="tb"><i style="width:${acc === null ? 0 : acc}%;background:${col}"></i></span><span class="pct">${acc === null ? "–" : acc + " %"}</span></div>`;
+  }).join("");
+  const weak = weakTopics();
+  const verdict = !Object.keys(progress.stats).length ? `<div class="advice calm"><b>Aún no hay datos</b><span>Haz algunas rondas y aquí verás qué temas dominas y cuáles no.</span></div>`
+    : weak.length ? `<div class="advice"><b>Estudia más y mejor:</b><span>${weak.slice(0, 4).map(o => `${o.k}. ${esc(TOPICS[o.k])} (${o.acc} %)`).join(" · ")}</span><div class="row"><button class="btn" data-act="practice-weak">Practicar mis temas débiles</button></div></div>`
+    : `<div class="advice calm"><b>Vas bien</b><span>Todos los temas practicados están por encima del 75 %. Sigue con temas que aún no has visto.</span></div>`;
+  return `<div class="wrap" style="gap:22px">
+    <div class="section"><span class="eyebrow">Mi progreso</span><h2>Aciertos por tema</h2><p class="muted">Verde ≥ 80 % · ámbar 60–79 % · rojo &lt; 60 %</p></div>
+    ${verdict}
+    <div class="card"><div class="topics">${rows}</div></div>
+    <div class="section"><div class="confirm" id="resetBox"><button class="btn danger" data-act="reset-ask">Borrar mi progreso</button></div><p class="savestate" id="saveLabel"></p></div>
+  </div>`;
+}
+
+function sessionHTML() {
+  const s = session; const n = s.items.length;
+  if (s.i >= n) return resultHTML();
+  const q = s.items[s.i];
+  return `<div class="card" id="qcard">
+    <div class="prog"><div class="meta"><span>${esc(s.title)}</span><span>${s.i + 1} / ${n}</span></div><div class="bar"><div class="fill" style="width:${(s.i) / n * 100}%"></div></div></div>
+    <div class="qtopic"><span class="pill type">${TYPE_LABEL[q.type]}</span><span class="pill">${q.t}. ${esc(TOPICS[q.t])}</span></div>
+    <div id="qbody"></div>
+    <div id="fb"></div>
+    <div class="row" style="justify-content:space-between"><button class="btn" data-act="quit">Terminar</button><span></span></div>
+  </div>`;
+}
+
+function resultHTML() {
+  const s = session; const ok = s.results.filter(r => r.ok).length; const n = s.results.length;
+  const pct = n ? Math.round(ok / n * 100) : 0;
+  const wrong = s.results.filter(r => !r.ok);
+  const msg = pct >= 90 ? "Excelente. Esto ya lo dominas." : pct >= 70 ? "Bien. Repasa los fallos y estará listo." : pct >= 50 ? "Vas por buen camino, pero hay que repasar." : "Aquí hay que estudiar más. Empieza por los fallos.";
+  return `<div class="card">
+    <span class="eyebrow">Ronda terminada · ${esc(s.title)}</span>
+    <div class="result-score"><b>${ok}/${n}</b><span class="muted">${pct} % correcto</span></div>
+    <p>${msg}</p>
+    ${wrong.length ? `<div class="section"><h3>Fallados en esta ronda</h3><div class="list">${wrong.map(r => `<div class="li"><span class="t">${r.t}. ${esc(TOPICS[r.t])} · ${TYPE_LABEL[r.type]}</span><span>${esc(r.q)}</span></div>`).join("")}</div></div>` : ""}
+    <div class="row">${wrong.length ? `<button class="btn primary" data-act="repeat-round">Repetir los ${wrong.length} fallados</button>` : ""}<button class="btn" data-act="again">Otra ronda</button><button class="btn" data-act="go-home">Inicio</button></div>
+  </div>`;
+}
+
+// ---------- Question rendering ----------
+function mountQuestion() {
+  if (!session || session.i >= session.items.length) return;
+  const q = session.items[session.i]; const body = $("#qbody"); session.answered = false;
+  if (q.type === "mc" || q.type === "tf") {
+    const opts = q.type === "tf" ? q.opts : shuffle(q.opts);
+    body.innerHTML = `<p class="question">${esc(q.q)}</p><div class="opts">${opts.map((o, i) => `<button class="opt" data-val="${esc(o)}"><span class="k">${"ABCD"[i] || ""}</span><span>${esc(o)}</span></button>`).join("")}</div>`;
+    body.querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => {
+      if (session.answered) return; const ok = b.dataset.val === q.a;
+      body.querySelectorAll(".opt").forEach(x => { x.disabled = true; if (x.dataset.val === q.a) x.classList.add("correct"); });
+      if (!ok) b.classList.add("wrong");
+      finish(ok, ok ? "" : `Correcto: <b>${esc(q.a)}</b>`);
+    }));
+  } else if (q.type === "gap") {
+    const parts = q.text.split("___");
+    body.innerHTML = `<p class="gaptext">${esc(parts[0])}<span class="blank" id="blank">?</span>${esc(parts[1] || "")}</p><div class="chips">${shuffle(q.opts).map(o => `<button class="chip" data-val="${esc(o)}">${esc(o)}</button>`).join("")}</div>`;
+    body.querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => {
+      if (session.answered) return; const ok = b.dataset.val === q.a; const bl = $("#blank");
+      bl.textContent = b.dataset.val; bl.classList.add(ok ? "ok" : "bad");
+      body.querySelectorAll(".chip").forEach(x => x.disabled = true);
+      finish(ok, ok ? "" : `Correcto: <b>${esc(q.a)}</b>`);
+    }));
+  } else if (q.type === "type" || q.type === "calc") {
+    const isCalc = q.type === "calc";
+    body.innerHTML = `<p class="question">${esc(q.q)}</p><form class="answer-row" id="ansForm" autocomplete="off"><input id="ans" ${isCalc ? 'inputmode="decimal" placeholder="Resultado"' : 'placeholder="Escribe el término en alemán"'} aria-label="Respuesta">${isCalc ? `<span class="unit">${esc(q.unit)}</span>` : ""}<button class="btn primary" type="submit">Comprobar</button></form>${isCalc ? `<p class="muted" style="font-size:13px">Usa coma o punto. Se acepta un margen de ±2 %.</p>` : ""}`;
+    const inp = $("#ans"); setTimeout(() => inp.focus({ preventScroll: true }), 30);
+    $("#ansForm").addEventListener("submit", e => {
+      e.preventDefault(); if (session.answered) return; const v = inp.value.trim(); if (!v) return;
+      let ok, sol;
+      if (isCalc) { const x = num(v); ok = x !== null && Math.abs(x - q.a) <= Math.max(Math.abs(q.a) * 0.02, 0.01); sol = `Resultado: <b>${de(q.a, q.a < 10 ? 2 : 1)} ${esc(q.unit)}</b>`; }
+      else { ok = q.answers.some(a => norm(a) === norm(v)); sol = `Respuesta: <b>${esc(q.answers[0])}</b>`; }
+      inp.disabled = true; inp.style.borderColor = ok ? "var(--good)" : "var(--red)";
+      finish(ok, ok && !isCalc ? "" : sol);
+    });
+  } else if (q.type === "match") {
+    const left = q.pairs.map((p, i) => ({ i, txt: p[0] })); const right = shuffle(q.pairs.map((p, i) => ({ i, txt: p[1] })));
+    const pairs = {}; let sel = null;
+    body.innerHTML = `<p class="question">${esc(q.q)}</p><p class="muted" style="font-size:13px">Toca un concepto de la izquierda y luego su pareja de la derecha.</p><div class="match"><div class="col" id="mL">${left.map(l => `<button class="mitem" data-l="${l.i}"><span class="tagn" id="tl${l.i}">${l.i + 1}</span><span>${esc(l.txt)}</span></button>`).join("")}</div><div class="col" id="mR">${right.map(r => `<button class="mitem" data-r="${r.i}"><span class="tagn" id="tr${r.i}">·</span><span>${esc(r.txt)}</span></button>`).join("")}</div></div><div class="row"><button class="btn primary" id="mCheck" disabled>Comprobar</button><button class="btn" id="mReset">Deshacer</button></div>`;
+    const paint = () => {
+      body.querySelectorAll("[data-l]").forEach(b => { const i = +b.dataset.l; b.classList.toggle("sel", sel === i); b.classList.toggle("paired", pairs[i] !== undefined); });
+      body.querySelectorAll("[data-r]").forEach(b => { const r = +b.dataset.r; const owner = Object.keys(pairs).find(k => pairs[k] === r); b.classList.toggle("paired", owner !== undefined); b.querySelector(".tagn").textContent = owner !== undefined ? (+owner + 1) : "·"; });
+      $("#mCheck").disabled = Object.keys(pairs).length !== q.pairs.length;
+    };
+    body.querySelectorAll("[data-l]").forEach(b => b.addEventListener("click", () => { if (session.answered) return; sel = +b.dataset.l; paint(); }));
+    body.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => {
+      if (session.answered || sel === null) return; const r = +b.dataset.r;
+      Object.keys(pairs).forEach(k => { if (pairs[k] === r) delete pairs[k]; });
+      pairs[sel] = r; const next = left.find(l => pairs[l.i] === undefined); sel = next ? next.i : null; paint();
+    }));
+    $("#mReset").addEventListener("click", () => { if (session.answered) return; Object.keys(pairs).forEach(k => delete pairs[k]); sel = null; paint(); });
+    $("#mCheck").addEventListener("click", () => {
+      if (session.answered) return; let all = true;
+      body.querySelectorAll("[data-l]").forEach(b => { const i = +b.dataset.l; const ok = pairs[i] === i; if (!ok) all = false; b.classList.add(ok ? "ok" : "bad"); b.disabled = true; });
+      body.querySelectorAll("[data-r]").forEach(b => { b.disabled = true; });
+      $("#mCheck").disabled = true; $("#mReset").disabled = true;
+      finish(all, all ? "" : `Parejas correctas:<br>${q.pairs.map(p => `${esc(p[0])} → <b>${esc(p[1])}</b>`).join("<br>")}`);
+    });
+    paint();
+  } else if (q.type === "order") {
+    const pool = shuffle(q.items.map((t, i) => ({ i, t }))); const chosen = [];
+    const draw = () => {
+      body.innerHTML = `<p class="question">${esc(q.q)}</p><p class="muted" style="font-size:13px">Toca los pasos en el orden correcto. Toca uno ya elegido para quitarlo.</p><div class="order"><div class="slots" id="oSlots">${chosen.length ? chosen.map((c, k) => `<button class="oitem" data-c="${k}"><span class="n">${k + 1}</span><span>${esc(c.t)}</span></button>`).join("") : `<span class="ph">Tu orden aparece aquí</span>`}</div><div class="opts">${pool.filter(p => !chosen.includes(p)).map(p => `<button class="oitem" data-p="${p.i}"><span class="n">+</span><span>${esc(p.t)}</span></button>`).join("")}</div></div><div class="row"><button class="btn primary" id="oCheck" ${chosen.length === q.items.length ? "" : "disabled"}>Comprobar</button></div>`;
+      body.querySelectorAll("[data-p]").forEach(b => b.addEventListener("click", () => { chosen.push(pool.find(p => p.i === +b.dataset.p)); draw(); }));
+      body.querySelectorAll("[data-c]").forEach(b => b.addEventListener("click", () => { chosen.splice(+b.dataset.c, 1); draw(); }));
+      const ck = $("#oCheck"); if (ck) ck.addEventListener("click", () => {
+        let all = true; body.querySelectorAll("#oSlots .oitem").forEach((b, k) => { const ok = chosen[k].i === k; if (!ok) all = false; b.classList.add(ok ? "ok" : "bad"); b.disabled = true; });
+        ck.disabled = true; finish(all, all ? "" : `Orden correcto:<br>${q.items.map((t, k) => `${k + 1}. ${esc(t)}`).join("<br>")}`);
+      });
+    };
+    draw();
+  } else if (q.type === "flash") {
+    body.innerHTML = `<div class="flash"><span class="eyebrow">Piensa la respuesta</span><p class="question">${esc(q.q)}</p><div id="back"></div></div><div class="row" id="flashBtns"><button class="btn primary" id="flip">Mostrar respuesta</button></div>`;
+    $("#flip").addEventListener("click", () => {
+      $("#back").innerHTML = `<div class="back">${esc(q.answers[0])}</div><p class="ex" style="font-size:14px">${q.ex}</p>`;
+      $("#flashBtns").innerHTML = `<button class="btn" id="fNo">No lo sabía</button><button class="btn primary" id="fYes">Lo sabía</button>`;
+      $("#fYes").addEventListener("click", () => finish(true, "", true));
+      $("#fNo").addEventListener("click", () => finish(false, "", true));
+    });
+  }
+}
+
+function finish(ok, solHTML, silent) {
+  if (session.answered) return; session.answered = true;
+  const q = session.items[session.i];
+  record(q.id, ok);
+  session.results.push({ id: q.id, ok, t: q.t, type: q.type, q: q.q || q.text });
+  const last = session.i === session.items.length - 1;
+  const fb = $("#fb");
+  if (silent) { next(); return; }
+  fb.innerHTML = `<div class="feedback ${ok ? "ok" : "bad"}" role="status"><span class="verdict">${ok ? "✓ Richtig" : "✗ Leider falsch"}</span>${solHTML ? `<span class="sol">${solHTML}</span>` : ""}<span class="ex">${q.ex}</span></div><div class="row" style="justify-content:flex-end"><button class="btn primary" id="nextBtn">${last ? "Ver resultado" : "Siguiente →"}</button></div>`;
+  const nb = $("#nextBtn"); nb.addEventListener("click", next); nb.focus({ preventScroll: true });
+  fb.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+function next() { session.i++; render(); window.scrollTo({ top: 0 }); }
+document.addEventListener("keydown", e => {
+  if (current.view !== "session" || !session || !session.answered) return;
+  if (e.key === "Enter" && document.getElementById("nextBtn") && document.activeElement && document.activeElement.id !== "ans") { e.preventDefault(); next(); }
+});
+
+// ---------- Event binding ----------
+function bindView() {
+  const v = $("#view");
+  v.querySelectorAll("[data-topic].chip").forEach(b => b.addEventListener("click", () => { const k = b.dataset.topic; current.topics.has(k) ? current.topics.delete(k) : current.topics.add(k); render(); }));
+  v.querySelectorAll("[data-mode]").forEach(b => b.addEventListener("click", () => startSession(b.dataset.mode)));
+  const ls = $("#lenSel"); if (ls) ls.addEventListener("change", () => { current.len = +ls.value; });
+  v.querySelectorAll("[data-act]").forEach(b => b.addEventListener("click", () => act(b.dataset.act, b)));
+}
+function act(a, b) {
+  if (a === "all-topics") { current.topics = new Set(Object.keys(TOPICS)); render(); }
+  else if (a === "no-topics") { current.topics = new Set(); render(); }
+  else if (a === "go-home") setView("home");
+  else if (a === "repeat-all") startSession("fails", { ids: shuffle(failIds()), title: "Repetir fallos" });
+  else if (a === "repeat-topic") startSession("fails", { ids: shuffle(failIds().filter(id => String(BY_ID[id].t) === b.dataset.topic)), title: `Fallos · ${TOPICS[b.dataset.topic]}` });
+  else if (a === "repeat-round") startSession("fails", { ids: session.results.filter(r => !r.ok).map(r => r.id), title: "Repetir fallados" });
+  else if (a === "again") startSession(session.mode === "fails" ? "mix" : session.mode);
+  else if (a === "quit") { if (session.results.length) { session.items = session.items.slice(0, session.results.length); session.i = session.items.length; render(); } else setView("home"); }
+  else if (a === "practice-weak") { const w = weakTopics().slice(0, 3).map(o => o.k); const ids = shuffle(Q.filter(q => w.includes(String(q.t)))).slice(0, Math.max(current.len, 10)).map(q => q.id); startSession("weak", { ids, title: "Temas débiles" }); }
+  else if (a === "reset-ask") { $("#resetBox").innerHTML = `<span>¿Seguro? Se borran todas tus estadísticas.</span><button class="btn danger" data-act="reset-yes">Sí, borrar</button><button class="btn" data-act="reset-no">Cancelar</button>`; bindView(); }
+  else if (a === "reset-no") render();
+  else if (a === "reset-yes") { progress = { stats: {}, updated: Date.now() }; writeLocal(); if (docRef) flushSave(); updateFailBadge(); render(); }
+}
+
+updateFailBadge(); render(); connectStore();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) { window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {})); }
+</script>
+
+</body>
+</html>
