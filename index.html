@@ -300,6 +300,104 @@ select.inp { padding: 9px 10px; }
   nav.tabs button { font-size: 12px !important; }
   .tabs .lg { display: none; } .tabs .sh { display: inline; }
 }
+/* ===== Visuelle Navigation ===== */
+:root { --c-learn: #1c5dcc; --c-learn-s: #e2ebfb; --c-prac: #b86e00; --c-prac-s: #fbefd9; --c-exam: #1d7f47; --c-exam-s: #e1f3e8; --c-fail: #c4362c; --c-fail-s: #fbe7e5; --c-prog: #6b46c1; --c-prog-s: #eee8fb; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --c-learn: #6a9cf2; --c-learn-s: #1c2c47; --c-prac: #e3a43a; --c-prac-s: #3a2c14; --c-exam: #55c487; --c-exam-s: #17322a; --c-fail: #ef7266; --c-fail-s: #3a1f1d; --c-prog: #a58cf0; --c-prog-s: #2a2342; } }
+:root[data-theme="dark"] { --c-learn: #6a9cf2; --c-learn-s: #1c2c47; --c-prac: #e3a43a; --c-prac-s: #3a2c14; --c-exam: #55c487; --c-exam-s: #17322a; --c-fail: #ef7266; --c-fail-s: #3a1f1d; --c-prog: #a58cf0; --c-prog-s: #2a2342; }
+.ico { width: 20px; height: 20px; flex: none; }
+nav.tabs button { display: inline-flex; align-items: center; gap: 6px; }
+nav.tabs .ico { width: 17px; height: 17px; }
+.iconbtn { display: inline-flex; align-items: center; gap: 6px; }
+.iconbtn .ico { width: 17px; height: 17px; }
+.crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-size: 13px; color: var(--muted); }
+.crumb { border: 0; background: none; color: var(--accent); font: 600 13px var(--font-body); padding: 2px 0; cursor: pointer; }
+.crumb.cur { color: var(--ink); font-weight: 600; }
+.crumbs .sep { opacity: .6; }
+.hero { display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.hero-txt { display: grid; gap: 6px; flex: 1 1 260px; }
+.hero-stats { display: flex; gap: 14px; align-items: center; }
+.ring { position: relative; width: 84px; height: 84px; display: grid; place-items: center; text-align: center; }
+.ring svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ring-bg { fill: none; stroke: var(--surface-2); stroke-width: 7; }
+.ring-fg { fill: none; stroke: var(--good); stroke-width: 7; stroke-linecap: round; }
+.ring { align-content: center; gap: 0; }
+.ring b, .ring span { position: relative; }
+.ring b { font-family: var(--font-display); font-size: 21px; line-height: 1; }
+.ring span { font-size: 11px; color: var(--muted); line-height: 1.2; }
+.mini { display: grid; }
+.mini b { font-family: var(--font-display); font-size: 26px; line-height: 1.1; }
+.mini span { font-size: 12px; color: var(--muted); }
+.htiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.htile { --c: var(--c-learn); --cs: var(--c-learn-s); position: relative; display: grid; gap: 6px; align-content: start; text-align: left; padding: 18px; border-radius: 16px; border: 1px solid var(--line); border-top: 4px solid var(--c); background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; min-height: 150px; }
+.htile:hover { border-color: var(--c); }
+.htile strong { font-family: var(--font-display); font-size: 22px; line-height: 1.1; }
+.htile small { color: var(--muted); font-size: 13px; line-height: 1.35; }
+.hico { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: var(--cs, var(--c-learn-s)); color: var(--c, var(--c-learn)); flex: none; }
+.hico .ico { width: 28px; height: 28px; }
+.hbadge { position: absolute; top: 14px; right: 14px; min-width: 28px; height: 28px; padding: 0 8px; border-radius: 999px; background: var(--c); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+.t-learn { --c: var(--c-learn); --cs: var(--c-learn-s); }
+.t-practice { --c: var(--c-prac); --cs: var(--c-prac-s); }
+.t-exam { --c: var(--c-exam); --cs: var(--c-exam-s); }
+.t-fail { --c: var(--c-fail); --cs: var(--c-fail-s); }
+.t-prog { --c: var(--c-prog); --cs: var(--c-prog-s); }
+.t-edit { --c: var(--muted); --cs: var(--surface-2); }
+.htile.t-off { opacity: .7; border-top-color: var(--line); }
+.ptitle { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.ptitle > div:not(.seg) { flex: 1 1 auto; display: grid; gap: 2px; min-width: 0; }
+.shead { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.shead > .ico { color: var(--accent); }
+.shead h3 { flex: 1 1 auto; }
+.mtiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.mtile { display: flex; gap: 12px; align-items: flex-start; text-align: left; padding: 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; position: relative; }
+.mtile:hover:not(:disabled) { border-color: var(--accent); }
+.mtile:disabled { opacity: .45; cursor: default; }
+.mico { width: 40px; height: 40px; border-radius: 12px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; flex: none; }
+.mico .ico { width: 22px; height: 22px; }
+.mtxt { display: grid; gap: 2px; min-width: 0; flex: 1; }
+.mtxt strong { font-family: var(--font-display); font-size: 18px; font-weight: 600; line-height: 1.15; }
+.mtxt small { color: var(--muted); font-size: 12.5px; line-height: 1.35; }
+.mcnt { justify-self: start; margin-top: 4px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); background: var(--surface-2); border-radius: 999px; padding: 2px 7px; }
+.mtile[data-mode="mix"] .mico { background: var(--c-prac-s); color: var(--c-prac); }
+.mtile[data-mode="exam"] .mico { background: var(--c-exam-s); color: var(--c-exam); }
+.mtile[data-mode="flash"] .mico { background: var(--c-prog-s); color: var(--c-prog); }
+.tchip { display: inline-flex; align-items: center; gap: 6px; }
+.tchip .ico { width: 16px; height: 16px; }
+.pomo-l { display: flex; gap: 12px; align-items: center; }
+.pico { width: 44px; height: 44px; border-radius: 12px; background: var(--c-fail-s); color: var(--c-fail); display: grid; place-items: center; }
+.ltiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.ltile { display: flex; gap: 12px; align-items: center; text-align: left; padding: 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; }
+.ltile:hover { border-color: var(--c-learn); }
+.ltile > .ico { color: var(--muted); }
+.lnum { position: relative; width: 48px; height: 48px; border-radius: 14px; background: var(--c-learn-s); color: var(--c-learn); display: grid; place-items: center; flex: none; }
+.lnum .ico { width: 26px; height: 26px; }
+.lnum i { position: absolute; bottom: -6px; right: -6px; font-style: normal; font: 700 11px var(--font-mono); background: var(--c-learn); color: #fff; border-radius: 999px; min-width: 20px; height: 20px; display: grid; place-items: center; padding: 0 4px; }
+.lbar { height: 5px; background: var(--surface-2); border-radius: 999px; overflow: hidden; margin-top: 4px; }
+.lbar i { display: block; height: 100%; background: var(--good); }
+.yearb { flex: none; width: 62px; height: 62px; border-radius: 14px; display: grid; place-items: center; align-content: center; background: var(--c-exam-s); color: var(--c-exam); }
+.yearb.w { background: var(--c-learn-s); color: var(--c-learn); }
+.yearb small { font-size: 10px; text-transform: uppercase; letter-spacing: .05em; font-weight: 700; }
+.yearb b { font-family: var(--font-display); font-size: 22px; line-height: 1; }
+.btn .ico { width: 17px; height: 17px; vertical-align: -3px; margin-right: 4px; }
+.pill.tp { display: inline-flex; align-items: center; gap: 4px; }
+.pill.tp .ico { width: 13px; height: 13px; }
+.tname { display: inline-flex; gap: 8px; align-items: center; }
+.tname .ico { width: 18px; height: 18px; color: var(--accent); }
+@media (max-width: 760px) { .mtiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) {
+  .mtiles, .ltiles { grid-template-columns: minmax(0, 1fr); }
+  .htile { min-height: 130px; padding: 14px; }
+  .htile strong { font-size: 19px; }
+  .hico { width: 42px; height: 42px; }
+}
+@media (max-width: 640px) {
+  nav.tabs button { flex-direction: column; gap: 2px; padding: 6px 2px !important; font-size: 11px !important; }
+  nav.tabs .ico { width: 21px; height: 21px; }
+  nav.tabs .badge { position: absolute; transform: translate(12px, -4px); }
+  nav.tabs button { position: relative; }
+  body { padding-block: 0 calc(96px + env(safe-area-inset-bottom, 0px)) !important; }
+}
+
+.seg { flex: none; }
 
 </style>
 <script>try{var t=localStorage.getItem("etech-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -823,6 +921,53 @@ const EXAMS = [
 ];
 const EXAM_BY_ID = Object.fromEntries(EXAMS.map(e => [e.id, e]));
 
+// ---------- Icons (eigene, einfache Strichzeichnungen) ----------
+const svg = (p, extra = "") => `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${p}</svg>`;
+const ICON = {
+  home: svg('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>'),
+  learn: svg('<path d="M3 5h6a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H3z"/><path d="M21 5h-6a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h7z"/>'),
+  exams: svg('<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="M8.5 11l2 2 4-4"/><path d="M8.5 17h7"/>'),
+  fails: svg('<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v4h4"/><path d="M12 8v4l3 2"/>'),
+  progress: svg('<path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/>'),
+  editor: svg('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>'),
+  mix: svg('<path d="M4 7h3l10 10h3"/><path d="M4 17h3l3-3"/><path d="M14 10l3-3h3"/><path d="M18 5l2 2-2 2"/><path d="M18 15l2 2-2 2"/>'),
+  exam: svg('<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2"/><path d="M9 2h6"/>'),
+  flash: svg('<rect x="3" y="7" width="13" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-3"/>'),
+  mc: svg('<circle cx="6" cy="7" r="2"/><circle cx="6" cy="17" r="2"/><path d="M11 7h9"/><path d="M11 17h9"/><path d="M5 7l1 1 2-2"/>'),
+  calc: svg('<rect x="5" y="3" width="14" height="18" rx="2"/><rect x="8" y="6" width="8" height="3"/><path d="M8.5 13h.01M12 13h.01M15.5 13h.01M8.5 16.5h.01M12 16.5h.01M15.5 16.5h.01"/>'),
+  gap: svg('<path d="M3 12h4"/><rect x="9" y="9" width="6" height="6" rx="1" stroke-dasharray="2 2"/><path d="M17 12h4"/>'),
+  type: svg('<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/>'),
+  match: svg('<circle cx="5" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 6l10 12"/><path d="M7 18l10-12"/>'),
+  order: svg('<path d="M10 6h10M10 12h10M10 18h10"/><path d="M4 5l1-1v4"/><path d="M3.5 11.5a1.2 1.2 0 0 1 2 1L3.5 15H6"/>'),
+  timer: svg('<circle cx="12" cy="13" r="8"/><path d="M12 9v4"/><path d="M9 2h6"/><path d="M19 6l1.5-1.5"/>'),
+  sun: svg('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),
+  moon: svg('<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>'),
+  arrow: svg('<path d="M9 6l6 6-6 6"/>'),
+  play: svg('<path d="M7 4l13 8-13 8z"/>'),
+  pause: svg('<path d="M8 5v14M16 5v14"/>')
+};
+const TOPIC_ICON = {
+  1: svg('<path d="M6 19h4v-2a6 6 0 1 1 4 0v2h4"/>'),
+  2: svg('<path d="M2 12c2.5-7 5-7 7.5 0s5 7 7.5 0 3-4 5-3"/>'),
+  3: svg('<circle cx="12" cy="4" r="2"/><path d="M12 6v5"/><path d="M5 11h14"/><path d="M5 11v4M12 11v4M19 11v4"/><path d="M3 19h4M10 19h4M17 19h4"/>'),
+  4: svg('<path d="M2 8h4"/><rect x="6" y="6" width="5" height="4"/><path d="M11 8h2"/><rect x="13" y="6" width="5" height="4"/><path d="M18 8h4"/><path d="M4 14v6h16v-6"/><rect x="9" y="12" width="6" height="4"/><path d="M4 14h5M15 14h5"/>'),
+  5: svg('<path d="M12 3l10 18H2z"/><path d="M13 9l-3 5h4l-3 4"/>'),
+  6: svg('<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>'),
+  7: svg('<path d="M4 12a8 6 0 1 0 16 0 8 6 0 1 0-16 0"/><path d="M16 6.5l2.5-.5-.5 2.5"/><path d="M11 12h2"/>'),
+  8: svg('<path d="M4 16a8 8 0 1 1 16 0"/><path d="M12 16l4-5"/><path d="M4 20h16"/>'),
+  9: svg('<path d="M3 17c4 0 4-10 9-10s5 10 9 10"/><circle cx="3" cy="17" r="1.5"/><circle cx="21" cy="17" r="1.5"/>'),
+  10: svg('<path d="M4 20V9"/><path d="M12 20V9"/><path d="M20 20V9"/><path d="M2 9h20"/><path d="M12 4v5"/>'),
+  11: svg('<path d="M12 12V4"/><path d="M12 12l-7 5"/><path d="M12 12l7 5"/><circle cx="12" cy="12" r="1.5"/>')
+};
+const MODE_ICON = { mix: "mix", exam: "exam", flash: "flash", mc: "mc", calc: "calc", gap: "gap", type: "type", match: "match", order: "order" };
+function crumbs(parts) {
+  return `<nav class="crumbs" aria-label="Du bist hier">${parts.map((p, i) => i < parts.length - 1 ? `<button class="crumb" data-act="${p.act}"${p.k ? ` data-k="${p.k}"` : ""}>${p.label}</button><span class="sep">›</span>` : `<span class="crumb cur" aria-current="page">${p.label}</span>`).join("")}</nav>`;
+}
+function ring(pct, label) {
+  const r = 26, c = 2 * Math.PI * r, v = pct === null ? 0 : pct;
+  return `<div class="ring"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="${r}" class="ring-bg"/>${v > 0 ? `<circle cx="32" cy="32" r="${r}" class="ring-fg" stroke-dasharray="${(v / 100 * c).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 32 32)"/>` : ""}</svg><b>${pct === null ? "–" : pct + "%"}</b><span>${label}</span></div>`;
+}
+
 
 // ---------- Fragenpool aufbauen ----------
 CALC.forEach(c => Q.push({ id: c.id, t: c.t, type: "calc", gen: c.gen, label: CALC_NAME[c.id] }));
@@ -974,7 +1119,7 @@ function render() {
 }
 
 function pomoCardHTML() {
-  return `<div class="card pomo-card"><div class="row" style="justify-content:space-between"><div><span class="eyebrow">Pomodoro</span><h3 id="pomoBig" class="pomo-big">${mmss(pomo.left)}</h3><span class="muted" id="pomoState">${pomoLabel()}</span></div><div class="row"><button class="btn primary" data-act="pomo-toggle" id="pomoBtn">${pomo.running ? "Pause" : "Start"}</button><button class="btn" data-act="pomo-skip">${pomo.mode === "work" ? "Pause überspringen" : "Pause beenden"}</button><button class="btn" data-act="pomo-reset">Zurücksetzen</button></div></div><span class="muted" style="font-size:13px">25 min lernen · 5 min Pause · heute: <b id="pomoCount">${pomoToday()}</b> Einheiten</span></div>`;
+  return `<div class="card pomo-card"><div class="row" style="justify-content:space-between"><div class="pomo-l"><span class="pico">${ICON.timer}</span><div><span class="eyebrow">Pomodoro</span><h3 id="pomoBig" class="pomo-big">${mmss(pomo.left)}</h3><span class="muted" id="pomoState">${pomoLabel()}</span></div></div><div class="row"><button class="btn primary" data-act="pomo-toggle" id="pomoBtn">${pomo.running ? "Pause" : "Start"}</button><button class="btn" data-act="pomo-skip">${pomo.mode === "work" ? "Pause überspringen" : "Pause beenden"}</button><button class="btn" data-act="pomo-reset">Zurücksetzen</button></div></div><span class="muted" style="font-size:13px">25 min lernen · 5 min Pause · heute: <b id="pomoCount">${pomoToday()}</b> Einheiten</span></div>`;
 }
 
 function homeHTML() {
@@ -982,36 +1127,34 @@ function homeHTML() {
   let c = 0, w = 0; ids.forEach(id => { c += progress.stats[id].c; w += progress.stats[id].w; });
   const acc = c + w ? Math.round(c / (c + w) * 100) : null;
   const fails = failIds().length;
-  const chips = Object.entries(TOPICS).map(([k, n]) => `<button class="chip" data-topic="${k}" aria-pressed="${current.topics.has(k)}">${k}. ${esc(n)}</button>`).join("");
-  const modes = MODES.map(m => { const cnt = m.key === "mix" ? poolFor(null, current.topics).length : poolFor(m.types, current.topics).length; return `<button class="mode ${m.wide ? "wide" : ""}" data-mode="${m.key}" ${cnt ? "" : "disabled"}><span class="code">${m.code} · ${cnt} Aufgaben</span><strong>${m.name}</strong><small>${m.desc}</small></button>`; }).join("");
   const examsDone = Object.keys(progress.exams).length;
-  return `<div class="wrap" style="gap:22px">
-    <div class="section">
-      <span class="eyebrow">Sicherstellen der Energieversorgung · IHK-Abschlussprüfung</span>
-      <h2>Lernen für die Prüfung</h2>
-      <p class="muted">Alle Fragen sind auf Deutsch, wie in der Prüfung. Nach jeder Antwort gibt es eine kurze Erklärung.</p>
+  const chips = Object.entries(TOPICS).map(([k, n]) => `<button class="chip tchip" data-topic="${k}" aria-pressed="${current.topics.has(k)}">${TOPIC_ICON[k]}<span>${k}. ${esc(n)}</span></button>`).join("");
+  const modes = MODES.map(m => { const cnt = m.key === "mix" ? poolFor(null, current.topics).length : poolFor(m.types, current.topics).length; return `<button class="mtile" data-mode="${m.key}" ${cnt ? "" : "disabled"}><span class="mico">${ICON[MODE_ICON[m.key]]}</span><span class="mtxt"><strong>${m.name}</strong><small>${m.desc}</small><span class="mcnt">${cnt} Aufgaben</span></span></button>`; }).join("");
+  const tile = (cls, act, icon, title, sub, badge) => `<button class="htile ${cls}" data-act="${act}"><span class="hico">${icon}</span><strong>${title}</strong><small>${sub}</small>${badge ? `<span class="hbadge">${badge}</span>` : ""}</button>`;
+  return `<div class="wrap" style="gap:24px">
+    <div class="hero">
+      <div class="hero-txt"><span class="eyebrow">Sicherstellen der Energieversorgung · IHK</span><h2>Wohin möchtest du?</h2><p class="muted">Wähle einen Bereich. Oben im Menü kommst du jederzeit zurück.</p></div>
+      <div class="hero-stats">${ring(acc, "richtig")}<div class="mini"><b>${ids.length}</b><span>von ${Q.length} gesehen</span></div></div>
     </div>
-    <div class="stats">
-      <div class="stat"><b>${ids.length}</b><span>von ${Q.length} Aufgaben gesehen</span></div>
-      <div class="stat"><b>${acc === null ? "–" : acc + " %"}</b><span>richtig</span></div>
-      <div class="stat ${fails ? "alert" : ""}"><b>${fails}</b><span>offene Fehler</span></div>
+    <div class="htiles">
+      ${tile("t-learn", "go-learn", ICON.learn, "Lernen", "Lernunterlage · 11 Punkte · DE/ES", "")}
+      ${tile("t-practice", "quick-mix", ICON.mix, "Schnell üben", `${current.len} gemischte Fragen`, "")}
+      ${tile("t-exam", "go-exams", ICON.exams, "Alte Prüfungen", `${EXAMS.length} IHK-Prüfungen 2018–2025${examsDone ? ` · ${examsDone} bearbeitet` : ""}`, "")}
+      ${tile("t-fail" + (fails ? "" : " t-off"), fails ? "repeat-all" : "go-fails", ICON.fails, "Fehler wiederholen", fails ? "Was du falsch hattest" : "Noch keine offenen Fehler", fails ? String(fails) : "")}
     </div>
-    ${fails ? `<button class="btn primary" data-act="repeat-all">Meine ${fails} Fehler wiederholen</button>` : ""}
-    <button class="mode exam-cta learn-cta" data-act="go-learn"><span class="code">LERNUNTERLAGE · 11 PUNKTE · DE / ES</span><strong>Lernen</strong><small>Zusammenfassung jedes Punktes mit Bildern – auf Deutsch oder Spanisch.</small></button>
-    <button class="mode exam-cta" data-act="go-exams"><span class="code">IHK · ${EXAMS.length} PRÜFUNGEN 2018–2025</span><strong>Alte Prüfungen üben</strong><small>${examsDone ? `${examsDone} schon bearbeitet. ` : ""}Aufgaben mit Lösungen, Selbstbewertung und 60-Minuten-Simulation.</small></button>
     ${pomoCardHTML()}
-    <div class="section">
-      <div class="row" style="justify-content:space-between"><h3>Themen</h3><div class="row"><button class="chip" data-act="all-topics">Alle</button><button class="chip" data-act="no-topics">Keine</button></div></div>
-      <div class="chips">${chips}</div>
-    </div>
-    <div class="section">
-      <div class="row" style="justify-content:space-between"><h3>Lernmodi</h3>
+    <section class="section" id="ueben">
+      <div class="shead">${ICON.mix}<h3>Üben nach Aufgabenart</h3>
         <label class="lenpick" for="lenSel">Fragen pro Runde
           <select id="lenSel" class="chip">${[5, 10, 15, 20, 30].map(n => `<option value="${n}" ${n === current.len ? "selected" : ""}>${n}</option>`).join("")}</select>
-        </label>
-      </div>
-      <div class="modes">${modes}</div>
-    </div>
+        </label></div>
+      <div class="mtiles">${modes}</div>
+    </section>
+    <section class="section">
+      <div class="shead">${ICON.learn}<h3>Welche Themen?</h3><div class="row"><button class="chip" data-act="all-topics">Alle</button><button class="chip" data-act="no-topics">Keine</button></div></div>
+      <p class="muted" style="font-size:13px">Gilt für „Schnell üben“ und alle Aufgabenarten.</p>
+      <div class="chips">${chips}</div>
+    </section>
     <p class="savestate saveLabel"></p>
   </div>`;
 }
@@ -1033,7 +1176,7 @@ function failsHTML() {
   const groups = {}; ids.forEach(id => (groups[BY_ID[id].t] = groups[BY_ID[id].t] || []).push(id));
   const blocks = Object.keys(groups).sort((a, b) => a - b).map(t => `<div class="section"><div class="row" style="justify-content:space-between"><h3>${t}. ${esc(TOPICS[t])}</h3><button class="btn" data-act="repeat-topic" data-topic="${t}">Diese wiederholen (${groups[t].length})</button></div><div class="list">${groups[t].map(id => { const q = BY_ID[id], s = progress.stats[id]; return `<div class="li"><span class="t">${TYPE_LABEL[q.type]} · ${s.w}× falsch${s.s ? ` · ${s.s}× richtig in Folge` : ""}</span><span>${esc(q.q || q.text || q.label || "")}</span></div>`; }).join("")}</div></div>`).join("");
   return `<div class="wrap" style="gap:22px">
-    <div class="section"><span class="eyebrow">Fehler wiederholen</span><h2>${ids.length} offene ${ids.length === 1 ? "Aufgabe" : "Aufgaben"}</h2><p class="muted">Eine Aufgabe verschwindet, wenn du sie zweimal hintereinander richtig hast. Bei Rechenaufgaben ändern sich die Zahlen.</p></div>
+    ${crumbs([{ label: "Start", act: "go-home" }, { label: "Fehler" }])}<div class="section"><div class="ptitle t-fail"><span class="hico">${ICON.fails}</span><div><span class="eyebrow">Fehler wiederholen</span><h2>${ids.length} offene ${ids.length === 1 ? "Aufgabe" : "Aufgaben"}</h2></div></div><p class="muted">Eine Aufgabe verschwindet, wenn du sie zweimal hintereinander richtig hast. Bei Rechenaufgaben ändern sich die Zahlen.</p></div>
     ${advice ? `<div class="advice"><b>Hier solltest du mehr lernen</b><ul style="margin:0;padding-left:18px;display:grid;gap:4px">${advice}</ul></div>` : ""}
     <button class="btn primary" data-act="repeat-all">Alle Fehler wiederholen</button>
     ${blocks}
@@ -1046,7 +1189,7 @@ function progressHTML() {
     const o = ts[k], tot = o.c + o.w, total = Q.filter(q => String(q.t) === k).length;
     const acc = tot ? Math.round(o.c / tot * 100) : null;
     const col = acc === null ? "var(--line)" : acc >= 80 ? "var(--good)" : acc >= 60 ? "var(--warn)" : "var(--red)";
-    return `<div class="trow"><span>${k}. ${esc(n)} <span class="muted" style="font-size:12px">· ${o.seen}/${total}</span></span><span class="tb"><i style="width:${acc === null ? 0 : acc}%;background:${col}"></i></span><span class="pct">${acc === null ? "–" : acc + " %"}</span></div>`;
+    return `<div class="trow"><span class="tname">${TOPIC_ICON[k]}<span>${k}. ${esc(n)} <span class="muted" style="font-size:12px">· ${o.seen}/${total}</span></span></span><span class="tb"><i style="width:${acc === null ? 0 : acc}%;background:${col}"></i></span><span class="pct">${acc === null ? "–" : acc + " %"}</span></div>`;
   }).join("");
   const weak = weakTopics();
   const verdict = !Object.keys(progress.stats).length ? `<div class="advice calm"><b>Noch keine Daten</b><span>Mach ein paar Runden, dann siehst du hier deine starken und schwachen Themen.</span></div>`
@@ -1054,7 +1197,7 @@ function progressHTML() {
     : `<div class="advice calm"><b>Du bist auf einem guten Weg</b><span>Alle geübten Themen liegen über 75 %. Mach mit neuen Themen weiter.</span></div>`;
   const ex = EXAMS.filter(e => progress.exams[e.id]).map(e => { const r = progress.exams[e.id]; const p = Math.round(r.best / r.max * 100); return `<div class="trow"><span>${esc(e.term)} <span class="muted" style="font-size:12px">· ${r.n || 1}× bearbeitet</span></span><span class="tb"><i style="width:${p}%;background:${p >= 67 ? "var(--good)" : p >= 50 ? "var(--warn)" : "var(--red)"}"></i></span><span class="pct">${p} %</span></div>`; }).join("");
   return `<div class="wrap" style="gap:22px">
-    <div class="section"><span class="eyebrow">Mein Fortschritt</span><h2>Richtig pro Thema</h2><p class="muted">Grün ≥ 80 % · Gelb 60–79 % · Rot &lt; 60 %</p></div>
+    ${crumbs([{ label: "Start", act: "go-home" }, { label: "Fortschritt" }])}<div class="section"><div class="ptitle t-prog"><span class="hico">${ICON.progress}</span><div><span class="eyebrow">Mein Fortschritt</span><h2>Richtig pro Thema</h2></div></div><p class="muted">Grün ≥ 80 % · Gelb 60–79 % · Rot &lt; 60 %</p></div>
     ${verdict}
     <div class="card"><div class="topics">${rows}</div></div>
     <div class="section"><h3>Alte Prüfungen (bestes Ergebnis)</h3>${ex ? `<div class="card"><div class="topics">${ex}</div></div>` : `<p class="muted">Noch keine Prüfung ausgewertet.</p>`}</div>
@@ -1070,13 +1213,13 @@ function learnHTML() {
   const toggle = `<div class="seg" role="group" aria-label="Sprache"><button data-act="lang" data-lang="de" aria-pressed="${LANG === "de"}">Deutsch</button><button data-act="lang" data-lang="es" aria-pressed="${LANG === "es"}">Español</button></div>`;
   const k = current.learnTopic;
   if (!k) {
-    const list = Object.entries(TOPICS).map(([n, name]) => { const ts = topicStats()[n]; const tot = ts.c + ts.w; const acc = tot ? Math.round(ts.c / tot * 100) + " %" : "–"; const book = (LERN.de[n].match(/Buch: ([^<]*)/) || [, ""])[1]; return `<button class="mode" data-act="learn-open" data-k="${n}"><span class="code">PUNKT ${n} · ${acc} richtig</span><strong>${esc(name)}</strong><small>${esc(book)}</small></button>`; }).join("");
-    return `<div class="wrap" style="gap:18px"><div class="section"><span class="eyebrow">Lernverzeichnis · Kapitel 7 Energieversorgung</span><div class="row" style="justify-content:space-between"><h2>Lernen</h2>${toggle}</div><p class="muted">${L.intro}</p></div><div class="modes">${list}</div></div>`;
+    const list = Object.entries(TOPICS).map(([n, name]) => { const ts = topicStats()[n]; const tot = ts.c + ts.w; const acc = tot ? Math.round(ts.c / tot * 100) + " %" : "–"; const book = (LERN.de[n].match(/Buch: ([^<]*)/) || [, ""])[1]; const pct = tot ? Math.round(ts.c / tot * 100) : 0; return `<button class="ltile" data-act="learn-open" data-k="${n}"><span class="lnum">${TOPIC_ICON[n]}<i>${n}</i></span><span class="mtxt"><strong>${esc(name)}</strong><small>${esc(book)}</small><span class="lbar"><i style="width:${pct}%"></i></span><small>${tot ? acc + " richtig" : "noch nicht geübt"}</small></span>${ICON.arrow}</button>`; }).join("");
+    return `<div class="wrap" style="gap:18px">${crumbs([{ label: "Start", act: "go-home" }, { label: "Lernen" }])}<div class="section"><div class="ptitle t-learn"><span class="hico">${ICON.learn}</span><div><span class="eyebrow">Lernverzeichnis · Kapitel 7</span><h2>Lernen</h2></div>${toggle}</div><p class="muted">${L.intro}</p></div><div class="ltiles">${list}</div></div>`;
   }
   const imgs = (LERN.img[k] || []).map(i => `<figure class="lfig"><img src="${i.src}" alt="${esc(i.alt)}" loading="lazy"><figcaption>${esc(i.alt)}</figcaption></figure>`).join("");
   const n = +k;
   return `<div class="wrap" style="gap:16px">
-    <div class="section"><button class="linkbtn" data-act="learn-back">${L.back}</button><span class="eyebrow">Punkt ${k} von 11</span><div class="row" style="justify-content:space-between"><h2>${esc(TOPICS[k])}</h2>${toggle}</div></div>
+    ${crumbs([{ label: "Start", act: "go-home" }, { label: "Lernen", act: "learn-back" }, { label: `Punkt ${k}` }])}<div class="section"><div class="ptitle t-learn"><span class="hico">${TOPIC_ICON[k]}</span><div><span class="eyebrow">Punkt ${k} von 11</span><h2>${esc(TOPICS[k])}</h2></div>${toggle}</div></div>
     ${imgs}
     <article class="card lern" lang="${LANG}">${(LERN[LANG] || LERN.de)[k]}</article>
     <div class="row"><button class="btn primary" data-act="learn-practice" data-k="${k}">${L.practice}</button><button class="btn" data-act="learn-cards" data-k="${k}">${L.cards}</button></div>
@@ -1089,11 +1232,11 @@ function lvBadge(e) { return e.lv === "offiziell" ? `<span class="badge-lv ok">I
 function examsHTML() {
   const list = EXAMS.slice().reverse().map(e => {
     const r = progress.exams[e.id];
-    return `<div class="card exam-item"><div class="row" style="justify-content:space-between;align-items:flex-start"><div style="display:grid;gap:4px;min-width:0"><span class="eyebrow">${esc(e.term)} · ${e.tasks.length} Aufgaben · ${e.tasks.reduce((s, t) => s + t.p, 0)} Punkte</span><h3>${esc(e.title)}</h3><div class="row">${lvBadge(e)}${r ? `<span class="badge-lv">Bestes: ${Math.round(r.best / r.max * 100)} % · Note ${noteFor(r.best / r.max * 100).split(" ")[0]}</span>` : ""}</div></div></div>
-      <div class="row"><button class="btn primary" data-act="exam-open" data-exam="${e.id}" data-mode="practice">Üben</button><button class="btn" data-act="exam-open" data-exam="${e.id}" data-mode="sim">Simulation 60 min</button></div></div>`;
+    return `<div class="card exam-item"><div class="row" style="align-items:flex-start;flex-wrap:nowrap;gap:14px"><span class="yearb ${e.id[0] === "W" ? "w" : "s"}"><small>${e.id[0] === "W" ? "Winter" : "Sommer"}</small><b>${e.id.slice(1)}</b></span><div style="display:grid;gap:4px;min-width:0"><span class="eyebrow">${esc(e.term)} · ${e.tasks.length} Aufgaben · ${e.tasks.reduce((s, t) => s + t.p, 0)} Punkte</span><h3>${esc(e.title)}</h3><div class="row">${lvBadge(e)}${r ? `<span class="badge-lv">Bestes: ${Math.round(r.best / r.max * 100)} % · Note ${noteFor(r.best / r.max * 100).split(" ")[0]}</span>` : ""}</div></div></div>
+      <div class="row"><button class="btn primary" data-act="exam-open" data-exam="${e.id}" data-mode="practice">${ICON.learn} Üben</button><button class="btn" data-act="exam-open" data-exam="${e.id}" data-mode="sim">${ICON.timer} Simulation 60 min</button></div></div>`;
   }).join("");
   return `<div class="wrap" style="gap:18px">
-    <div class="section"><span class="eyebrow">IHK-Prüfungen · Sicherstellen der Energieversorgung</span><h2>Alte Prüfungen</h2>
+    ${crumbs([{ label: "Start", act: "go-home" }, { label: "Alte Prüfungen" }])}<div class="section"><div class="ptitle t-exam"><span class="hico">${ICON.exams}</span><div><span class="eyebrow">IHK · Energieversorgung</span><h2>Alte Prüfungen</h2></div></div>
       <p class="muted"><b>Üben</b>: Lösung pro Aufgabe sofort aufdecken. <b>Simulation</b>: 60 Minuten, Lösungen erst nach Abgabe. Danach bewertest du dich selbst (10 bis 0 Punkte, wie die IHK).</p>
       <div class="advice"><b>Wichtig zu den Lösungen</b><span>Bei <b>„Eigene Lösung – prüfen“</b> gab es keine offizielle IHK-Lösung. Diese Lösungen habe ich erarbeitet – sie können Fehler enthalten. Mit „✎ Lösung korrigieren“ kannst du sie ändern und als geprüft markieren.</span></div>
     </div>
@@ -1137,7 +1280,7 @@ function examHTML() {
   const allRated = rated.length === e.tasks.length;
   const pct = max ? Math.round(pts / max * 100) : 0;
   return `<div class="wrap" style="gap:16px">
-    <div class="section"><button class="linkbtn" data-act="exam-back">← Alle Prüfungen</button><span class="eyebrow">${esc(e.term)} · ${sim ? "Simulation" : "Üben"}</span><h2>${esc(e.title)}</h2><div class="row">${lvBadge(e)}</div></div>
+    ${crumbs([{ label: "Start", act: "go-home" }, { label: "Alte Prüfungen", act: "exam-back" }, { label: e.term }])}<div class="section"><span class="eyebrow">${esc(e.term)} · ${sim ? "Simulation" : "Üben"}</span><h2>${esc(e.title)}</h2><div class="row">${lvBadge(e)}</div></div>
     ${timer}
     <div class="card scen"><span class="eyebrow">Prüfungsaufgaben-Beschreibung</span><div>${e.scen}</div><p class="muted" style="font-size:13px">Pläne und Anlagen findest du im Original-PDF. Die wichtigen Daten stehen in den Aufgaben.</p></div>
     ${tasks}
@@ -1184,7 +1327,7 @@ function editorHTML() {
   const base = BASE_Q.filter(q => (current.edTopic === "all" || String(q.t) === current.edTopic) && (!f || norm(q.q || q.text || q.label || "").includes(f)));
   const baseList = base.slice(0, 80).map(q => { const hid = !!CU().hidden[q.id]; const ov = !!CU().over[q.id]; const editable = ["mc", "tf", "type", "gap"].includes(q.type); return `<div class="li ${hid ? "dim" : ""}"><span class="t">${TYPE_LABEL[q.type]} · ${q.t}. ${esc(TOPICS[q.t])}${ov ? " · ✎ geändert" : ""}${hid ? " · ausgeblendet" : ""}</span><span>${esc(q.q || q.text || q.label || "")}</span><div class="row">${editable ? `<button class="linkbtn" data-act="ed-edit-base" data-id="${q.id}">Bearbeiten</button>` : ""}${ov ? `<button class="linkbtn" data-act="ed-reset-base" data-id="${q.id}">Original</button>` : ""}<button class="linkbtn ${hid ? "" : "danger"}" data-act="ed-hide" data-id="${q.id}">${hid ? "Einblenden" : "Ausblenden"}</button></div></div>`; }).join("");
   return `<div class="wrap" style="gap:20px">
-    <div class="section"><span class="eyebrow">Editor</span><h2>Fragen verwalten</h2><p class="muted">Eigene Karteikarten und Fragen hinzufügen, vorhandene Fragen korrigieren oder ausblenden. Alles wird mit deinem Fortschritt gespeichert.</p></div>
+    ${crumbs([{ label: "Start", act: "go-home" }, { label: "Editor" }])}<div class="section"><div class="ptitle t-edit"><span class="hico">${ICON.editor}</span><div><span class="eyebrow">Editor</span><h2>Fragen verwalten</h2></div></div><p class="muted">Eigene Karteikarten und Fragen hinzufügen, vorhandene Fragen korrigieren oder ausblenden. Alles wird mit deinem Fortschritt gespeichert.</p></div>
     ${d ? editorFormHTML(d) : `<button class="btn primary" data-act="ed-new">+ Neue Frage</button>`}
     <div class="section"><h3>Meine Fragen (${CU().questions.length})</h3>${mine ? `<div class="list">${mine}</div>` : `<p class="muted">Noch keine eigenen Fragen.</p>`}</div>
     <div class="section"><h3>Vorhandene Fragen</h3>
@@ -1252,9 +1395,9 @@ function sessionHTML() {
   const s = session; const n = s.items.length;
   if (s.i >= n) return resultHTML();
   const q = s.items[s.i];
-  return `<div class="card" id="qcard">
+  return `${crumbs([{ label: "Start", act: "go-home" }, { label: s.title }])}<div class="card" id="qcard">
     <div class="prog"><div class="meta"><span>${esc(s.title)}${s.exam ? ` · <span id="sessTimer">${mmss((Date.now() - s.start) / 1000)}</span>` : ""}</span><span>${s.i + 1} / ${n}</span></div><div class="bar"><div class="fill" style="width:${(s.i) / n * 100}%"></div></div></div>
-    <div class="qtopic"><span class="pill type">${TYPE_LABEL[q.type]}</span><span class="pill">${q.t}. ${esc(TOPICS[q.t] || "")}</span>${q.custom ? `<span class="pill">eigene Frage</span>` : ""}</div>
+    <div class="qtopic"><span class="pill type">${TYPE_LABEL[q.type]}</span><span class="pill tp">${TOPIC_ICON[q.t] || ""}${q.t}. ${esc(TOPICS[q.t] || "")}</span>${q.custom ? `<span class="pill">eigene Frage</span>` : ""}</div>
     <div id="qbody"></div>
     <div id="fb"></div>
     <div class="row" style="justify-content:space-between"><button class="btn" data-act="quit">Beenden</button><span></span></div>
@@ -1401,7 +1544,7 @@ function pomoTick() {
   if (current.view === "session" && session && session.exam) { const el = $("#sessTimer"); if (el) el.textContent = mmss((Date.now() - session.start) / 1000); }
 }
 function pomoUI() {
-  const pill = $("#pomoPill"); if (pill) { pill.textContent = `${pomo.mode === "work" ? "Lernen" : "Pause"} ${mmss(pomo.left)}`; pill.classList.toggle("run", pomo.running); pill.classList.toggle("brk", pomo.mode === "brk"); pill.setAttribute("aria-label", `Pomodoro ${pomoLabel()}, ${mmss(pomo.left)}. Antippen zum ${pomo.running ? "Pausieren" : "Starten"}`); }
+  const pill = $("#pomoPill"); if (pill) { pill.innerHTML = `${pomo.running ? ICON.pause : ICON.timer}<span>${mmss(pomo.left)}</span>`; pill.classList.toggle("run", pomo.running); pill.classList.toggle("brk", pomo.mode === "brk"); pill.setAttribute("aria-label", `Pomodoro ${pomoLabel()}, ${mmss(pomo.left)}. Antippen zum ${pomo.running ? "Pausieren" : "Starten"}`); }
   const big = $("#pomoBig"); if (big) big.textContent = mmss(pomo.left);
   const st = $("#pomoState"); if (st) st.textContent = pomoLabel();
   const btn = $("#pomoBtn"); if (btn) btn.textContent = pomo.running ? "Pause" : "Start";
@@ -1412,20 +1555,25 @@ function pomoReset() { pomo = { mode: "work", running: false, end: 0, left: POMO
 $("#pomoPill").addEventListener("click", pomoToggle);
 setInterval(pomoTick, 1000);
 
+// ---------- Navigation mit Icons ----------
+document.querySelectorAll("nav.tabs button").forEach(b => b.insertAdjacentHTML("afterbegin", ICON[b.dataset.view] || ""));
+$("#pomoPill").insertAdjacentHTML("beforebegin", "");
+function themeIcon() { const cur = document.documentElement.getAttribute("data-theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); $("#themeBtn").innerHTML = cur === "dark" ? ICON.sun : ICON.moon; }
+
 // ---------- Hell/Dunkel ----------
 const THEME_KEY = "etech-theme";
 function applyTheme(t) { if (t) document.documentElement.setAttribute("data-theme", t); else document.documentElement.removeAttribute("data-theme"); }
 try { applyTheme(localStorage.getItem(THEME_KEY)); } catch (e) { }
 $("#themeBtn").addEventListener("click", () => {
   const cur = document.documentElement.getAttribute("data-theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-  const nt = cur === "dark" ? "light" : "dark"; applyTheme(nt); try { localStorage.setItem(THEME_KEY, nt); } catch (e) { }
+  const nt = cur === "dark" ? "light" : "dark"; applyTheme(nt); try { localStorage.setItem(THEME_KEY, nt); } catch (e) { } themeIcon();
 });
 
 // ---------- Ereignisse ----------
 function bindView() {
   const v = $("#view");
   v.querySelectorAll("[data-topic].chip").forEach(b => b.addEventListener("click", () => { const k = b.dataset.topic; current.topics.has(k) ? current.topics.delete(k) : current.topics.add(k); render(); }));
-  v.querySelectorAll("[data-mode].mode").forEach(b => b.addEventListener("click", () => startSession(b.dataset.mode)));
+  v.querySelectorAll(".mode[data-mode], .mtile[data-mode]").forEach(b => b.addEventListener("click", () => startSession(b.dataset.mode)));
   const ls = $("#lenSel"); if (ls) ls.addEventListener("change", () => { current.len = +ls.value; });
   v.querySelectorAll("[data-act]").forEach(b => b.addEventListener("click", () => act(b.dataset.act, b)));
   v.querySelectorAll("textarea[data-ans]").forEach(t => t.addEventListener("input", () => { if (examRun) examRun.ans[t.dataset.ans] = t.value; }));
@@ -1439,6 +1587,8 @@ function act(a, b) {
   else if (a === "no-topics") { current.topics = new Set(); render(); }
   else if (a === "go-home") setView("home");
   else if (a === "go-exams") setView("exams");
+  else if (a === "go-fails") setView("fails");
+  else if (a === "quick-mix") startSession("mix", { title: "Schnell üben" });
   else if (a === "go-learn") { current.learnTopic = null; setView("learn"); }
   else if (a === "repeat-all") startSession("fails", { ids: shuffle(failIds()), title: "Fehler wiederholen" });
   else if (a === "repeat-topic") startSession("fails", { ids: shuffle(failIds().filter(id => String(BY_ID[id].t) === b.dataset.topic)), title: `Fehler · ${TOPICS[b.dataset.topic]}` });
@@ -1490,7 +1640,7 @@ function rerenderKeep(anchorId) {
   if (el2 && top !== null) window.scrollTo({ top: window.scrollY + el2.getBoundingClientRect().top - top }); else window.scrollTo({ top: y });
 }
 
-updateFailBadge(); render(); pomoUI(); connectStore();
+themeIcon(); updateFailBadge(); render(); pomoUI(); connectStore();
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) { window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {})); }
 
 </script>
