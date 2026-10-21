@@ -8,12 +8,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Energie">
+<meta name="apple-mobile-web-app-title" content="E-Tech">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Energieversorgung Trainer</title>
+<title>E-Tech Trainer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
@@ -228,23 +228,74 @@ p { margin: 0; }
   .feedback + .row { position: sticky; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
 }
 @media (prefers-reduced-motion: reduce) { .prog .fill { transition: none; } }
+
+/* --- Erweiterungen: Header-Aktionen, Prüfungen, Karteikarten, Editor --- */
+.top-actions { display: flex; gap: 6px; align-items: center; }
+.iconbtn { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; height: 34px; min-width: 34px; padding: 0 10px; font: 600 13px var(--font-body); cursor: pointer; font-variant-numeric: tabular-nums; }
+.iconbtn.run { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.iconbtn.run.brk { background: var(--good); border-color: var(--good); }
+.pomo-big { font-family: var(--font-mono); font-size: 34px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.pomo-card { gap: 10px; }
+.exam-cta { grid-column: 1 / -1; border-left: 4px solid var(--pe-green); }
+.badge-lv { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--surface-2); color: var(--muted); }
+.badge-lv.ok { background: var(--good-soft); color: var(--good); }
+.badge-lv.own { background: color-mix(in srgb, var(--warn) 16%, transparent); color: var(--warn); }
+.exam-item { gap: 12px; }
+.task { gap: 12px; }
+.tq { font-size: 16px; line-height: 1.6; }
+.scen { gap: 8px; font-size: 15px; line-height: 1.6; background: var(--surface-2); }
+.ta, .inp { width: 100%; border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 8px; padding: 10px 12px; font: 15px/1.5 var(--font-body); }
+.ta { resize: vertical; min-height: 84px; }
+select.inp { padding: 9px 10px; }
+.solution { display: grid; gap: 10px; border-top: 1px dashed var(--line); padding-top: 12px; }
+.solbody { font-size: 15px; line-height: 1.65; }
+.warn { border-left: 3px solid var(--warn); background: color-mix(in srgb, var(--warn) 12%, transparent); padding: 8px 12px; border-radius: 0 8px 8px 0; font-size: 13px; font-weight: 600; }
+.okmark { font-size: 13px; color: var(--good); font-weight: 600; }
+.rate { display: grid; gap: 6px; }
+.linkbtn { border: 0; background: none; color: var(--accent); font: 600 14px var(--font-body); padding: 4px 0; cursor: pointer; text-align: left; }
+.linkbtn.danger { color: var(--red); }
+.timerbar { position: sticky; top: 70px; z-index: 4; display: flex; gap: 12px; align-items: center; justify-content: space-between; background: var(--accent); color: var(--on-accent); padding: 10px 16px; border-radius: 12px; }
+.timerbar b { font-family: var(--font-mono); font-size: 22px; font-variant-numeric: tabular-nums; }
+.timerbar .btn { background: var(--on-accent); color: var(--accent); border-color: var(--on-accent); }
+.li.dim { opacity: 0.55; }
+.editor-form { gap: 12px; }
+.editor-form label { display: grid; gap: 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+.optset { border: 1px solid var(--line); border-radius: 10px; padding: 10px; display: grid; gap: 8px; margin: 0; }
+.optset legend { font-size: 13px; color: var(--muted); font-weight: 600; padding: 0 4px; }
+/* Karteikarte zum Umdrehen */
+.flip { border: 0; padding: 0; background: none; width: 100%; perspective: 1200px; cursor: pointer; font: inherit; color: inherit; text-align: left; }
+.flip-inner { position: relative; display: grid; transition: transform .5s ease; transform-style: preserve-3d; min-height: 190px; }
+.flip.flipped .flip-inner { transform: rotateY(180deg); }
+.face { grid-area: 1 / 1; display: grid; gap: 10px; align-content: center; padding: 22px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface-2); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.face.back { transform: rotateY(180deg); background: var(--accent-soft); border-color: var(--accent); }
+.backans { font-weight: 600; font-size: 18px; white-space: pre-line; }
+@media (prefers-reduced-motion: reduce) { .flip-inner { transition: none; } }
+@media (max-width: 640px) {
+  nav.tabs { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 2px !important; padding-left: 6px !important; padding-right: 6px !important; }
+  nav.tabs button { font-size: 12.5px !important; padding: 10px 2px !important; }
+  nav.tabs .badge { margin-left: 2px; min-width: 16px; padding: 0 4px; line-height: 16px; font-size: 11px; }
+  .timerbar { top: 6px; }
+  .brand .tag { display: none; }
+}
+
 </style>
+<script>try{var t=localStorage.getItem("etech-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 </head>
 <body>
-
-
 <div class="wrap">
   <header class="top">
-    <div class="brand"><h1>Energie-Trainer</h1><span class="tag">FaVT · Kap. 7</span></div>
-    <nav class="tabs" aria-label="Secciones">
-      <button id="tab-home" data-view="home" aria-current="page">Inicio</button>
-      <button id="tab-fails" data-view="fails">Fallos <span class="badge" id="failBadge" hidden>0</span></button>
-      <button id="tab-progress" data-view="progress">Progreso</button>
+    <div class="brand"><h1>E-Tech-Trainer</h1><span class="tag">FaVT · Energieversorgung</span></div>
+    <div class="top-actions"><button class="iconbtn" id="pomoPill" title="Pomodoro starten/pausieren">Lernen 25:00</button><button class="iconbtn" id="themeBtn" title="Hell/Dunkel umschalten" aria-label="Hell- oder Dunkelmodus umschalten">◐</button></div>
+    <nav class="tabs" aria-label="Bereiche">
+      <button data-view="home" aria-current="page">Start</button>
+      <button data-view="exams">Prüfungen</button>
+      <button data-view="fails">Fehler <span class="badge" id="failBadge" hidden>0</span></button>
+      <button data-view="progress">Fortschritt</button>
+      <button data-view="editor">Editor</button>
     </nav>
   </header>
   <main id="view"></main>
 </div>
-
 <script>
 // ---------- Content ----------
 const TOPICS = {
@@ -477,16 +528,276 @@ const CALC = [
   { id: "c_delta", t: 11, gen() { const R = pick([46, 92, 115]); const Is = 400 / R; const P = 3 * 400 * Is; return { q: `Drei Widerstände mit je ${R} Ω sind im Dreieck an 400 V geschaltet. Wie groß ist der Leiterstrom?`, a: Math.sqrt(3) * Is, unit: "A", ex: `<span class='formula'>IStr = 400 V / ${R} Ω = ${de(Is)} A → I = √3 × IStr = ${de(Math.sqrt(3) * Is)} A</span> (P ≈ ${de(P, 0)} W).` }; } }
 ];
 const CALC_NAME = { c_ohm: "Ohmsches Gesetz: Strom berechnen", c_power: "Gesamtstrom mehrerer Scheinwerfer", c_energy: "Elektrische Arbeit in kWh", c_ueff: "Effektivwert aus Scheitelwert", c_kva: "Scheinleistung des Stromerzeugers", c_series: "Reihenschaltung: Strom berechnen", c_parallel: "Parallelschaltung: Ersatzwiderstand", c_knoten: "Knotenpunktregel: Zuleitungsstrom", c_body: "Körperstrom bei Berührung", c_ik: "Kurzschlussstrom aus Zs", c_zsmax: "Maximale Schleifenimpedanz eines LS", c_du: "Spannungsfall in Prozent", c_amin: "Mindestquerschnitt nach Spannungsfall", c_drum: "Strombelastbarkeit auf der Kabeltrommel", c_phase: "Strom pro Außenleiter bei symmetrischer Last", c_star: "Leistung in der Sternschaltung", c_delta: "Leiterstrom in der Dreieckschaltung" };
-CALC.forEach(c => Q.push({ id: c.id, t: c.t, type: "calc", gen: c.gen, label: CALC_NAME[c.id] }));
-const BY_ID = Object.fromEntries(Q.map(x => [x.id, x]));
+// ---------- Zusätzliche Fragen aus den IHK-Prüfungen ----------
+mc("x1", 6, "Welchen Querschnitt muss eine Schutzpotenzialausgleichsleitung in der Veranstaltungstechnik mindestens haben?", ["4 mm²", "6 mm²", "10 mm²", "16 mm²"], 3, "Mindestens <b>16 mm² Kupfer</b>, H07RN-F, grün-gelb (IHK S2021 U6, S2024 U6, W2025 U5).");
+mc("x2", 6, "Welcher PA-Aufbau ist sicherer?", ["In Reihe von Traverse zu Traverse", "Sternförmig über einen Potenzialverteiler", "Beide gleich", "Nur über den Schutzleiter der Scheinwerfer"], 1, "<b>Sternförmig</b>: Bei einer unterbrochenen Leitung verliert nur eine Konstruktion den PA (IHK S2024 U5).");
+mc("x3", 6, "Was bedeutet „Durchschliff“ an einem CEE-Ausgang einer Unterverteilung?", ["Der Ausgang hat eine eigene RCD", "Eingang und Ausgang sind direkt verbunden – ohne RCD und MCB in der UV", "Der Ausgang ist nur für 230 V", "Der Ausgang ist abgeschaltet"], 1, "Durchgeschliffen = ohne Schutzeinrichtung. Der LS des <b>Übergabepunkts</b> schützt diesen Ausgang (IHK W2025 U1).");
+mc("x4", 6, "Warum ist bei vielen Scheinwerfern eine RCD je Phase bzw. RCBO je Stromkreis besser als eine gemeinsame RCD?", ["Es ist billiger", "Die Ableitströme verteilen sich, die Summe löst die RCD nicht aus", "Weil die RCD sonst zu langsam ist", "Wegen des Spannungsfalls"], 1, "Beispiel W2025: 32 × 0,6 mA + 4 × 3 mA = 31,2 mA > 30 mA an <b>einer</b> RCD → Auslösung. Verteilt auf drei RCDs kein Problem.");
+mc("x5", 6, "Eine RCD hat IΔn = 0,3 A, Typ B, S. Ist sie für den Personenschutz zugelassen?", ["Ja, Typ B ist immer zugelassen", "Nein – für Personenschutz ist IΔn ≤ 30 mA nötig", "Ja, wegen S = selektiv", "Nur im Freien"], 1, "300 mA = Brandschutz/selektive Vorschaltung. Personen- bzw. Zusatzschutz: <b>≤ 30 mA</b>.");
+mc("x6", 3, "Ein ungeerdeter Stromerzeuger versorgt mehrere Verbraucher. Was fordert die DGUV-I 203-032?", ["Nichts, ungeerdet ist immer sicher", "Jedes Verbrauchsmittel bis auf eines bekommt eine RCD ≤ 30 mA", "Eine gemeinsame RCD 300 mA", "Nur einen Erder"], 1, "RCD für das zweite und jedes weitere Verbrauchsmittel – im Erzeuger oder in einem Verteiler mit einer RCD je Steckdose (IHK W2022).");
+mc("x7", 9, "Darf eine CEE16-Einspeisung über einen Adapter auf einen CEE32-Eingang gehen?", ["Nein, nie", "Ja – Aufwärtsadaptierung: größerer Querschnitt, der 16-A-Schutz davor schützt", "Nur mit zusätzlicher 32-A-Sicherung", "Nur bei 230 V"], 1, "Aufwärtsadaptierung = Querschnitt wird größer → <b>keine zusätzliche Absicherung</b> (IHK S2021 U5). Abwärts (CEE32 → CEE16) braucht eine Absicherung!");
+mc("x8", 7, "Ein Kurzschluss erzeugt Ik = 300 A. Welcher LS löst sicher <b>nicht</b> unverzögert aus?", ["B32 (5 × 32 = 160 A)", "C10 (10 × 10 = 100 A)", "C32 (10 × 32 = 320 A)", "B16 (5 × 16 = 80 A)"], 2, "Unverzögert sicher ab B: 5 × In, C: 10 × In. C32 → 320 A > 300 A → keine sichere Sofortauslösung. So erreicht man Selektivität (IHK S2024 U2).");
+mc("x9", 8, "Gemessene Auslöseströme einer 30-mA-RCD: Welcher Wert ist in Ordnung?", ["11 mA", "24 mA", "45 mA", "60 mA"], 1, "Eine RCD muss zwischen <b>0,5 × und 1 × IΔn</b> auslösen, also 15–30 mA (IHK W2021 U5).");
+mc("x10", 8, "Bei einer Schleifenimpedanzmessung zeigt das Gerät L–PE 123 V, N–PE 115 V, L–N 235 V. Was liegt vor?", ["Alles in Ordnung", "N-Leiter vertauscht", "Schutzleiter unterbrochen", "Kurzschluss"], 2, "L–PE müsste ~230 V und N–PE ~0 V sein. Beide etwa halb → PE „schwebt“ → <b>PE unterbrochen</b>.");
+mc("x11", 8, "Was gehört zur Inbetriebnahme eines Übergabepunkts mit Einzeladern (Powerlock)?", ["Zuerst L1 stecken", "Reihenfolge PE → N → L1–L3, Trennen umgekehrt, lastfrei", "Unter Last stecken", "N zuletzt stecken"], 1, "Erst PE, dann N, dann die Außenleiter – nur lastfrei. Beim Trennen umgekehrt.");
+mc("x12", 10, "Ein Stromerzeuger soll dauerhaft 7,5 kW liefern. Typ I: Dauer 4,8 kW / max. 5,3 kW · Typ II: Dauer 8,0 kW / max. 8,8 kW. Welcher passt?", ["Typ I", "Typ II", "Beide", "Keiner"], 1, "Immer die <b>Dauerleistung</b> ansetzen: 8,0 kW ≥ 7,5 kW → Typ II (IHK W2022 U1).");
+mc("x13", 9, "Welche drei Umrechnungsfaktoren braucht man typischerweise für Iz einer Multicore-Leitung?", ["Länge, Farbe, Gewicht", "Umgebungstemperatur, Häufung/Bündelung, Anzahl belasteter Adern", "cos φ, Frequenz, Spannung", "Nur die Länge"], 1, "Iz = Ir × f1 (Temperatur) × f2 (Häufung) × f3 (vieladrig) – IHK S2024 U3.");
+mc("x14", 9, "Was hilft, wenn gebündelte Multicores Iz < In ergeben (gleicher Querschnitt)?", ["Länger verlegen", "Nicht bündeln, nebeneinander verlegen", "Größeren LS einsetzen", "Leitung aufwickeln"], 1, "Nebeneinander statt gebündelt → besserer Häufungsfaktor (0,65 → 0,75), Iz steigt (IHK S2024 U3).");
+mc("x15", 10, "Warum löst ein C32 beim gleichzeitigen Einschalten von 30 LED-Washlights (je 10,7 A Anlaufstrom, 10 je Phase) nicht aus?", ["Weil LEDs keinen Strom ziehen", "107 A je Phase < 160 A (5 × In) und der Anlaufstrom dauert nur eine Halbperiode", "Weil C immer träge ist", "Weil der RCD vorher auslöst"], 1, "Magnetisch frühestens ab 5 × 32 A = 160 A; 107 A für 10 ms reicht auch thermisch nicht (IHK S2025).");
+tf("x16", 6, "Endgeräte dürfen direkt an einen durchgeschliffenen CEE-Ausgang ohne RCD angeschlossen werden.", false, "Falsch. Ohne RCD fehlt der Zusatzschutz – dort nur weitere UV anschließen (IHK W2025 U1).");
+tf("x17", 6, "IP54 ist für den Außeneinsatz grundsätzlich geeignet.", true, "Richtig. 5 = staubgeschützt, 4 = Spritzwasser von allen Seiten. Außen mind. IP44.");
+tf("x18", 8, "Ein gemessener PA-Widerstand ist immer etwas größer als der berechnete.", true, "Richtig – wegen der Übergangswiderstände der Verbindungsstellen (IHK S2024 U6).");
+tf("x19", 7, "Für Selektivität soll vor einem C10-Endstromkreis besser ein C32 statt eines B32 sitzen, wenn Ik = 300 A ist.", true, "Richtig. B32 löst ab 160 A sicher aus, C32 erst ab 320 A – dann schaltet nur der C10 ab.");
+gap("x20", 6, "Der Steckverbinder einer PA-Leitung muss gegen Öffnen ohne ___ gesichert sein.", ["Werkzeug", "Spannung", "Strom", "Erlaubnis"], "Werkzeug", "Haltevorrichtung/Verriegelung, einpolig (IHK S2021 U6).");
+gap("x21", 10, "Strom bei Drehstrom: I = P / (√3 × ___ V)", ["400", "230", "325", "690"], "400", "I = P / (√3 × 400 V) = P / 692,8 V – z. B. 57,89 kW → 83,56 A (IHK W2020 U1).");
+gap("x22", 9, "Spannungsfall Drehstrom: ΔU = √3 × l × I / (κ × ___)", ["A", "U", "P", "R"], "A", "Drehstrom mit √3, Wechselstrom mit 2 (Hin- und Rückleiter). Prozent bei Drehstrom auf 400 V beziehen.");
+ty("x23", 6, "Wie heißt der kombinierte Schutzschalter aus LS und RCD (Abkürzung)?", ["RCBO", "FI/LS", "FILS"], "<b>RCBO</b> = Überstrom- + Fehlerstromschutz in einem Gerät.");
+ty("x24", 9, "Wie nennt man das Adaptieren von CEE16 auf CEE32?", ["Aufwärtsadaptierung", "Aufwaertsadaptierung"], "<b>Aufwärtsadaptierung</b> – zulässig ohne zusätzliche Absicherung.");
+mt("x25", 6, "Ordne die IP-Ziffern zu.", [["IP 5x", "staubgeschützt"], ["IP 6x", "staubdicht"], ["IP x4", "Spritzwasser allseitig"], ["IP x5", "Strahlwasser"], ["IP x7", "zeitweiliges Untertauchen"]], "1. Ziffer = Fremdkörper/Staub, 2. Ziffer = Wasser.");
+mt("x26", 8, "Ordne Grenzwerte der Geräteprüfung (SK I) zu.", [["Schutzleiterwiderstand bis 5 m", "≤ 0,3 Ω"], ["Isolationswiderstand", "≥ 1 MΩ"], ["Schutzleiterstrom", "≤ 3,5 mA"], ["Berührungsstrom SK II", "≤ 0,5 mA"]], "Werte aus dem Prüfprotokoll VDE 0701/0702 (IHK S2022 U4, W2022 U4).");
+od("x27", 8, "Fehlersuche: RCD löst bei Inbetriebnahme aus. Reihenfolge?", ["Alle Verbraucher trennen", "RCD wieder einschalten", "Verbraucher einzeln zuschalten", "Fehlerhaftes Gerät aussondern und kennzeichnen", "Reparatur durch EFK und Prüfung nach DIN EN 50678"], "Schrittweise zuschalten, bis die RCD auslöst – so findet man den Verursacher.");
 
-// ---------- Progress storage ----------
+// ---------- Zusätzliche Rechenaufgaben (Prüfungsstil) ----------
+const CALC2 = [
+  { id: "c_3ph", t: 10, name: "Drehstrom: Strom je Außenleiter aus Gesamtleistung", gen() { const P = pick([22, 34.2, 41.5, 57.89, 69]); const I = P * 1000 / (Math.sqrt(3) * 400); return { q: `Gesamtleistung ${de(P)} kW, symmetrisch an 400 V, cos φ = 1. Wie groß ist der Strom je Außenleiter?`, a: I, unit: "A", ex: `<span class='formula'>I = P / (√3 × 400 V) = ${de(P * 1000, 0)} W / 692,8 V = ${de(I, 1)} A</span> ${I <= 16 ? "→ CEE 16A" : I <= 32 ? "→ CEE 32A" : I <= 63 ? "→ CEE 63A" : "→ CEE 125A"}` }; } },
+  { id: "c_pf", t: 10, name: "Strom aus Wirkleistung und Leistungsfaktor", gen() { const P = pick([510, 600, 750, 850, 920]); const c = pick([0.9, 0.95, 0.978, 0.98, 0.99]); const I = P / (230 * c); return { q: `Ein Scheinwerfer: 230 V, ${P} W, cos φ = ${de(c, 3)}. Wie groß ist der Strom?`, a: I, unit: "A", ex: `<span class='formula'>I = P / (U × cos φ) = ${P} W / (230 V × ${de(c, 3)}) = ${de(I)} A</span>` }; } },
+  { id: "c_ikcheck", t: 7, name: "Unverzögerter Auslösestrom eines LS", gen() { const ch = pick(["B", "C"]); const In = pick([10, 16, 32, 63]); const k = ch === "B" ? 5 : 10; return { q: `Ab welchem Kurzschlussstrom löst ein LS ${ch}${In} sicher unverzögert aus?`, a: k * In, unit: "A", ex: `${ch}: ${k} × In → <span class='formula'>${k} × ${In} A = ${k * In} A</span>. Ist Ik größer, schaltet er sofort ab.` }; } },
+  { id: "c_iz", t: 9, name: "Strombelastbarkeit Iz mit Korrekturfaktoren", gen() { const A = pick([[1.5, 18], [2.5, 26], [4, 34]]); const T = pick([[20, 1.15], [25, 1.08], [30, 1.0], [35, 0.91]]); const H = pick([[2, 0.8], [3, 0.7], [4, 0.65]]); const V = pick([[5, 0.75], [7, 0.65], [12, 0.525], [14, 0.5]]); const Iz = A[1] * T[1] * H[1] * V[1]; return { q: `Multicore ${de(A[0])} mm² (Ir = ${A[1]} A), ${V[0]} belastete Adern (f = ${de(V[1], 3)}), ${H[0]} Leitungen gebündelt (f = ${de(H[1])}), Umgebung ${T[0]} °C (f = ${de(T[1])}). Wie groß ist Iz?`, a: Iz, unit: "A", ex: `<span class='formula'>Iz = ${A[1]} × ${de(T[1])} × ${de(H[1])} × ${de(V[1], 3)} = ${de(Iz)} A</span> – danach prüfen: Ib ≤ In ≤ Iz.` }; } },
+  { id: "c_rpe", t: 6, name: "Widerstand der PA-Leitung", gen() { const l = pick([15, 20, 25, 30, 40, 50]); const R = l / (56 * 16); return { q: `Potenzialausgleichsleitung Cu 16 mm², ${l} m lang. Wie groß ist ihr Widerstand (κ = 56)?`, a: R, unit: "Ω", ex: `<span class='formula'>R = l / (κ × A) = ${l} m / (56 × 16 mm²) = ${de(R, 3)} Ω</span>. Gemessen ist der Wert etwas größer (Übergangswiderstände).` }; } },
+  { id: "c_ipe", t: 6, name: "Summe der Ableitströme", gen() { const n1 = pick([16, 24, 32]); const a1 = pick([0.5, 0.6, 1.0]); const n2 = pick([2, 4, 6]); const a2 = pick([2, 3]); const s = n1 * a1 + n2 * a2; return { q: `${n1} Geräte mit je ${de(a1)} mA und ${n2} Geräte mit je ${a2} mA Ableitstrom hängen an einer RCD. Summe der Ableitströme?`, a: s, unit: "mA", ex: `<span class='formula'>${n1} × ${de(a1)} + ${n2} × ${a2} = ${de(s, 1)} mA</span> ${s >= 15 ? "→ ≥ 15 mA: eine 30-mA-RCD kann bereits auslösen! Auf mehrere RCDs/RCBOs verteilen." : "→ unter 15 mA, unkritisch."}` }; } },
+  { id: "c_inrush", t: 10, name: "Einschaltstrom mehrerer Geräte", gen() { const n = pick([4, 6, 8, 10]); const ia = pick([10.7, 12, 15]); const s = n * ia; return { q: `${n} LED-Geräte mit je ${de(ia, 1)} A Anlaufstrom werden gleichzeitig an einem Stromkreis eingeschaltet. Gesamter Einschaltstrom?`, a: s, unit: "A", ex: `<span class='formula'>${n} × ${de(ia, 1)} A = ${de(s, 1)} A</span>. Vergleich: C10 löst ab 50–100 A aus, B16 ab 48–80 A.` }; } },
+  { id: "c_du3", t: 9, name: "Spannungsfall Drehstrom in Prozent", gen() { const l = pick([10, 20, 30, 50]); const [I, A] = pick([[63, 16], [32, 6], [32, 4], [125, 35]]); const dU = Math.sqrt(3) * l * I / (56 * A); const pct = dU / 400 * 100; return { q: `Drehstromleitung ${l} m, ${A} mm², I = ${I} A. Spannungsfall in Prozent (bezogen auf 400 V)?`, a: pct, unit: "%", ex: `<span class='formula'>ΔU = √3 × ${l} × ${I} / (56 × ${A}) = ${de(dU)} V → ${de(dU)} / 400 × 100 = ${de(pct)} %</span>` }; } },
+  { id: "c_gen", t: 2, name: "Strom eines Stromerzeugers aus kVA", gen() { const S = pick([60, 100, 175, 300]); const I = S * 1000 / (Math.sqrt(3) * 400); return { q: `Wie viel Strom je Außenleiter liefert ein Stromerzeuger mit ${S} kVA bei 400 V?`, a: I, unit: "A", ex: `<span class='formula'>I = S / (√3 × 400 V) = ${S * 1000} VA / 692,8 V = ${de(I, 1)} A</span>` }; } }
+];
+CALC2.forEach(c => { CALC_NAME[c.id] = c.name; CALC.push(c); });
+
+// ---------- IHK-Prüfungen „Sicherstellen der Energieversorgung“ (AbEV) ----------
+// lv: "offiziell" = Lösungsvorschlag der IHK liegt vor · "eigen" = Lösung selbst erarbeitet (bitte prüfen)
+// own:true an einer Aufgabe = eigene Lösung · rec:true = Aufgabentext aus der Lösung rekonstruiert
+const EXAMS = [
+{
+  id: "W2018", term: "Winter 2018/19", title: "Band-Festival „Turn Around“ im Kulturzentrum", lv: "eigen", max: 50,
+  scen: `Ein Kulturzentrum beauftragt Sie mit Planung und Durchführung eines Band-Festivals. Hauptsaal 23 m × 12 m mit Bühne 1 (55 m², Traverse 8 m), Bühne 2 (24 m²) und FOH.<br>Einspeisungen laut Plan: Bühne 1: 2 × CEE 63A/400V · Bühne 2: 1 × CEE 32A/400V + 1 × CEE 16A/400V · FOH: 1 × CEE 16A/400V.`,
+  tasks: [
+    { u: "U1", p: 10, own: true, q: `1. Ermitteln Sie den Leistungsbedarf der Lichttechnik (in VA):<br>10 × Fresnel 1000 W · 4 × Fresnel 2000 W · 8 × Profil 1000 W · 6 × 6er-Bar 3000 W · 3 × ACL-Set 2000 W · 20 × LED-RGB-Par 70 W (kompensiert) · 10 × LED-Wash-ML 350 VA · 6 × LED-Spot-ML 380 VA · 6 × Dimmer 12 × 10 A · 1 × Lichtpult 350 VA<br>2. Ermitteln Sie den Gesamtstrombedarf I (in A).<br>3. Legen Sie zwei Schutzmaßnahmen gegen elektrische Gefährdungen fest.`,
+      sol: `<b>1.</b> 10 000 + 8 000 + 8 000 + 18 000 + 6 000 + 1 400 + 3 500 + 2 280 + 350 = <b>57 530 VA</b><br>(Die Dimmer haben keine eigene Leistung – ihre Last sind die Scheinwerfer, sonst würde doppelt gezählt. „Kompensiert“ → cos φ ≈ 1, also W ≈ VA.)<br><b>2.</b> I = S / (√3 × 400 V) = 57 530 VA / 692,8 V ≈ <b>83 A je Außenleiter</b> (bei symmetrischer Verteilung). Einphasig gerechnet: 57 530 / 230 = 250 A gesamt → ÷ 3 ≈ 83 A.<br>→ Die 2 × CEE 63A an Bühne 1 reichen (126 A), ein CEE 125A wäre ebenfalls passend.<br><b>3.</b> z. B. Zusatzschutz durch RCD ≤ 30 mA · Schutzpotenzialausgleich der Traversen (16 mm² Cu) · Schutz durch automatische Abschaltung (passende LS) · nur geprüfte Betriebsmittel einsetzen.` },
+    { u: "U2", p: 10, own: true, q: `Verstärker-Datenblatt (alle Kanäle): max. Ausgangsleistung 4 × 1400 W an 8 Ω · 4 × 2600 W an 4 Ω · 4 × 3300 W an 2,7 Ω.<br>Stromaufnahme 1/3 Leistung (−5 dB, „worst case“): 10,5 A/2300 W (8 Ω) · 19 A/4200 W (4 Ω) · 26 A/5500 W (2,7 Ω).<br>1/8 Leistung (−9 dB, Normalbetrieb): 4,8 A/1050 W · 8,1 A/1850 W · 11,5 A/2400 W. Idle 1 A/160 W.<br>Beispiel im Datenblatt: 4 Ω, 1/8 → 4 × 325 W = 1300 W Ausgang, 1850 W Aufnahme → Wärme 550 W.<br>1. Bestimmen Sie die maximale Stromaufnahme (worst case). Jeder der vier Kanäle treibt zwei parallel geschaltete 8-Ω-Lautsprecher.<br>2. Berechnen Sie die zu erwartende Verlustleistung P<sub>verl</sub>.<br>3. Worauf achten Sie beim Einsatz wegen der Verlustleistung?`,
+      sol: `<b>1.</b> 2 × 8 Ω parallel = 4 Ω je Kanal. Worst case = 1/3 Ausgangsleistung → Spalte 4 Ω: <b>I = 19 A</b>.<br><b>2.</b> Normalbetrieb (1/8, 4 Ω): P<sub>verl</sub> = 1850 W − 4 × 325 W = <b>550 W</b>. (Im worst case: 4200 W − 4 × 2600 W / 3 ≈ 733 W.)<br><b>3.</b> Wärme muss abgeführt werden: Rack-Belüftung/Lüfter frei, Abstand zu Wänden, Racks nicht abdecken, ausreichend Raumlüftung/Klimatisierung, Umgebungstemperatur beachten, nicht in engen geschlossenen Räumen.` },
+    { u: "U3", p: 10, own: true, q: `Bühne 2 wird nur mit konventionellem Licht beleuchtet. Übergabepunkt CEE 32A/400V 3L+N+PE.<br>Material: 1 UV (IN CEE32, OUT 2 × CEE32 + 3 × Schuko) · 2 Dimmer (IN CEE32, OUT 12 × 10 A auf 2 × HAN16) · 4 Last-Multicore 20 m · 2 Plugboxen (HAN16 → 6 × Schuko) · 2 × 6er-Bar 6 × 0,5 kW (HAN16) · 4 × Stufenlinse 1 kW · 2 × Stufenlinse 2 kW · 4 × Profil 1 kW · 2 × ACL-Set 2 kW.<br>1. Erstellen Sie ein Blockschaltbild vom Übergabepunkt bis zu den Plugboxen/6er-Bars.<br>2. Beurteilen Sie, ob am Übergabepunkt eine Überlast entsteht.`,
+      sol: `<b>1.</b> ÜP CEE32 → UV (IN CEE32) → 2 × CEE32-Abgang → Dimmer 1 und Dimmer 2 → je 2 × HAN16-Ausgang → Last-Multicore 20 m → Plugbox 1, Plugbox 2, 6er-Bar 1, 6er-Bar 2 (je ein Multicore).<br><b>2.</b> Last: 6er-Bars 2 × 3 kW = 6 kW · Stufen 4 kW + 4 kW · Profile 4 kW · ACL 4 kW → <b>22 kW</b>.<br>Ideal symmetrisch: 22 000 W / 3 / 230 V ≈ <b>31,9 A je Außenleiter</b> → knapp unter 32 A, <b>keine Reserve</b>. Jede ungleiche Kanalverteilung führt zur Überlast einer Phase → Überlast praktisch zu erwarten; größeren Anschluss (CEE 63A) oder weniger Last.` },
+    { u: "U4", p: 10, own: true, q: `Messprotokoll Übergabepunkt Bühne 1 (CEE 63A/400V/5P, Schutzorgan MCB B63A 3P):<br>Schutzleiter spannungsfrei · L1-N 238 V, L2-N 235 V, L3-N 230 V · L1-L2 406 V, L1-L3 404 V, L2-L3 407 V · Rechtsdrehfeld · keine RCD am Übergabepunkt · Netzimpedanz L1-PE 0,5 Ω/460 A · L2-PE 0,45 Ω/511 A · L3-PE 0,55 Ω/418 A.<br>Richtwerte: 230 V (207…244 V), 400 V (360…424 V), B-LS: I<sub>a</sub> > 5 × I<sub>N</sub>, C-LS: I<sub>a</sub> > 10 × I<sub>N</sub>.<br>1. Beurteilen Sie die Messergebnisse.<br>2. Nennen Sie fünf Punkte der Sichtprüfung (SQP4 / DIN VDE 0100-600).<br>3. Es ist keine RCD vorhanden. Worauf achten Sie in der nachfolgenden mobilen Anlage?`,
+      sol: `<b>1.</b> Spannungen alle im Toleranzband → i. O. · Drehfeld rechts → i. O. · B63: I<sub>a</sub> > 5 × 63 A = 315 A; gemessen 460/511/418 A → alle > 315 A → <b>Abschaltung gewährleistet</b>. Ergebnis: Anschlusspunkt betriebssicher (RCD muss in der eigenen Anlage folgen).<br><b>2.</b> z. B. Gehäuse/Steckverbindungen/Leitungen unbeschädigt · Typenschilder/Prüfplaketten vorhanden · Leitungen kreuzen keine Rettungswege, keine Stolpergefahr · IP-Schutzart passend · Lüftungsöffnungen frei · Potenzialausgleich angeschlossen (≥ 16 mm²) · Stromkreise gekennzeichnet · Schutzorgane richtig bemessen.<br><b>3.</b> Zusatzschutz durch eigene RCD ≤ 30 mA für alle Endstromkreise (z. B. UV mit RCD/RCBO), Selektivität beachten, nach Aufbau RCD prüfen (Auslösestrom/-zeit).` },
+    { u: "U5", p: 10, own: true, q: `Zwölf Kunstlichtscheinwerfer der Bühne 1 hängen an einem Dimmer 12 × 10 A. Jeder Kanal: MCB C10. Dimmereingang: RCD 40 A/30 mA/4p.<br>1. Ein Scheinwerfer leuchtet nicht – drei mögliche Ursachen?<br>2. Drei Schritte zur Fehlersuche?<br>3. Bei Inbetriebnahme löst die RCD aus – drei mögliche Ursachen?<br>4. Erläutern Sie Ihre Vorgehensweise zur Fehlersuche.`,
+      sol: `<b>1.</b> Leuchtmittel defekt · Kanal-MCB ausgelöst · Leitung/Stecker defekt · falsch gepatcht bzw. Kanal nicht hochgezogen · Dimmerkanal defekt.<br><b>2.</b> Kanal am Pult prüfen (Patch, Level) · Kontrolle MCB/Anzeige am Dimmer · Scheinwerfer an anderen Kanal stecken bzw. Leitung tauschen · Leuchtmittel im freigeschalteten Zustand prüfen.<br><b>3.</b> Isolationsfehler/Körperschluss in einem Scheinwerfer · Feuchtigkeit in Stecker/Leitung · beschädigte Leitung · Summe der Ableitströme zu hoch · N und PE verbunden/vertauscht.<br><b>4.</b> Alle Verbraucher trennen, RCD wieder einschalten, Verbraucher einzeln zuschalten bis zur Auslösung → fehlerhaftes Gerät/Leitung gefunden; aussondern, kennzeichnen, Isolationsmessung, Reparatur durch EFK.` }
+  ]
+},
+{
+  id: "S2019", term: "Sommer 2019", title: "Schwimmbadparty im Freibad", lv: "eigen", max: 50,
+  scen: `Freibad-Party mit Liveband auf Open-Air-Bühne (12 m × 9 m) und DJ-Platz über dem Schwimmbecken. Becken nutzbar, max. 2400 Besucher, 18–24 Uhr, keine Spezialeffekte.<br>Material Bühne: 4 × Stufenlinse 230 V/2 kW · 10 × Stufenlinse 1 kW · 2 × 6er-Bar PAR64 6 × 1 kW · 4 × MH-Wash 580 W/2,6 A/cos φ 0,981 · 4 × MH-Profile 565 W/2,5 A/cos φ 0,988 · 1 × Amp-Rack CEE 32A/400V.`,
+  tasks: [
+    { u: "U1", p: 10, own: true, q: `Laut DGUV I 215-314 / DIN VDE 0100-702: Bereich 0 = Inneres des Beckens · Bereich 1 = Volumen über dem Becken bis 2,5 m Höhe und bis 2,0 m Abstand vom Beckenrand. In Bereich 0 und 1 nur Schutzkleinspannung oder Schutztrennung, keine Verteiler/Dimmer/Vorschaltgeräte.<br>Plan: UV 1 steht neben der Bühne auf der Liegewiese, UV 2 direkt am Beckenrand neben dem DJ-Platz.<br>Dürfen UV 1 und UV 2 so platziert werden? Begründen Sie.`,
+      sol: `<b>UV 1</b>: weit außerhalb von Bereich 0/1 → <b>zulässig</b>.<br><b>UV 2</b>: steht am Beckenrand, also innerhalb von 2 m → <b>Bereich 1</b> → Verteiler dort <b>nicht zulässig</b>. UV 2 muss mehr als 2 m vom Beckenrand entfernt aufgestellt werden (DJ-Technik im Bereich 1 nur mit SELV oder Schutztrennung).` },
+    { u: "U2", p: 10, own: true, q: `Die Betriebsmittel der Open-Air-Bühne werden über UV 1 versorgt. Berechnen Sie den Strombedarf I (in A) und bestimmen Sie den benötigten Anschluss.`,
+      sol: `Konventionell: 4 × 2 kW + 10 × 1 kW + 2 × 6 kW = 30 kW → 30 000 W / 230 V = 130,4 A<br>Moving Heads: 4 × 2,6 A + 4 × 2,5 A = 20,4 A<br>Summe einphasig 150,8 A → symmetrisch ÷ 3 = <b>50,3 A je Außenleiter</b><br>Amp-Rack CEE 32A (keine Angabe → volle 32 A je Außenleiter)<br>Gesamt ≈ <b>82,3 A je Außenleiter → CEE 125A/400V</b>` },
+    { u: "U3", p: 10, own: true, q: `1. Alle konventionellen Scheinwerfer (Pos. 1–3) werden <b>einzeln</b> gedimmt. Bestimmen Sie Anzahl und Ausgangsleistungen der Dimmerpacks.<br>2. Bestimmen Sie Eingang, Ausgänge und Schutzorgane der UV 1. Die Dimmerpacks haben keine RCD.`,
+      sol: `<b>1.</b> 4 + 10 + 12 (2 Bars × 6 PAR) = <b>26 Dimmerkanäle</b>. z. B. 5 × 6-Kanal-Dimmerpack mit je 6 × 2,3 kW (10 A) = 30 Kanäle (4 Reserve); 2 kW / 230 V = 8,7 A ≤ 10 A. Eingang je Pack CEE 32A/400V.<br><b>2.</b> IN: CEE 125A/400V 5P.<br>OUT: 5 × CEE 32A/400V (Dimmer) – je RCD 40 A/30 mA/4P + MCB C32 3P · 1 × CEE 32A/400V (Amp-Rack) – RCD 40 A/30 mA/4P (Typ B empfehlenswert) + MCB C32 3P · Abgänge für Moving Heads, z. B. 3 × CEE16 230 V oder Schuko – je RCD 25 A/30 mA/2P + MCB C16 1P (oder RCBO).<br>Weil die Dimmer keine RCD haben, muss der Zusatzschutz in der UV 1 sitzen.` },
+    { u: "U4", p: 10, own: true, q: `Prüfung nach DIN VDE 0100-600 (Besichtigen, Erproben und Messen). Geben Sie je ein Beispiel für das Besichtigen und für das Erproben/Messen an: Traversenkonstruktion · Zuleitung Baustromverteiler UV 1 · Scheinwerfer · Unterverteilung 1 · Plugboxen.`,
+      sol: `<b>Traverse</b>: PA angeschlossen, 16 mm², feste Verbindung · Niederohmigkeit des PA messen.<br><b>Zuleitung UV 1</b>: unbeschädigt, H07RN-F, passender Querschnitt, keine Stolperstelle/Rettungsweg · Spannung/Drehfeld, Schleifenimpedanz/I<sub>k</sub>, Isolationswiderstand.<br><b>Scheinwerfer</b>: Gehäuse/Linse unbeschädigt, Sekundärsicherung, Prüfplakette, IP für außen · Funktion erproben, Schutzleiterdurchgang.<br><b>UV 1</b>: Schutzorgane richtig bemessen, Stromkreise gekennzeichnet, IP/verschlossen · RCD-Prüftaste, Auslösestrom und -zeit messen.<br><b>Plugboxen</b>: Gehäuse und Steckdosen unbeschädigt, Plakette · Schutzleiterwiderstand, Spannung an den Steckdosen, RCD-Auslösung über die Steckdose.` },
+    { u: "U5", p: 10, own: true, q: `Bei Inbetriebnahme löst nur ein MCB im Stromkreis eines Stufenlinsenscheinwerfers sofort aus.<br>1. Welche Fehlerart liegt vor?<br>2. In welchem Anlagenteil muss sich der ausgelöste MCB befinden (Selektivität vorausgesetzt)?<br>3. Nennen Sie vier mögliche Anlagenteile, in denen der Fehler liegen kann.`,
+      sol: `<b>1.</b> Sofortige Auslösung (magnetischer Auslöser) → <b>Kurzschluss</b>.<br><b>2.</b> Im <b>Dimmerpack</b> (Kanal-MCB des betroffenen Kanals) – der dem Fehler am nächsten liegende Schutz.<br><b>3.</b> Leuchtmittel · Fassung/interne Verdrahtung des Scheinwerfers · Anschlussleitung/Stecker · Verlängerung · Multicore bzw. Breakout/Spider · Dimmerausgang.` }
+  ]
+},
+{
+  id: "W2020", term: "Winter 2020/21", title: "Hochzeit im Straßenbahnmuseum – Catering", lv: "offiziell", max: 60,
+  scen: `Hochzeit in einem Straßenbahnmuseum, Übergabepunkt CEE 125A/400V/5P mit PE-Schiene. Catering-Geräte: Fritteuse 14 kW (CEE32 400V) · Pizzaofen 10 kW (CEE16 400V) · 2 × Salamander-Grill 3 kW (CEE16 230V) · 4 × Induktionsplatte 3,5 kW (CEE16 230V) · 2 × Heißluftofen 2,67 kW (CEE16 230V) · 2 × Wärmeschrank 1,2 kW · 4 × Bain-Marie 1,2 kW · 3 × Kühlschrank 350 W · 3 × Weinschrank 100 W (Schuko).`,
+  tasks: [
+    { u: "U1", p: 10, q: `Überprüfen Sie, ob der Übergabepunkt CEE 125A für das Catering richtig dimensioniert ist.`,
+      sol: `P<sub>ges</sub> = 14 + 10 + 2·3 + 4·3,5 + 2·2,67 + 6·1,2 + 3·0,35 + 3·0,1 = <b>57,89 kW</b><br>I = P / (√3 × 400 V) = 57,89 kW / 692,8 V = <b>83,56 A</b> &lt; 125 A → ausreichend dimensioniert.` },
+    { u: "U2", p: 10, q: `Lagerbestand: UV1 Modell A (IN CEE125, OUT 2 × CEE63 mit MCB 63A C 3P, <b>ohne RCD</b>) oder Modell B (zusätzlich 2 × RCD 63A/30mA/4P). UV2 Modell A (3 × CEE32 mit RCD 40A/30mA + MCB; 12 × CEE16 230V über 3 × RCD 63A/30mA 2P + 12 × MCB) oder Modell B (18 × CEE16 230V mit je RCBO 16A 1P+N C 30mA).<br>Treffen Sie eine begründete Auswahl unter Berücksichtigung der RCD-Selektivität bzw. Betriebssicherheit.`,
+      sol: `<b>UV1 → Modell A</b>: Hier auf eine RCD verzichten, um Selektivität bei Körperschluss zu erreichen. Mit Modell B könnte ein Körperschluss an einem Endverbraucher sämtliche Verbraucher der UV 2 bzw. 3 abschalten.<br><b>UV2 → Modell B</b>: Jeder CEE16-Abgang hat eine eigene RCBO → bei Körperschluss schaltet nur der betroffene Stromkreis ab. Heizgeräte (Öfen, Fritteusen) haben hohe Schutzleiterströme, die sich an einer gemeinsamen RCD summieren und sie auslösen könnten. → Hohe Selektivität und Betriebssicherheit.` },
+    { u: "U3", p: 10, q: `Berechnen Sie den maximalen Außenleiterstrom am Eingang der UV 2 (Induktionsplatten 4 × 3,5 kW, Salamander 2 × 3 kW, Heißluftofen 2 × 2,67 kW), symmetrische Verteilung anstreben.`,
+      sol: `Verteilung: L1 = 3,5 + 3 + 2,67 kW · L2 = 3,5 + 3 + 2,67 kW · L3 = 3,5 + 3,5 kW = 7 kW<br>Höchstbelasteter Außenleiter: P = <b>9,17 kW</b><br>I = P / U = 9 170 W / 230 V = <b>39,87 A</b>` },
+    { u: "U4", p: 10, q: `Der Cateringbereich wird mit LED-Scheinwerfern am Traversenkreis beleuchtet. Nennen Sie neben der RCD zwei weitere elektrische Schutzmaßnahmen.`,
+      sol: `– Traverse mittels Potenzialausgleich an die PA-Schiene anschließen<br>– Nur geprüfte Betriebsmittel einsetzen<br>– IP-Schutzart der Geräte muss den Einsatzbedingungen entsprechen<br>– Mobile Anlage absperren, Unbefugten unzugänglich machen` },
+    { u: "U5", p: 10, q: `Vor dem Anschluss an den Übergabepunkt CEE 125A ist dieser zu überprüfen.<br>1. Nennen Sie die durchzuführenden Messungen.<br>2. Nennen Sie zwei Voraussetzungen für den Anschluss.`,
+      sol: `<b>1.</b> Spannungen L1, L2, L3 gegen N · L1, L2, L3 gegen PE · zwischen den Außenleitern · Durchgang bzw. Spannungsfreiheit N–PE · (Drehfeld)<br><b>2.</b> Die Person muss elektrotechnisch unterwiesen sein · Die Steckverbindung ist im lastfreien Zustand herzustellen.` },
+    { u: "U6", p: 10, q: `Nach dem Aufbau führen Sie eine Errichterprüfung durch.<br>1. Nennen Sie fünf Punkte der Besichtigung.<br>2. Nennen Sie zwei Messungen.`,
+      sol: `<b>1.</b> Keine Beschädigungen an Gehäusen, Steckverbindungen, Leitungen · Typenschilder vorhanden · Leitungswege kreuzen keine Rettungswege · keine Stolpergefahr · Geräte geprüft · IP-Schutzcode passend · Lüftungsöffnungen frei · Wärme erzeugende Geräte mit Abstand · richtige Leitungsauswahl · PA korrekt angeschlossen (≥ 16 mm²) · Stromkreise gekennzeichnet · Schutzorgane richtig bemessen.<br><b>2.</b> RCD: Auslösestrom und Auslösezeit · Potenzialausgleich: Niederohmigkeit.` }
+  ]
+},
+{
+  id: "S2021", term: "Sommer 2021", title: "Bühne mit Drehscheibe und Wasservorhang", lv: "offiziell", max: 70, rec: true,
+  scen: `<b>Hinweis:</b> Für Sommer 2021 liegt nur das Lösungsheft vor. Die Aufgabentexte sind aus den Lösungen rekonstruiert – Daten können fehlen.`,
+  tasks: [
+    { u: "U1", p: 10, rec: true, q: `1. Welche Spannungen erwarten Sie bei der Messung am Übergabepunkt (L–N, L–L, L–PE, N–PE)?<br>2. Die Messwerte sind auffällig. Welcher Fehler könnte vorliegen und wie gehen Sie weiter vor?`,
+      sol: `<b>1.</b> L–N: 230 V · L–L: 400 V · L–PE: 230 V · N–PE: 0 V bzw. Durchgang.<br><b>2.</b> Der N-Leiter könnte nicht angeschlossen sein. Vorgehen: zuständige Elektrofachkraft/Auftraggeber/Betreiber informieren – der Anschluss darf so nicht in Betrieb genommen werden.` },
+    { u: "U2", p: 10, rec: true, q: `1. Berechnen Sie den Strombedarf der Gewerke Ton (4 × 5 A, 4 × 3 A, 1 × 3 A, 2 × 1 A, 1 × 1 A), Licht (24 × 220 W, 10 × 150 W) und Effekte (1,8 kW + 1,5 kW + 1,8 kW).<br>2. Es gibt drei Übergabepunkte CEE 16A/400V. Reicht das?`,
+      sol: `<b>1.</b> Ton: 5·4 + 3·4 + 3 + 1·2 + 1 = <b>38 A</b> · Licht: 220·24 + 150·10 = 6780 W → 6780/230 = <b>29,5 A</b> · Effekte: 5,1 kW → 5100/230 = <b>22,17 A</b><br><b>2.</b> Pro Anschluss 3 × 16 A = 48 A, insgesamt 3 × 48 A. Jedes Gewerk kann über einen eigenen Übergabepunkt versorgt werden – der Bedarf ist gedeckt.` },
+    { u: "U3", p: 10, rec: true, q: `Erstellen Sie das Blockschaltbild: ÜP1–ÜP3 je CEE16A, UV2 für Ton, UV2 für Video/Effekte, UV1 (Eingang CEE32) für Licht mit Plugboxen über HAN16.`,
+      sol: `ÜP1 CEE16 → Drehstromleitung CEE16/5P → UV 2 → Ton<br>ÜP2 CEE16 → Drehstromleitung CEE16/5P → UV 2 → Video und Effekte<br>ÜP3 CEE16 → <b>Drehstromadapter CEE16/5P auf CEE32/5P</b> → UV 1 → Licht → Multicore HAN16 → Plugbox (In HAN16, Out HAN16 + 12 × Schuko) → Plugbox (12 × Schuko) · zweiter HAN16 → Plugbox (6 × Schuko)` },
+    { u: "U4", p: 10, rec: true, q: `Verteilen Sie die Tontechnik symmetrisch auf L1–L3: 4 × Aktiv-Bass 5 A · 4 × Aktiv-Topteil 3 A · 1 × DJ-Monitor 3 A · 2 × CD/USB-Player 1 A · 1 × Mischpult 1 A. Begründen Sie.`,
+      sol: `z. B. Bass: L1 10 A, L2 5 A, L3 5 A · Topteile: L1 3, L2 6, L3 3 · Monitor: L3 3 · Player: L2 2 · Pult: L3 1 → <b>L1 13 A · L2 13 A · L3 12 A</b> (weitere Verteilungen möglich).<br>Begründung: möglichst symmetrische Phasenauslastung.` },
+    { u: "U5", p: 10, rec: true, q: `1. Darf eine CEE16-Einspeisung auf einen CEE32-Eingang adaptiert werden?<br>2. Begründen Sie, ob eine zusätzliche Absicherung nötig ist.`,
+      sol: `<b>1.</b> Ja.<br><b>2.</b> Eine <b>Aufwärtsadaptierung</b> bewirkt eine Erhöhung des Aderquerschnitts; der vorgeschaltete Schutz (16 A) schützt auch die dickere Leitung → keine zusätzliche Absicherung nötig. (Abwärts wäre eine Absicherung nötig!)` },
+    { u: "U6", p: 10, rec: true, q: `Nennen Sie die Anforderungen an den Schutzpotenzialausgleich.`,
+      sol: `– Alle leitenden Bühnenaufbauten, die eine Spannung annehmen können, anschließen<br>– Leitungen H07RN-F oder gleichwertig<br>– Steckverbindungen einpolig<br>– Grün-gelbe Kennzeichnung (nicht zwingend durchgängig)<br>– Steckverbinder mit Haltevorrichtung (Verriegelung), gegen Öffnen ohne Werkzeug gesichert<br>– Querschnitt mind. 16 mm², Material Kupfer<br>– Errichterprüfung für das PA-System durchführen` },
+    { u: "U7", p: 10, rec: true, q: `Nennen Sie je drei Prüfungen/Messungen der Errichterprüfung (1. Teil und 2. Teil laut Lösung).`,
+      sol: `<b>1.</b> Auslösestrom der RCD · Durchgängigkeit des Schutzleitersystems · Isolationswiderstand<br><b>2.</b> Schleifenimpedanz · Auslösezeit der RCD · Spannung` }
+  ]
+},
+{
+  id: "W2021", term: "Winter 2021/22", title: "Weihnachtsmarkt mit Eisfläche und Generator", lv: "eigen", max: 50,
+  scen: `Eislauffläche 13 m × 8 m auf einem Weihnachtsmarkt, umrahmt von Ground-Support mit Licht, Ton und vier LED-Wänden. Showbühne 6 m × 3 m. Versorgung über einen Generator (nur Übergabepunkt: geerdet, PA-Schiene, nur Überstromschutz).`,
+  tasks: [
+    { u: "U1", p: 10, own: true, q: `1. Strombedarf (Licht/Ton Ground-Support über Racks A–D, für Kettenzüge und Racks volle Anschlussleistung):<br>Ton Showbühne: 4 × Fullrange 2,5 A · 4 × Monitor 2 A · 4 × Sub 9,5 A · FOH 5 A · Band 12 A<br>Licht Showbühne: 4 × Stufen 4,4 A · 4 × Stagebar 0,2 A · Pult 5 A · 60 × Pixelarray 2,5 A<br>Kettenzugsteuerung 1 × CEE32A/400V · Racks A–D 4 × CEE32A/400V<br>2. Kettenzüge sind nur für die Montage. Generator-Angebote: Modell 1: 300 kVA/240 kW (68 dB(A)/7 m) · Modell 2: 175 kVA/140 kW (70 dB(A)/7 m). Bestimmen Sie den Gesamtstrom und wählen Sie ein Modell.`,
+      sol: `<b>1.</b> Ton Showbühne: 10 + 8 + 38 + 5 + 12 = <b>73 A</b> · Licht Showbühne: 17,6 + 0,8 + 5 + 150 = <b>173,4 A</b> · Kettenzugsteuerung: <b>32 A</b> je Außenleiter · Racks A–D: 4 × 32 A = <b>128 A</b> je Außenleiter.<br><b>2.</b> Showbühne symmetrisch: (73 + 173,4) / 3 ≈ 82,1 A je Außenleiter + Racks 128 A ≈ <b>210 A je Außenleiter</b> (Kettenzüge während der Show spannungsfrei; mit Kettenzügen ≈ 242 A).<br>Modell 2: I = 175 000 VA / (√3 × 400 V) ≈ 252,6 A → reicht (ca. 17 % Reserve). Modell 1: ≈ 433 A → viel Reserve, aber teurer/schwerer.<br>→ Begründete Wahl, z. B. <b>Modell 2</b> (ausreichend, wirtschaftlicher). Wer mehr Reserve will: Modell 1 – beides ist mit Begründung vertretbar.<br><i>Hinweis: Die IHK-Lösung liegt nicht vor; die Rechenweise (Racks als Strom je Außenleiter) bitte prüfen.</i>` },
+    { u: "U2", p: 10, own: true, q: `Der Generator dient nur als Übergabepunkt (nur Überstromschutz, geerdet, PA-Schiene). Nennen Sie fünf elektrotechnische Schutzmaßnahmen (Personenschutz) mit konkreten Angaben.`,
+      sol: `– Zusatzschutz: RCD I<sub>ΔN</sub> ≤ 30 mA für alle Endstromkreise (in der eigenen UV)<br>– Schutz durch automatische Abschaltung: passende MCB, Schleifenimpedanz/I<sub>k</sub> prüfen<br>– Schutzpotenzialausgleich: Ground-Support, Bühne, LED-Wände mit 16 mm² Cu an die PA-Schiene des Generators<br>– Betriebsmittel für außen geeignet (mind. IP44), Leitungen H07RN-F<br>– Nur geprüfte Betriebsmittel; Errichterprüfung vor Inbetriebnahme<br>– Verteiler gegen Unbefugte sichern (abschließen, absperren)` },
+    { u: "U3", p: 10, own: true, q: `1. Nennen Sie zwei Kriterien für eine Strom-/Leistungsverteilung.<br>2. Verteilen Sie die Lichttechnik der Showbühne (4 × Stufen 4,4 A, 4 × Stagebar 0,2 A, Pult 5 A, 60 × Pixelarray 2,5 A) auf L1–L3 und bestimmen Sie den Anschluss.`,
+      sol: `<b>1.</b> Möglichst symmetrische Verteilung · Strombelastbarkeit von Leitungen/Steckern/Schutzorganen · Gewerke trennen (Ton eigene Phase) · Reserve · Gleichzeitigkeit.<br><b>2.</b> z. B. L1: 20 Pixel (50 A) + 2 Stufen (8,8 A) = 58,8 A · L2: 20 Pixel + 1 Stufe + Pult = 59,4 A · L3: 20 Pixel + 1 Stufe + 4 Stagebars = 55,2 A (Summe 173,4 A).<br>→ max. ≈ 59,4 A je Außenleiter → <b>CEE 63A/400V</b>.` },
+    { u: "U4", p: 10, own: true, q: `Der Ground-Support ist mit einer 40 m langen Potenzialausgleichsleitung an die PA-Schiene des Generators angeschlossen.<br>1. Benötigter Querschnitt?<br>2. Berechnen Sie den Leiterwiderstand.<br>3. Gemessen: R = 0,08 Ω. Beurteilen Sie.`,
+      sol: `<b>1.</b> A = <b>16 mm²</b> Cu.<br><b>2.</b> R = l / (κ × A) = 40 m / (56 m/(Ω·mm²) × 16 mm²) = <b>0,045 Ω</b><br><b>3.</b> Messwert größer als berechnet → Übergangswiderstände der Verbindungsstellen und Messleitungen. Er liegt unter dem Richtwert (z. B. 0,1 Ω; nach DGUV-I 203-072 bis 1 Ω) → <b>zulässig</b>.` },
+    { u: "U5", p: 10, own: true, q: `Errichterprüfung nach SQP4.<br>1. Fünf Kriterien der Besichtigung.<br>2. Beurteilen Sie das Protokoll (Plugbox 1, 6 Stromkreise, Multicore 12 × 2,5 mm², RCBO C10, I<sub>ΔN</sub> 30 mA):<br>SK1: I<sub>k</sub> 400 A, R<sub>iso</sub> > 1 GΩ, I<sub>mess</sub> 24 mA · SK2: 390 A, > 1 GΩ, 22 mA · SK3: 410 A, > 1 GΩ, 11 mA · SK4: 90 A, > 1 GΩ, 26 mA · SK5: 405 A, > 1 GΩ, 45 mA · SK6: 120 A, 10 MΩ, 25 mA`,
+      sol: `<b>1.</b> siehe Besichtigungspunkte (Beschädigungen, Plaketten, IP, Rettungswege, Stolpergefahr, Kennzeichnung, PA, Schutzorgane …).<br><b>2.</b> Grenzwerte: C10 → I<sub>k</sub> ≥ 10 × 10 A = <b>100 A</b> · R<sub>iso</sub> ≥ <b>1 MΩ</b> · Auslösestrom zwischen <b>15 und 30 mA</b> (0,5…1 × I<sub>ΔN</sub>).<br>– SK4: I<sub>k</sub> = 90 A &lt; 100 A → <b>Mangel</b> (Abschaltung nicht sicher)<br>– SK3: 11 mA &lt; 15 mA → RCBO löst zu früh aus → <b>Mangel</b><br>– SK5: 45 mA &gt; 30 mA → <b>Mangel</b> (kein ausreichender Personenschutz)<br>– SK6: 10 MΩ ≥ 1 MΩ → i. O. (auffällig niedriger als die anderen, beobachten)<br>– SK1, SK2 i. O.` }
+  ]
+},
+{
+  id: "S2022", term: "Sommer 2022", title: "Baumaschinenmesse mit LED-Wand im Außenbereich", lv: "eigen", max: 60,
+  scen: `Messestand mit Gesprächsrunden; Übertragung von Bild und Ton ins Außengelände. Außen: LED-Wand 19 × 10 = 190 Panels. Anschlüsse der Messe: CEE 16/32/63/125A jeweils 400V/3L+N+PE oder 230V/L+N+PE.<br>Panel-Datenblatt: 500 × 500 mm · Leistung avg. 60 W / max. 180 W · 9 kg · True1 PowerCon · Ethercon · IP65 front / IP54 rear.`,
+  tasks: [
+    { u: "U1", p: 10, own: true, q: `1. Berechnen Sie den Strombedarf I der Videowand.<br>2. Ermitteln Sie den benötigten Anschluss.`,
+      sol: `<b>1.</b> P = 190 × 180 W = 34 200 W (Maximalwert – immer mit max. rechnen!)<br>I = P / (√3 × 400 V) = 34 200 / 692,8 = <b>49,4 A je Außenleiter</b> (cos φ ≈ 1 angenommen)<br><b>2.</b> → <b>CEE 63A/400V/3L+N+PE</b>` },
+    { u: "U2", p: 10, own: true, q: `1. Erläutern Sie die IP-Schutzcodes aus dem Datenblatt.<br>2. Sind die Panels für den Außeneinsatz geeignet?`,
+      sol: `<b>1.</b> IP65 (Front): 6 = staubdicht, 5 = Schutz gegen Strahlwasser aus beliebigem Winkel · IP54 (Rückseite): 5 = staubgeschützt, 4 = Schutz gegen Spritzwasser von allen Seiten.<br><b>2.</b> Ja – beide ≥ IP44, also für Regen geeignet. Die Rückseite verträgt aber kein Strahlwasser.` },
+    { u: "U3", p: 10, own: true, q: `Die Übergabepunkte (CEE und Einzeladeranschlüsse/Powerlock) werden von Ihnen in Betrieb genommen.<br>1. Zwei Punkte, die Sie bei der Inbetriebnahme beachten.<br>2. Zwei Tätigkeiten zur Prüfung/Inbetriebnahme der Drehstrom-ÜP, die ohne RCD bestellt wurden.`,
+      sol: `<b>1.</b> Stecken nur im lastfreien Zustand · bei Einzeladern Reihenfolge: zuerst PE, dann N, dann L1–L3 (Trennen umgekehrt) · nur durch EFK/EuP · Freigabe/Übergabe durch Betreiber.<br><b>2.</b> Messungen am ÜP: Spannungen L–N, L–L, L–PE, N–PE, Drehfeld · Netzimpedanz/I<sub>k</sub> bezogen auf das Schutzorgan · Zusatzschutz durch eigene RCD 30 mA in der UV sicherstellen und deren Auslösung prüfen.` },
+    { u: "U4", p: 10, own: true, q: `Die 190 Panels werden über vier Multicores mit je sechs Stromkreisen versorgt. Prüfprotokoll eines Panels (SK I): Schutzleiterwiderstand 0,12 Ω (≤ 0,3 Ω) · Differenzstrom 1,2 mA (≤ 3,5 mA).<br>Modell 1: IN CEE63, 4 × 19-Pin, 24 × RCBO 16A C 2P 30mA · Modell 2: IN CEE63, 24 × MCB 16A C 1P, 4 × RCD 40A 30mA 4P.<br>1. Wählen Sie das geeignete Modell. 2. Begründen Sie.`,
+      sol: `<b>1.</b> <b>Modell 1</b>.<br><b>2.</b> 190 Panels / 24 Kreise ≈ 8 Panels je Kreis → 8 × 1,2 mA ≈ 9,6 mA je RCBO (&lt; 15 mA) → sicher.<br>Modell 2: eine RCD je Multicore (6 Kreise ≈ 48 Panels) → ≈ 57 mA Ableitstrom &gt; 30 mA → RCD löst aus. Außerdem: RCBO = Selektivität, ein Fehler schaltet nur einen Kreis ab.<br>(Die Panels selbst sind i. O.: 0,12 Ω ≤ 0,3 Ω; 1,2 mA ≤ 3,5 mA.)` },
+    { u: "U5", p: 10, own: true, q: `Potenzialausgleich im Außenbereich Videowand.<br>1. Wo können Sie an die Haupterdungsschiene anschließen (zwei Möglichkeiten)?<br>2. Leiterquerschnitt?<br>3. Vier Anforderungen.<br>4. Vorgehen bei der Messung der Durchgängigkeit/Niederohmigkeit.`,
+      sol: `<b>1.</b> An der Haupterdungs-/Potenzialausgleichsschiene des Gebäudes bzw. am Erdungsanschluss des Übergabepunkts · an der PE-Schiene/Erdungsschraube der eigenen Unterverteilung.<br><b>2.</b> <b>16 mm²</b> Cu.<br><b>3.</b> H07RN-F · grün-gelb · einpolige Steckverbinder mit Verriegelung gegen Öffnen ohne Werkzeug · Kupfer · alle leitfähigen Teile (sternförmig) anschließen.<br><b>4.</b> Messgerät nach DIN VDE 0413, Messleitungen kompensieren (Nullabgleich), Prüfstrom ≥ 200 mA, zwischen PA-Schiene und jedem angeschlossenen Teil messen, Werte mit Richtwert vergleichen und dokumentieren.` },
+    { u: "U6", p: 10, own: true, q: `An einer Plugbox sollen die Schutzmaßnahmen (Personenschutz) überprüft werden. Nennen Sie vier mögliche Messungen.`,
+      sol: `Isolationswiderstand · Durchgängigkeit/Widerstand des Schutzleiters · Schleifenimpedanz bzw. Kurzschlussstrom I<sub>k</sub> · RCD-Auslösestrom · RCD-Auslösezeit · Spannung/Drehfeld (vgl. IHK-Lösung Sommer 2021 U7).` }
+  ]
+},
+{
+  id: "W2022", term: "Winter 2022/23", title: "Gemeinderatssitzung in der Mehrzweckhalle", lv: "eigen", max: 50,
+  scen: `Mehrzweckhalle 45 m × 27 m, Konferenztechnik, Präsentation eines Feuerwehrfahrzeugs. Catering vor der Halle über einen <b>ungeerdeten Stromerzeuger</b>: Doppelfritteuse 2 × 1,6 kW (2 × Schuko) · Kombidämpfer 3,4 kW (CEE16 400V) · 6 × RGB-LED-Fluter 150 W (Schuko, SK I, IP65).<br>Stromerzeuger Typ I: max. 6,6 kVA/5,3 kW, Dauer 6,0 kVA/4,8 kW, IP54, 2 × Schuko, 1 × CEE16, 3 × C16A · Typ II: max. 11 kVA/8,8 kW, Dauer 10 kVA/8,0 kW, IP54, 2 × Schuko, 2 × CEE16, 3 × C16A.`,
+  tasks: [
+    { u: "U1", p: 10, own: true, q: `Ermitteln Sie den Leistungsbedarf und wählen Sie den geeigneten Stromerzeuger.`,
+      sol: `P = 2 × 1,6 kW + 3,4 kW + 6 × 0,15 kW = <b>7,5 kW</b><br>Typ I: Dauerleistung 4,8 kW &lt; 7,5 kW → zu klein · Typ II: Dauerleistung 8,0 kW ≥ 7,5 kW → <b>Typ II</b> (bei Dauerbetrieb immer die Dauerleistung ansetzen, nicht die Maximalleistung).` },
+    { u: "U2", p: 10, own: true, q: `Der Stromerzeuger wird im Freien aufgestellt. Ist der Einsatz ohne weitere Maßnahmen möglich?`,
+      sol: `IP54 = staubgeschützt + Spritzwasser → für den Außeneinsatz grundsätzlich geeignet.<br>Aber: Der Erzeuger ist ungeerdet und hat <b>keine RCD</b>. Nach DGUV-I 203-032 braucht bei mehreren Verbrauchsmitteln jedes Verbrauchsmittel bis auf eines eine RCD ≤ 30 mA → <b>nicht ohne weitere Maßnahmen</b>. Außerdem: standsicher, Abgase/Abstand, Absperrung gegen Unbefugte.` },
+    { u: "U3", p: 10, own: true, q: `Laut DGUV-I 203-032 (Blatt 3): RCD 30 mA für das zweite und jedes weitere Verbrauchsmittel – im Erzeuger oder in Verteilern mit je einer RCD pro Steckdose.<br>UV1: 6 × Schuko, 1 × RCD 40A/30mA/4P, 6 × MCB C16 · UV2: 6 × Schuko, 6 × RCBO C16/30mA · UV3: 6 × Schuko ohne Schutz · UV4: 1 × CEE16 mit RCD 40A/30mA, 3 × Schuko mit je RCD 25A/30mA.<br>1. Welche UV sind geeignet (Begründung)?<br>2. Ergänzen Sie das Blockschaltbild.`,
+      sol: `<b>1.</b> UV1: <b>nein</b> – eine RCD für alle Steckdosen. UV2: <b>ja</b> – eine RCBO je Steckdose. UV3: <b>nein</b> – keine RCD. UV4: <b>ja</b> – jeder Abgang hat eine eigene RCD.<br><b>2.</b> Erzeuger CEE16 (1) → UV4: CEE16 → Kombidämpfer, Schuko → 2 × Fritteuse + 1 LED-Fluter · Erzeuger CEE16 (2) → UV2: 5 LED-Fluter (1 Steckdose Reserve).` },
+    { u: "U4", p: 10, own: true, q: `Eine RCD löst bei Inbetriebnahme aus, Verursacher ist ein Scheinwerfer. Beim Öffnen sieht man eine abisolierte Ader am Gehäuse.<br>1. Vorgehen beim Öffnen (Sicherheit)?<br>2. Fehlerart?<br>3. Weiteres Vorgehen?<br>4. Gerät mit Schutzleiterzeichen (SK I): Messungen nach der Reparatur und Grenzwerte?`,
+      sol: `<b>1.</b> Vom Netz trennen (Stecker ziehen), gegen Wiedereinstecken sichern, Spannungsfreiheit feststellen, Kondensatoren entladen lassen; nur durch EFK.<br><b>2.</b> Isolationsfehler → <b>Körperschluss</b> (blanke Ader berührt das Gehäuse).<br><b>3.</b> Gerät kennzeichnen und aussondern, Reparatur durch EFK (Ader neu isolieren/ersetzen, Zugentlastung), Prüfung nach DIN EN 50678 (VDE 0701), dokumentieren.<br><b>4.</b> Schutzleiterwiderstand ≤ 0,3 Ω (bis 5 m, + 0,1 Ω je 7,5 m, max. 1 Ω) · Isolationswiderstand ≥ 1 MΩ · Schutzleiterstrom ≤ 3,5 mA.` },
+    { u: "U5", p: 10, own: true, q: `12 LED-Scheinwerfer (je 92 W, einzeln mit C10 abgesichert) hängen an 2 × HAN16 Multicore (6L+6N+PE, 30 m, 2,5 mm²). Hallentemperatur 25 °C, Abstand der Multicores = Durchmesser d.<br>Tabellen: I<sub>r</sub>(2,5 mm²) = 26 A · Temperatur (60 °C-Leitung) bei 25 °C: 1,08 · einlagig mit Abstand d, 2 Leitungen: 0,94 · vieladrig: 10 Adern 0,55 / 14 Adern 0,50.<br>1. Korrekturfaktoren 2. I<sub>B</sub> 3. I<sub>N</sub> 4. I<sub>Z</sub> 5. Beurteilung`,
+      sol: `<b>1.</b> f1 = 1,08 · f2 = 0,94 · f3 (12 belastete Adern, interpoliert) = 0,525 (ohne Interpolation 0,50)<br><b>2.</b> I<sub>B</sub> = 92 W / 230 V = <b>0,4 A</b> je Stromkreis<br><b>3.</b> I<sub>N</sub> = <b>10 A</b><br><b>4.</b> I<sub>Z</sub> = 26 A × 1,08 × 0,94 × 0,525 ≈ <b>13,86 A</b><br><b>5.</b> I<sub>B</sub> 0,4 A ≤ I<sub>N</sub> 10 A ≤ I<sub>Z</sub> 13,86 A → <b>richtig dimensioniert</b>. (Vorgehen wie in der IHK-Lösung Sommer 2024 U3.)` }
+  ]
+},
+{
+  id: "S2024", term: "Sommer 2024", title: "Modenschau im historischen Saal", lv: "offiziell", max: 60,
+  scen: `Modenschau in einem historischen Saal. Unterlagen: Tabellenwerk, Blockschaltbild, 2D-Draufsicht. Laufsteg-Beleuchtung: 12 × LED-Stufenlinse (230 V, cos φ 0,9, 510 W) · 7 × LED-ML-Profiler (230 V, cos φ 0,99, 6 A) · 12 × LED-Rampe (230 V, 230 VA).`,
+  tasks: [
+    { u: "U1", p: 10, q: `1. Berechnen Sie den Strombedarf der Scheinwerfer.<br>2. Erstellen Sie eine symmetrische Stromverteilung.`,
+      sol: `<b>1.</b> Stufenlinse: I = 510 W / (230 V × 0,9) = 2,46 A × 12 = 29,52 A · Profiler: 6 A × 7 = 42 A · Rampe: 230 VA / 230 V = 1 A × 12 = 12 A → <b>Stromsumme 83,52 A</b><br><b>2.</b> Stufenlinsen je 4 pro Phase: 9,84 / 9,84 / 9,84 A · Profiler 2/2/3: 12 / 12 / 18 A · Rampen 6/6/0: 6 / 6 / – → <b>L1 = L2 = L3 = 27,84 A</b>` },
+    { u: "U2", p: 10, q: `An Plugbox 4 tritt ein Kurzschluss auf, I<sub>K</sub> = 300 A. Schutz: RCBO C10 A/30 mA (UV3) und LS B32 A/3P (UV1).<br>1. Welche Schutzorgane könnten auslösen?<br>2. Beurteilen Sie die Selektivität.<br>3. Welche Maßnahme in UV1 stellt Selektivität her?`,
+      sol: `<b>1.</b> RCBO C10: I<sub>K</sub> = 300 A > 10 × 10 A = 100 A → löst aus · LS B32: 300 A > 5 × 32 A = 160 A → löst ebenfalls aus.<br><b>2.</b> Keine Selektivität – es ist nicht sicher, ob RCBO C10 oder LS B32 zuerst auslöst.<br><b>3.</b> In UV1 LS-Schalter Typ <b>C32</b> statt B32 (10 × 32 A = 320 A > 300 A) oder ein zeitverzögertes MCB.` },
+    { u: "U3", p: 10, q: `Vier HAN16-Multicores (12 belastete Adern, 2,5 mm², 20 m) versorgen Plugbox 1–4 und sind als Bündel an der Traverse verlegt. Alle Scheinwerfer einzeln über RCBO C10/30mA. T<sub>U</sub> = 25 °C, Leitungstemperatur 60 °C, I<sub>B</sub> = 6 A, I<sub>N</sub> = 10 A.<br>1. Umrechnungsfaktoren 2. Strombelastbarkeit I<sub>Z</sub> 3. Betriebssicherheit 4. Maßnahme bei gleichem Querschnitt`,
+      sol: `<b>1.</b> T<sub>U</sub> 25 °C: f1 = 1,08 · Bündel aus 4 Leitungen: f2 = 0,65 · 12 Adern: f3 = 0,525 (0,5 ohne Interpolation)<br><b>2.</b> I<sub>Z</sub> = 26 A × 1,08 × 0,65 × 0,525 = <b>9,58 A</b><br><b>3.</b> I<sub>B</sub> ≤ I<sub>N</sub> ≤ I<sub>Z</sub>: 6 A &lt; 10 A &gt; 9,58 A → <b>nicht betriebssicher</b><br><b>4.</b> Leitungen nicht bündeln, sondern nebeneinander verlegen: f2 = 0,75 → I<sub>Z</sub> ≈ 11 A > I<sub>N</sub>` },
+    { u: "U4", p: 10, q: `Berechnen und beurteilen Sie den Spannungsfall vom Übergabepunkt bis zur Plugbox (mit den Bemessungsströmen der LS): CEE63 20 m 16 mm² (63 A, Drehstrom) · CEE32 4 m 6 mm² (32 A, Drehstrom) · HAN16 20 m 2,5 mm² (10 A, Wechselstrom).`,
+      sol: `ΔU<sub>CEE63</sub> = √3 × 20 m × 63 A / (56 × 16) = 2,44 V → 2,44/400 = <b>0,61 %</b><br>ΔU<sub>CEE32</sub> = √3 × 4 m × 32 A / (56 × 6) = 0,66 V → <b>0,165 %</b><br>ΔU<sub>HAN16</sub> = 2 × 20 m × 10 A / (56 × 2,5) = 2,86 V → 2,86/230 = <b>1,24 %</b><br>Gesamt = 0,61 + 0,165 + 1,24 = <b>2,015 % &lt; 3 % → in Ordnung</b>` },
+    { u: "U5", p: 10, q: `Potenzialausgleich: Variante A = sternförmig über einen Potenzialverteiler; Variante B = Reihe (1 → 2 → 3 → 4).<br>1. Welche Variante ist sicherer?<br>2. Benennen Sie die Bauteile 1–4.`,
+      sol: `<b>1.</b> <b>Variante A</b> (sternförmig): Bei einer unterbrochenen Leitung ist nur eine Konstruktion nicht mehr geerdet. Bei B verlieren alle folgenden Teile den PA.<br><b>2.</b> 1: Traverse 1/2/3 · 2: Traverse 4 · 3: Traverse 5 · 4: Laufsteg.` },
+    { u: "U6", p: 10, q: `Gemessen: R<sub>PE</sub> = 0,07 Ω für eine 20 m lange PA-Leitung.<br>1. Drei Kriterien der PA-Leitung 2. Berechnen Sie R<sub>PE</sub> 3. Warum weicht die Messung ab? 4. Ist der PA zulässig?`,
+      sol: `<b>1.</b> A = 16 mm² · H07RN-F · grün-gelb · Kupfer<br><b>2.</b> R<sub>PE</sub> = 20 m / (56 × 16 mm²) = <b>0,022 Ω</b><br><b>3.</b> Widerstand der Verbindungsstellen (Übergangswiderstände) – der Messwert ist immer etwas größer.<br><b>4.</b> Zulässig, Richtwert z. B. 0,1 Ω wird nicht überschritten – oder U<sub>B</sub> = 0,07 Ω × 30 mA = 0,0021 V &lt; 50 V AC. (Richtwerte: DGUV-I 203-072 bis 1,0 Ω; IGVW SQP4)` }
+  ]
+},
+{
+  id: "W2024", term: "Winter 2024/25", title: "Erntedankfest in der Scheune", lv: "eigen", max: 60,
+  scen: `Erntedankfest: Bühne in der Scheune, Biergarten auf der Freifläche. Speisepunkt CEE 16A/400V/5P mit MCB C16. Verteiler UV 3 × 32A/400V: Eingang CEE32, RCD 63A/0,03A; 6 × Schuko mit MCB C16: #3 L1, #4 L2, #5 L3, #6 L1, #7 L2, #8 L3; 2 × HAN16 (#MC1, #MC2) mit 12 × RCBO C10/30mA.<br>Variante 1: Plug-Box 1 (PowerCon) an #5, Plug-Box 2 an #8, je über Schuko→PowerCon. Variante 2: Plug-Boxen über HAN16 an #MC1/#MC2.<br>Scheinwerfer: 4 × MH-Spot 850 W, PF 0,98, IP65 · 4 × MH-Wash 750 W, PF 0,99, IP65 · 4 × Stufenlinse 600 W, PF 0,978, IP20 (alle 230 V).`,
+  tasks: [
+    { u: "U1", p: 10, own: true, q: `1. Kann der Strombedarf durch den Speisepunkt (CEE16, C16) gedeckt werden?<br>2. Beurteilen Sie den Einfluss des Leistungsfaktors.`,
+      sol: `<b>1.</b> I = P / (U × cos φ): Spot 850 / (230 × 0,98) = 3,77 A × 4 = 15,08 A · Wash 750 / (230 × 0,99) = 3,29 A × 4 = 13,18 A · Stufenlinse 600 / (230 × 0,978) = 2,67 A × 4 = 10,67 A → <b>Σ 38,93 A</b><br>Symmetrisch: 38,93 / 3 ≈ <b>12,98 A je Außenleiter &lt; 16 A</b> → gedeckt (nur bei symmetrischer Verteilung!).<br><b>2.</b> cos φ &lt; 1 → Scheinleistung > Wirkleistung → höherer Strom (Blindstromanteil) belastet Leitungen und Schutzorgane. Hier nahe 1 → nur ca. 1–2 % mehr Strom.` },
+    { u: "U2", p: 10, own: true, q: `Die Bühne wird vom Speisepunkt CEE16 über den Verteiler UV (Eingang CEE32) versorgt.<br>1. Wie muss der Anschluss am Speisepunkt ausgeführt werden?<br>2. Variante 1: Überlast an den belegten Ausgängen und am Speisepunkt?`,
+      sol: `<b>1.</b> Aufwärtsadaptierung CEE16-Stecker auf CEE32-Kupplung (Adapter) – zulässig, da der C16 am Speisepunkt die Leitung schützt (vgl. IHK-Lösung S2021 U5).<br><b>2.</b> Je 6 Scheinwerfer an #5 und #8 → ≈ 19,5 A je Ausgang &gt; 16 A (C16, Schuko max. 16 A) → <b>Überlast an beiden Ausgängen</b>. #5 und #8 liegen beide auf <b>L3</b> → 38,9 A auf L3 &gt; 16 A → <b>Überlast am Speisepunkt</b>.` },
+    { u: "U3", p: 10, own: true, q: `An #5 und #8 fließt jeweils I<sub>B</sub> = 24 A (MCB C16).<br>1. Markieren Sie im Kennlinienfeld die Auslösezeit und geben Sie sie an.<br>2. Beurteilen Sie die Betriebssicherheit mit Gleichzeitigkeitsfaktor 0,65.`,
+      sol: `<b>1.</b> 24 A / 16 A = <b>1,5 × I<sub>N</sub></b> → thermischer Bereich (Überlast). Abgelesen im Toleranzband etwa <b>1 bis 10 Minuten</b> (exakten Wert im Diagramm ablesen!). Grundsatz: ab 1,45 × I<sub>N</sub> Auslösung innerhalb 1 h.<br><b>2.</b> 24 A × 0,65 = <b>15,6 A &lt; 16 A</b> → der MCB löst nicht aus, aber ohne Reserve → Betriebssicherheit nur knapp gegeben; besser Variante 2.` },
+    { u: "U4", p: 10, own: true, q: `Es wird Variante 2 gewählt.<br>1. Welchen Vorteil bietet sie für die Produktionssicherheit?<br>2. Zwei Funktionen einer RCBO?`,
+      sol: `<b>1.</b> Jeder Scheinwerfer hat einen eigenen Stromkreis mit RCBO C10/30mA → ein Fehler schaltet nur diesen Scheinwerfer ab (Selektivität); Last wird auf L1–L3 verteilt, keine Überlast; ein Ausfall stoppt nicht die ganze Show.<br><b>2.</b> Überstromschutz (Überlast + Kurzschluss, wie MCB) und Fehlerstromschutz (wie RCD 30 mA, Personenschutz).` },
+    { u: "U5", p: 10, own: true, q: `Besichtigung nach VDE 0100-600: Geben Sie je zwei Kriterien für Mängelfreiheit an: Leitungen · Leitungsverlegung · Unterverteilung · Potenzialausgleich · Steckverbindungen.`,
+      sol: `<b>Leitungen</b>: Mantel unbeschädigt, keine Quetschungen · richtiger Typ (H07RN-F) und Querschnitt, Prüfplakette.<br><b>Verlegung</b>: stolperfrei/abgedeckt, Rettungswege frei · keine Zugbelastung, Trommeln abgerollt.<br><b>UV</b>: Gehäuse unbeschädigt und verschlossen · Schutzorgane richtig bemessen, Stromkreise gekennzeichnet, IP passend.<br><b>PA</b>: alle Traversen angeschlossen · 16 mm², grün-gelb, sichere Verbindung.<br><b>Steckverbindungen</b>: unbeschädigt, vollständig gesteckt/verriegelt · IP für außen (Biergarten), keine Überlastspuren.` },
+    { u: "U6", p: 10, own: true, q: `1. Messgenauigkeit ±0,1 × I<sub>ΔN</sub>. Gemessener Auslösestrom an Plug-Box 1: I<sub>a</sub> = 29,4 mA. Beurteilen Sie.<br>2. Der Speisepunkt ist durch eine RCD „FI-D 40-4-03-S/B“ geschützt: I<sub>N</sub> 40 A, I<sub>ΔN</sub> = 0,3 A, Typ B, S. Zulässig für Personenschutz?`,
+      sol: `<b>1.</b> ±0,1 × 30 mA = ±3 mA → tatsächlicher Wert 26,4 … 32,4 mA. Der obere Wert liegt über 30 mA → Einhaltung des Grenzwerts <b>nicht sicher nachgewiesen</b>; Messung wiederholen bzw. RCD tauschen. (Beurteilung bitte mit Ausbilder abgleichen.)<br><b>2.</b> <b>Nein</b>: I<sub>ΔN</sub> = 300 mA. Für Personenschutz/Zusatzschutz ist ≤ 30 mA nötig. Eine 300-mA-S-RCD dient dem Brandschutz bzw. als selektive Vorschaltung.` }
+  ]
+},
+{
+  id: "S2025", term: "Sommer 2025", title: "Gala-Beleuchtung mit 30 LED-Washlights", lv: "eigen", max: 50,
+  scen: `Übergabepunkt CEE 32A/400V/230V/5P, MCB C32 3P. UV1: Eingang CEE 63A/400V; Ausgang 4 × HAN16 (L1,L2,L3,L1,L2,L3) mit 24 × RCBO C10/30mA; HAN GND Erdungssystem C-Pot; Erdungsschraube M8.<br>Washlight-Datenblatt: 100–240 V, max. 400 W · bei 230 V/50 Hz: 228 W, 1,1 A, PF 0,959 · Anlaufstrom (halber Zyklus) 10,7 A · Durchschleifen (MAINS OUT → IN) mit 1,5 mm²: max. 8 Geräte bei 200–240 V · Schuko max. 250 V/16 A.`,
+  tasks: [
+    { u: "U1", p: 10, own: true, q: `1. Strombedarf der 30 Washlights?<br>2. Deckt der Übergabepunkt den Bedarf?<br>3. Alle 30 werden über einen 3-poligen Hauptschalter gleichzeitig eingeschaltet. Einschaltstrom?<br>4. Löst der MCB C32 des Übergabepunkts aus?`,
+      sol: `<b>1.</b> 30 × 1,1 A = <b>33 A</b> → symmetrisch <b>11 A je Außenleiter</b><br><b>2.</b> 11 A &lt; 32 A → gedeckt.<br><b>3.</b> 30 × 10,7 A = <b>321 A</b> → je Außenleiter 10 × 10,7 = <b>107 A</b><br><b>4.</b> C32 löst unverzögert bei 5–10 × I<sub>N</sub> = 160–320 A aus. 107 A ≈ 3,3 × I<sub>N</sub> → nur thermischer Bereich, und der Anlaufstrom dauert nur eine Halbperiode (10 ms) → <b>keine Auslösung</b>.` },
+    { u: "U2", p: 10, own: true, q: `UV1 (Eingang CEE63) wird am Übergabepunkt CEE32 angeschlossen.<br>1. Wie wird die Adaptierung ausgeführt?<br>2. Maximale Anzahl verlinkter Scheinwerfer?`,
+      sol: `<b>1.</b> Aufwärtsadaptierung: CEE32-Stecker → CEE63-Kupplung (5-polig, geprüfter Adapter). Zulässig, weil der Querschnitt größer wird und der C32 am Übergabepunkt den Schutz übernimmt.<br><b>2.</b> Laut Datenblatt max. <b>8</b> Geräte bei 230 V (8 × 1,1 A = 8,8 A ≤ 10 A RCBO, ≤ 16 A Schuko).<br>Achtung Einschaltstrom: 8 × 10,7 A = 85,6 A liegt im Auslösebereich des C10 (50–100 A) → Fehlauslösung möglich. Sicher sind <b>4 Geräte</b> pro Stromkreis (42,8 A &lt; 50 A).<br><i>Welche Zahl die IHK erwartet, ist ohne Lösung nicht sicher – bitte prüfen.</i>` },
+    { u: "U3", p: 10, own: true, q: `Nennen Sie für die Planungsaspekte jeweils eine Bedingung und eine Begründung: 1 Leitungsverlegung · 2 Bemessungsströme RCBO · 3 Leitungsquerschnitt · 4 Einschaltstromstärke · 5 Steckdosenbelastung.`,
+      sol: `<b>1</b> Stolperfrei, nicht durch Rettungswege, Zugentlastung an der Traverse → Unfallgefahr vermeiden.<br><b>2</b> I<sub>B</sub> ≤ I<sub>N</sub> ≤ I<sub>Z</sub> → Leitung vor Überlast schützen.<br><b>3</b> Netzleitungen mind. 1,5 mm² (Datenblatt), I<sub>Z</sub> mit Korrekturfaktoren ≥ I<sub>N</sub> → keine Überhitzung.<br><b>4</b> Summe der Anlaufströme je Kreis &lt; 5 × I<sub>N</sub> (C10: 50 A) → keine Fehlauslösung.<br><b>5</b> Schuko/PowerCon max. 16 A, Datenblatt max. 8 Geräte → keine Erwärmung/Brand der Kontakte.` },
+    { u: "U4", p: 10, own: true, q: `Der Schutzpotenzialausgleich der Traversen wird über UV1 realisiert.<br>1. Welcher Erdungsanschluss kommt vorzugsweise infrage? Begründen Sie.<br>2. Vier Ausführungsmerkmale des Schutzpotenzialausgleichs.`,
+      sol: `<b>1.</b> Das <b>HAN-GND-Erdungssystem (C-Pot)</b>: einpolige, verriegelte Steckverbindung, schnell und sicher, gegen Öffnen ohne Werkzeug gesichert. Die M8-Erdungsschraube ist nur die Alternative. (Eigene Begründung – bitte prüfen.)<br><b>2.</b> 16 mm² · Kupfer · H07RN-F, grün-gelb · einpolige, verriegelte Steckverbinder · alle leitfähigen Teile anschließen · Errichterprüfung (Niederohmigkeit).` },
+    { u: "U5", p: 10, own: true, q: `1. Fünf Punkte der Sichtprüfung.<br>2. Schleifenimpedanz an Plugbox 1, Stromkreise 1–6 (C10, Lim 100 A). SK1–2, 4–6: I<sub>k</sub> 455–480 A, R<sub>iso</sub> > 999 MΩ, I<sub>mess</sub> 24–25 mA. SK3: keine Messung möglich. Display bei SK3: L–PE 123 V, PE–N 115 V, L–N 235 V. Fehler und defektes Bauteil?`,
+      sol: `<b>1.</b> Beschädigungen an Leitungen/Gehäusen/Steckern · Plaketten · IP · Rettungswege/Stolpergefahr · Kennzeichnung · PA · Schutzorgane.<br><b>2.</b> Normal: L–PE ≈ 230 V, N–PE ≈ 0 V. Hier liegen L–PE und N–PE je bei ungefähr der halben Spannung → der Schutzleiter „schwebt“ → <b>PE unterbrochen</b>. Da die anderen Kreise derselben Plugbox funktionieren, ist der <b>Schutzkontakt der Steckdose 3 an Plugbox 1</b> (bzw. dessen PE-Anschluss) defekt.` }
+  ]
+},
+{
+  id: "W2025", term: "Winter 2025/26", title: "Ärztekongress – Ausstellung mit 6 Messeständen", lv: "offiziell", max: 60,
+  scen: `Hotel-Saal 25 m × 23 m mit sechs Messeständen. Bestückung je Stand: 16 × Scheinwerfer Typ 1 (0,2 A, Ableitstrom 0,6 mA) · 16 × Typ 2 (0,8 A, 0,6 mA) · 4 × Typ 3 (800 W, 3 mA), Powerlink In/Out. Übergabepunkte 1 und 2: je CEE 32A/5P; jede UV (Stand) über CEE32 versorgt, Ausgänge „durchgeschliffen ohne Schutzeinrichtung“.`,
+  tasks: [
+    { u: "U1", p: 10, q: `Die CEE32A-Ausgänge der UV sind mit „Durchschliff“ gekennzeichnet.<br>1. Was bedeutet das sicherheitstechnisch?<br>2. Ein Vorteil? 3. Ein Nachteil? 4. Wo sitzt der LS-Schalter dieser Ausgänge?`,
+      sol: `<b>1.</b> Der Eingang der UV ist direkt ohne weitere Schutzmaßnahmen mit dem Ausgang verbunden – in der UV keine RCD und kein MCB für diesen Ausgang.<br><b>2.</b> Überflüssige LS-Schalter vermieden → Kostenersparnis · flexibler Aufbau durch weitere UV · hohe Auslastung der Übergabepunkte.<br><b>3.</b> Genaue Planung nötig · leicht Überlast möglich · Endgeräte dürfen dort nicht direkt betrieben werden (keine RCD).<br><b>4.</b> Die LS-Schalter des <b>Übergabepunkts</b>.` },
+    { u: "U2", p: 10, q: `1. Berechnen Sie den gesamten Strombedarf der Stände.<br>2. Decken die Übergabepunkte 1 und 2 den Bedarf? Belegen Sie das durch eine Rechnung.`,
+      sol: `<b>1.</b> Pro Stand: I = 16 × (0,2 A + 0,8 A) + 4 × (800 W / 230 V) = <b>29,9 A</b> · sechs Stände: 6 × 29,9 A = <b>179,4 A</b><br><b>2.</b> Je Übergabepunkt: 179,4 / 2 = 89,7 A → je Phase 89,7 / 3 = <b>29,9 A &lt; 32 A</b> → gedeckt. (Alternativ: sechs Wechselstromkreise mit 32 A für sechs Stände à 29,9 A.)` },
+    { u: "U3", p: 10, q: `Erstellen Sie eine Leistungsverteilung für Übergabepunkt 1 (versorgt UV 1–3).`,
+      sol: `Je Stand: Typ 1: 16 × 0,2 = 3,2 A · Typ 2: 16 × 0,8 = 12,8 A · Typ 3: 4 × 3,48 A = 13,92 A – jeweils eine Gruppe pro Phase, von Stand zu Stand rotiert:<br>UV1: L1 3,2 · L2 12,8 · L3 13,92<br>UV2: L1 13,92 · L2 3,2 · L3 12,8<br>UV3: L1 12,8 · L2 13,92 · L3 3,2<br>→ am Übergabepunkt 1: <b>L1 = L2 = L3 = 29,92 A</b>` },
+    { u: "U4", p: 10, q: `UV-Typen: Typ 1 (Eingang RCD 40A/30mA 4P für alle 6 Schuko + CEE16) · Typ 2 (1 × RCD 40A/30mA 4P vor 6 × Schuko, 2 × CEE16) · Typ 3 (9 Schuko, 9 × MCB C16, 3 × RCD 40A/30mA 2P – eine RCD je Phase).<br>1. Summe der Ableitströme I<sub>PE</sub> eines Stands?<br>2. Welche UV gewährleistet die Betriebssicherheit?`,
+      sol: `<b>1.</b> I<sub>PE</sub> = 32 × 0,6 mA + 4 × 3 mA = <b>31,2 mA</b> (&gt; 30 mA!)<br><b>2.</b> <b>UV-Typ 3</b>: Jede Phase hat eine eigene RCD; verteilt auf drei Phasen verursacht die Summe der Ableitströme keine Auslösung.` },
+    { u: "U5", p: 10, q: `PA-Leitung zu Messestand 3: l = 20 m.<br>1. Querschnitt? 2. Widerstand R<sub>L</sub>? 3. Gemessen R<sub>PE</sub> = 0,03 Ω – beurteilen.`,
+      sol: `<b>1.</b> A = <b>16 mm²</b><br><b>2.</b> R<sub>L</sub> = l / (A × κ) = 20 m / (16 mm² × 56 m/(Ω·mm²)) = <b>0,022 Ω</b><br><b>3.</b> Die Abweichung kommt durch Übergangswiderstände der Verbindungsstellen und Messfehler. Richtwert R &lt; 0,1 Ω bis R &lt; 1,0 Ω (ortsfeste Anlagen, DGUV-I 203-072) → erfüllt.` },
+    { u: "U6", p: 10, q: `1. Errichtungsprüfung nach DIN VDE 0100-600 – vier Prüfpunkte der Besichtigung.<br>Isolationsmessung vom Übergabepunkt 1 bis zu den Ausgängen der UV3 laut Herstellerdiagramm:<br>2. Wie erfüllen Sie „Netzspannung freischalten“?<br>3. Wie erfüllen Sie „Lasten trennen“?`,
+      sol: `<b>1.</b> Kennzeichnung der Stromkreise · stolperfreie Leitungsverlegung · Rettungswege freihalten · nur geprüfte Betriebsmittel (Plakette) · Typenschilder vorhanden · geeigneter IP-Schutzcode · Überprüfung auf Überlastspuren · Leitungen und Gehäuse auf Mängel prüfen.<br><b>2.</b> Netzstecker am Übergabepunkt ziehen.<br><b>3.</b> Keine Scheinwerfer oder andere Verbraucher bis zur erfolgten Messung aufstecken.` }
+  ]
+}
+];
+const EXAM_BY_ID = Object.fromEntries(EXAMS.map(e => [e.id, e]));
+
+
+// ---------- Fragenpool aufbauen ----------
+CALC.forEach(c => Q.push({ id: c.id, t: c.t, type: "calc", gen: c.gen, label: CALC_NAME[c.id] }));
+TYPE_LABEL.card = "Karteikarte";
+const BASE_Q = Q.slice();
+const BASE_BY_ID = Object.fromEntries(BASE_Q.map(x => [x.id, x]));
+let BY_ID = {};
+
+// ---------- Speicher ----------
 const LS_KEY = "energie-trainer-v1";
-let progress = { stats: {}, updated: 0 };
+const emptyCustom = () => ({ questions: [], over: {}, hidden: {}, sol: {} });
+function normalize(p) {
+  p = p && typeof p === "object" ? p : {};
+  return { stats: p.stats || {}, exams: p.exams || {}, custom: Object.assign(emptyCustom(), p.custom || {}), pomo: p.pomo || { day: "", n: 0 }, updated: p.updated || 0 };
+}
+let progress = normalize(null);
 let db = null, docRef = null, saveState = "local";
 function readLocal() { try { const raw = localStorage.getItem(LS_KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; } }
 function writeLocal() { try { localStorage.setItem(LS_KEY, JSON.stringify(progress)); } catch (e) { } }
-const local = readLocal(); if (local && local.stats) progress = local;
+{ const l = readLocal(); if (l) progress = normalize(l); }
+const CU = () => progress.custom;
+
+function rebuildQ() {
+  Q.length = 0;
+  BASE_Q.forEach(q => { if (CU().hidden[q.id]) return; const o = CU().over[q.id]; Q.push(o ? Object.assign({}, q, o, { edited: true }) : q); });
+  (CU().questions || []).forEach(q => Q.push(Object.assign({}, q, { custom: true })));
+  BY_ID = Object.fromEntries(Q.map(x => [x.id, x]));
+}
+rebuildQ();
+
 let saveTimer = null, saving = false, pendingSave = false;
 function scheduleSave() {
   progress.updated = Date.now(); writeLocal();
@@ -497,7 +808,7 @@ async function flushSave() {
   if (!docRef) return;
   if (saving) { pendingSave = true; return; }
   saving = true;
-  try { await docRef.set({ stats: progress.stats, updated: progress.updated }); saveState = "cloud"; }
+  try { await docRef.set(JSON.parse(JSON.stringify(progress))); saveState = "cloud"; }
   catch (e) { saveState = "local"; }
   saving = false; updateSaveLabel();
   if (pendingSave) { pendingSave = false; flushSave(); }
@@ -512,14 +823,14 @@ async function connectStore() {
     const snap = await docRef.get();
     if (snap.exists) {
       const d = snap.data() || {};
-      if (d.stats && (d.updated || 0) > (progress.updated || 0)) { progress = { stats: d.stats, updated: d.updated }; writeLocal(); }
+      if ((d.updated || 0) > (progress.updated || 0)) { progress = normalize(d); writeLocal(); rebuildQ(); }
       else if ((progress.updated || 0) > (d.updated || 0)) { flushSave(); }
-    } else if (Object.keys(progress.stats).length) { flushSave(); }
+    } else if (Object.keys(progress.stats).length || progress.custom.questions.length) { flushSave(); }
     saveState = "cloud"; updateFailBadge(); updateSaveLabel();
-    if (current.view !== "session") render();
-  } catch (e) { /* stays local */ }
+    if (current.view !== "session" && current.view !== "exam") render();
+  } catch (e) { /* bleibt lokal */ }
 }
-function updateSaveLabel() { const el = document.getElementById("saveLabel"); if (el) el.textContent = saveState === "cloud" ? "Progreso guardado en tu cuenta" : "Progreso guardado en este navegador"; }
+function updateSaveLabel() { document.querySelectorAll(".saveLabel").forEach(el => el.textContent = saveState === "cloud" ? "Fortschritt wird in deinem Konto gespeichert." : "Fortschritt wird in diesem Browser gespeichert."); }
 
 function record(id, ok) {
   const s = progress.stats[id] || { c: 0, w: 0, s: 0 };
@@ -528,78 +839,85 @@ function record(id, ok) {
 }
 const isFail = id => { const s = progress.stats[id]; return !!s && s.w > 0 && (s.s || 0) < 2; };
 const failIds = () => Object.keys(progress.stats).filter(id => BY_ID[id] && isFail(id));
-function updateFailBadge() { const n = failIds().length; const b = document.getElementById("failBadge"); b.hidden = n === 0; b.textContent = n; }
+function updateFailBadge() { const n = failIds().length; const b = document.getElementById("failBadge"); if (!b) return; b.hidden = n === 0; b.textContent = n; }
 function topicStats() {
   const out = {}; for (const k of Object.keys(TOPICS)) out[k] = { c: 0, w: 0, fails: 0, seen: 0 };
-  for (const [id, s] of Object.entries(progress.stats)) { const q = BY_ID[id]; if (!q) continue; const o = out[q.t]; o.c += s.c; o.w += s.w; o.seen++; if (isFail(id)) o.fails++; }
+  for (const [id, s] of Object.entries(progress.stats)) { const q = BY_ID[id]; if (!q || !out[q.t]) continue; const o = out[q.t]; o.c += s.c; o.w += s.w; o.seen++; if (isFail(id)) o.fails++; }
   return out;
 }
 
-// ---------- Helpers ----------
+// ---------- Hilfsfunktionen ----------
 const $ = s => document.querySelector(s);
-const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const shuffle = a => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
 const norm = s => String(s).toLowerCase().replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss").replace(/φ/g, "phi").replace(/[\s\-_.()/,]/g, "");
 const num = s => { const v = parseFloat(String(s).replace(/\s/g, "").replace(",", ".")); return isNaN(v) ? null : v; };
+const exHTML = q => q.custom ? esc(q.ex || "").replace(/\n/g, "<br>") : (q.ex || "");
+const plain = h => String(h || "").replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+const mmss = s => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+function noteFor(p) { return p >= 92 ? "1 · sehr gut" : p >= 81 ? "2 · gut" : p >= 67 ? "3 · befriedigend" : p >= 50 ? "4 · ausreichend" : p >= 30 ? "5 · mangelhaft" : "6 · ungenügend"; }
 
-// ---------- App state ----------
-const current = { view: "home", topics: new Set(Object.keys(TOPICS)), len: 10 };
-let session = null;
+// ---------- Zustand ----------
+const current = { view: "home", topics: new Set(Object.keys(TOPICS)), len: 10, exam: null, edit: null, edFilter: "", edTopic: "all" };
+let session = null, examRun = null;
 
 const MODES = [
-  { key: "mix", code: "MIX", name: "Prüfungsmix", desc: "Todo mezclado, como en el examen: quiz, huecos, cálculo, ordenar…", wide: true },
-  { key: "mc", code: "QUIZ", name: "Quiz", desc: "Opción múltiple y verdadero/falso.", types: ["mc", "tf"] },
-  { key: "gap", code: "LÜCKE", name: "Lückentext", desc: "Completa la frase con la palabra correcta.", types: ["gap"] },
-  { key: "type", code: "TIPPEN", name: "Begriffe schreiben", desc: "Escribe tú el término técnico en alemán.", types: ["type"] },
-  { key: "calc", code: "RECHNEN", name: "Rechenaufgaben", desc: "Ohm, potencia, Spannungsfall, Zs… con valores nuevos cada vez.", types: ["calc"] },
-  { key: "match", code: "PAARE", name: "Zuordnen", desc: "Une cada concepto con su pareja.", types: ["match"] },
-  { key: "order", code: "ABLAUF", name: "Reihenfolge", desc: "Ordena los pasos: 5 reglas, Prüfablauf…", types: ["order"] },
-  { key: "flash", code: "KARTEN", name: "Karteikarten", desc: "Repaso rápido: piensa la respuesta y gira la tarjeta.", types: ["type"] }
+  { key: "mix", code: "MIX", name: "Prüfungsmix", desc: "Alles gemischt: Quiz, Lücken, Rechnen, Zuordnen …", wide: true },
+  { key: "exam", code: "PRÜFUNG", name: "Prüfungsmodus", desc: "20 Fragen ohne Hilfe, Auswertung mit IHK-Note am Ende.", types: ["mc", "tf", "gap", "type", "calc"], fixed: 20 },
+  { key: "flash", code: "KARTEN", name: "Karteikarten", desc: "Karte antippen zum Umdrehen – ehrlich bewerten.", types: ["type", "card"] },
+  { key: "mc", code: "QUIZ", name: "Quiz", desc: "Multiple Choice und Richtig/Falsch.", types: ["mc", "tf"] },
+  { key: "calc", code: "RECHNEN", name: "Rechenaufgaben", desc: "Immer neue Werte – wie in der Prüfung.", types: ["calc"] },
+  { key: "gap", code: "LÜCKE", name: "Lückentext", desc: "Das richtige Wort einsetzen.", types: ["gap"] },
+  { key: "type", code: "TIPPEN", name: "Begriffe schreiben", desc: "Den Fachbegriff selbst eintippen.", types: ["type"] },
+  { key: "match", code: "PAARE", name: "Zuordnen", desc: "Begriffe passend verbinden.", types: ["match"] },
+  { key: "order", code: "ABLAUF", name: "Reihenfolge", desc: "Schritte in die richtige Reihenfolge bringen.", types: ["order"] }
 ];
-
 function poolFor(types, topics) { return Q.filter(q => topics.has(String(q.t)) && (!types || types.includes(q.type))); }
-
 function instantiate(q, asFlash) {
-  if (q.type === "calc") { const g = q.gen(); return { ...q, ...g }; }
-  if (asFlash) return { ...q, type: "flash" };
-  return { ...q };
+  if (q.type === "calc") { const g = q.gen(); return Object.assign({}, q, g); }
+  if (asFlash || q.type === "card") return Object.assign({}, q, { type: "flash" });
+  return Object.assign({}, q);
 }
-
 function startSession(modeKey, opts = {}) {
   const mode = MODES.find(m => m.key === modeKey);
-  let base;
-  if (opts.ids) base = opts.ids.map(id => BY_ID[id]).filter(Boolean);
-  else base = poolFor(mode && mode.types, current.topics);
+  let base = opts.ids ? opts.ids.map(id => BY_ID[id]).filter(Boolean) : poolFor(mode && mode.types, current.topics);
   if (!base.length) { render(); return; }
   let items = shuffle(base);
+  const len = mode && mode.fixed ? mode.fixed : current.len;
   if (!opts.ids) {
-    if (modeKey === "mix") {
-      // balance types a bit
+    if (modeKey === "mix" || modeKey === "exam") {
       const byType = {}; items.forEach(q => (byType[q.type] = byType[q.type] || []).push(q));
       const out = []; let i = 0; const keys = Object.keys(byType);
-      while (out.length < current.len && keys.some(k => byType[k].length)) { const k = keys[i % keys.length]; if (byType[k].length) out.push(byType[k].shift()); i++; }
+      while (out.length < len && keys.some(k => byType[k].length)) { const k = keys[i % keys.length]; if (byType[k].length) out.push(byType[k].shift()); i++; }
       items = shuffle(out);
-    } else items = items.slice(0, current.len);
+    } else items = items.slice(0, len);
   }
-  session = { mode: modeKey, title: opts.title || (mode ? mode.name : "Sesión"), items: items.map(q => instantiate(q, modeKey === "flash")), i: 0, results: [], answered: false };
+  session = { mode: modeKey, exam: modeKey === "exam", start: Date.now(), title: opts.title || (mode ? mode.name : "Runde"), items: items.map(q => instantiate(q, modeKey === "flash")), i: 0, results: [], answered: false };
   setView("session");
 }
 
-// ---------- Views ----------
+// ---------- Ansichten ----------
 function setView(v) {
   current.view = v;
-  document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-current", b.dataset.view === v ? "page" : "false"));
+  document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-current", (b.dataset.view === v || (v === "exam" && b.dataset.view === "exams")) ? "page" : "false"));
   render(); window.scrollTo({ top: 0 });
 }
-document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));
+document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => { if (current.view === "exam" && examRun && examRun.mode === "sim" && !examRun.done && !confirm("Simulation läuft. Wirklich verlassen?")) return; setView(b.dataset.view); }));
 
 function render() {
   const v = current.view; const el = $("#view");
   if (v === "home") el.innerHTML = homeHTML();
   else if (v === "fails") el.innerHTML = failsHTML();
   else if (v === "progress") el.innerHTML = progressHTML();
+  else if (v === "exams") el.innerHTML = examsHTML();
+  else if (v === "exam") el.innerHTML = examHTML();
+  else if (v === "editor") el.innerHTML = editorHTML();
   else if (v === "session") { el.innerHTML = sessionHTML(); mountQuestion(); }
   bindView(); updateSaveLabel();
+}
+
+function pomoCardHTML() {
+  return `<div class="card pomo-card"><div class="row" style="justify-content:space-between"><div><span class="eyebrow">Pomodoro</span><h3 id="pomoBig" class="pomo-big">${mmss(pomo.left)}</h3><span class="muted" id="pomoState">${pomoLabel()}</span></div><div class="row"><button class="btn primary" data-act="pomo-toggle" id="pomoBtn">${pomo.running ? "Pause" : "Start"}</button><button class="btn" data-act="pomo-skip">${pomo.mode === "work" ? "Pause überspringen" : "Pause beenden"}</button><button class="btn" data-act="pomo-reset">Zurücksetzen</button></div></div><span class="muted" style="font-size:13px">25 min lernen · 5 min Pause · heute: <b id="pomoCount">${pomoToday()}</b> Einheiten</span></div>`;
 }
 
 function homeHTML() {
@@ -608,38 +926,41 @@ function homeHTML() {
   const acc = c + w ? Math.round(c / (c + w) * 100) : null;
   const fails = failIds().length;
   const chips = Object.entries(TOPICS).map(([k, n]) => `<button class="chip" data-topic="${k}" aria-pressed="${current.topics.has(k)}">${k}. ${esc(n)}</button>`).join("");
-  const modes = MODES.map(m => { const cnt = m.key === "mix" ? poolFor(null, current.topics).length : poolFor(m.types, current.topics).length; return `<button class="mode ${m.wide ? "wide" : ""}" data-mode="${m.key}" ${cnt ? "" : "disabled"}><span class="code">${m.code} · ${cnt} ${cnt === 1 ? "ejercicio" : "ejercicios"}</span><strong>${m.name}</strong><small>${m.desc}</small></button>`; }).join("");
+  const modes = MODES.map(m => { const cnt = m.key === "mix" ? poolFor(null, current.topics).length : poolFor(m.types, current.topics).length; return `<button class="mode ${m.wide ? "wide" : ""}" data-mode="${m.key}" ${cnt ? "" : "disabled"}><span class="code">${m.code} · ${cnt} Aufgaben</span><strong>${m.name}</strong><small>${m.desc}</small></button>`; }).join("");
+  const examsDone = Object.keys(progress.exams).length;
   return `<div class="wrap" style="gap:22px">
     <div class="section">
-      <span class="eyebrow">Sicherstellen der Energieversorgung · IHK Abschlussprüfung</span>
-      <h2>Practica los 11 puntos de tu Lernverzeichnis</h2>
-      <p class="muted">Las preguntas están en alemán, como en el examen. Después de cada respuesta verás una explicación corta antes de pasar a la siguiente.</p>
+      <span class="eyebrow">Sicherstellen der Energieversorgung · IHK-Abschlussprüfung</span>
+      <h2>Lernen für die Prüfung</h2>
+      <p class="muted">Alle Fragen sind auf Deutsch, wie in der Prüfung. Nach jeder Antwort gibt es eine kurze Erklärung.</p>
     </div>
     <div class="stats">
-      <div class="stat"><b>${ids.length}</b><span>de ${Q.length} ejercicios vistos</span></div>
-      <div class="stat"><b>${acc === null ? "–" : acc + " %"}</b><span>aciertos</span></div>
-      <div class="stat ${fails ? "alert" : ""}"><b>${fails}</b><span>fallos pendientes</span></div>
+      <div class="stat"><b>${ids.length}</b><span>von ${Q.length} Aufgaben gesehen</span></div>
+      <div class="stat"><b>${acc === null ? "–" : acc + " %"}</b><span>richtig</span></div>
+      <div class="stat ${fails ? "alert" : ""}"><b>${fails}</b><span>offene Fehler</span></div>
     </div>
-    ${fails ? `<button class="btn primary" data-act="repeat-all">Repetir mis ${fails} fallos</button>` : ""}
+    ${fails ? `<button class="btn primary" data-act="repeat-all">Meine ${fails} Fehler wiederholen</button>` : ""}
+    <button class="mode exam-cta" data-act="go-exams"><span class="code">IHK · ${EXAMS.length} PRÜFUNGEN 2018–2025</span><strong>Alte Prüfungen üben</strong><small>${examsDone ? `${examsDone} schon bearbeitet. ` : ""}Aufgaben mit Lösungen, Selbstbewertung und 60-Minuten-Simulation.</small></button>
+    ${pomoCardHTML()}
     <div class="section">
-      <div class="row" style="justify-content:space-between"><h3>Temas</h3><div class="row"><button class="chip" data-act="all-topics">Todos</button><button class="chip" data-act="no-topics">Ninguno</button></div></div>
+      <div class="row" style="justify-content:space-between"><h3>Themen</h3><div class="row"><button class="chip" data-act="all-topics">Alle</button><button class="chip" data-act="no-topics">Keine</button></div></div>
       <div class="chips">${chips}</div>
     </div>
     <div class="section">
-      <div class="row" style="justify-content:space-between"><h3>Modos de estudio</h3>
-        <label class="lenpick" for="lenSel">Preguntas por ronda
+      <div class="row" style="justify-content:space-between"><h3>Lernmodi</h3>
+        <label class="lenpick" for="lenSel">Fragen pro Runde
           <select id="lenSel" class="chip">${[5, 10, 15, 20, 30].map(n => `<option value="${n}" ${n === current.len ? "selected" : ""}>${n}</option>`).join("")}</select>
         </label>
       </div>
       <div class="modes">${modes}</div>
     </div>
-    <p class="savestate" id="saveLabel"></p>
+    <p class="savestate saveLabel"></p>
   </div>`;
 }
 
 function weakTopics() {
   const ts = topicStats();
-  return Object.entries(ts).filter(([, o]) => o.c + o.w > 0).map(([k, o]) => ({ k, ...o, acc: Math.round(o.c / (o.c + o.w) * 100) }))
+  return Object.entries(ts).filter(([, o]) => o.c + o.w > 0).map(([k, o]) => Object.assign({ k }, o, { acc: Math.round(o.c / (o.c + o.w) * 100) }))
     .filter(o => o.fails > 0 || o.acc < 75).sort((a, b) => (b.fails - a.fails) || (a.acc - b.acc));
 }
 
@@ -647,16 +968,16 @@ function failsHTML() {
   const ids = failIds();
   if (!ids.length) {
     const seen = Object.keys(progress.stats).length;
-    return `<div class="card"><div class="empty"><h2>${seen ? "Sin fallos pendientes" : "Todavía no hay fallos"}</h2><p>${seen ? "Todo lo que fallaste lo has acertado dos veces seguidas. Buen trabajo." : "Haz una ronda en Inicio. Lo que falles aparecerá aquí para repetirlo."}</p><button class="btn primary" data-act="go-home">Ir a Inicio</button></div></div>`;
+    return `<div class="card"><div class="empty"><h2>${seen ? "Keine offenen Fehler" : "Noch keine Fehler"}</h2><p>${seen ? "Alles, was du falsch hattest, hast du zweimal hintereinander richtig beantwortet." : "Mach eine Runde auf der Startseite. Was du falsch hast, erscheint hier."}</p><button class="btn primary" data-act="go-home">Zur Startseite</button></div></div>`;
   }
   const weak = weakTopics();
-  const advice = weak.length ? weak.slice(0, 3).map(o => `<li><b>${o.k}. ${esc(TOPICS[o.k])}</b> – ${o.acc} % de aciertos, ${o.fails} ${o.fails === 1 ? "fallo pendiente" : "fallos pendientes"}. Repasa el punto ${o.k} de tu Lernunterlage.</li>`).join("") : "";
+  const advice = weak.length ? weak.slice(0, 3).map(o => `<li><b>${o.k}. ${esc(TOPICS[o.k])}</b> – ${o.acc} % richtig, ${o.fails} offen.</li>`).join("") : "";
   const groups = {}; ids.forEach(id => (groups[BY_ID[id].t] = groups[BY_ID[id].t] || []).push(id));
-  const blocks = Object.keys(groups).sort((a, b) => a - b).map(t => `<div class="section"><div class="row" style="justify-content:space-between"><h3>${t}. ${esc(TOPICS[t])}</h3><button class="btn" data-act="repeat-topic" data-topic="${t}">Repetir estos (${groups[t].length})</button></div><div class="list">${groups[t].map(id => { const q = BY_ID[id], s = progress.stats[id]; return `<div class="li"><span class="t">${TYPE_LABEL[q.type]} · ${s.w}× falsch${s.s ? ` · ${s.s}× seguido bien` : ""}</span><span>${esc(q.q || q.text || q.label || "")}</span></div>`; }).join("")}</div></div>`).join("");
+  const blocks = Object.keys(groups).sort((a, b) => a - b).map(t => `<div class="section"><div class="row" style="justify-content:space-between"><h3>${t}. ${esc(TOPICS[t])}</h3><button class="btn" data-act="repeat-topic" data-topic="${t}">Diese wiederholen (${groups[t].length})</button></div><div class="list">${groups[t].map(id => { const q = BY_ID[id], s = progress.stats[id]; return `<div class="li"><span class="t">${TYPE_LABEL[q.type]} · ${s.w}× falsch${s.s ? ` · ${s.s}× richtig in Folge` : ""}</span><span>${esc(q.q || q.text || q.label || "")}</span></div>`; }).join("")}</div></div>`).join("");
   return `<div class="wrap" style="gap:22px">
-    <div class="section"><span class="eyebrow">Fehler wiederholen</span><h2>${ids.length} ${ids.length === 1 ? "ejercicio pendiente" : "ejercicios pendientes"}</h2><p class="muted">Un ejercicio sale de esta lista cuando lo aciertas dos veces seguidas. En los de cálculo cambian los números.</p></div>
-    ${advice ? `<div class="advice"><b>Lo que tienes que estudiar más</b><ul style="margin:0;padding-left:18px;display:grid;gap:4px">${advice}</ul></div>` : ""}
-    <button class="btn primary" data-act="repeat-all">Repetir todos los fallos</button>
+    <div class="section"><span class="eyebrow">Fehler wiederholen</span><h2>${ids.length} offene ${ids.length === 1 ? "Aufgabe" : "Aufgaben"}</h2><p class="muted">Eine Aufgabe verschwindet, wenn du sie zweimal hintereinander richtig hast. Bei Rechenaufgaben ändern sich die Zahlen.</p></div>
+    ${advice ? `<div class="advice"><b>Hier solltest du mehr lernen</b><ul style="margin:0;padding-left:18px;display:grid;gap:4px">${advice}</ul></div>` : ""}
+    <button class="btn primary" data-act="repeat-all">Alle Fehler wiederholen</button>
     ${blocks}
   </div>`;
 }
@@ -667,85 +988,252 @@ function progressHTML() {
     const o = ts[k], tot = o.c + o.w, total = Q.filter(q => String(q.t) === k).length;
     const acc = tot ? Math.round(o.c / tot * 100) : null;
     const col = acc === null ? "var(--line)" : acc >= 80 ? "var(--good)" : acc >= 60 ? "var(--warn)" : "var(--red)";
-    return `<div class="trow"><span>${k}. ${esc(n)} <span class="muted" style="font-size:12px">· ${o.seen}/${total} vistos</span></span><span class="tb"><i style="width:${acc === null ? 0 : acc}%;background:${col}"></i></span><span class="pct">${acc === null ? "–" : acc + " %"}</span></div>`;
+    return `<div class="trow"><span>${k}. ${esc(n)} <span class="muted" style="font-size:12px">· ${o.seen}/${total}</span></span><span class="tb"><i style="width:${acc === null ? 0 : acc}%;background:${col}"></i></span><span class="pct">${acc === null ? "–" : acc + " %"}</span></div>`;
   }).join("");
   const weak = weakTopics();
-  const verdict = !Object.keys(progress.stats).length ? `<div class="advice calm"><b>Aún no hay datos</b><span>Haz algunas rondas y aquí verás qué temas dominas y cuáles no.</span></div>`
-    : weak.length ? `<div class="advice"><b>Estudia más y mejor:</b><span>${weak.slice(0, 4).map(o => `${o.k}. ${esc(TOPICS[o.k])} (${o.acc} %)`).join(" · ")}</span><div class="row"><button class="btn" data-act="practice-weak">Practicar mis temas débiles</button></div></div>`
-    : `<div class="advice calm"><b>Vas bien</b><span>Todos los temas practicados están por encima del 75 %. Sigue con temas que aún no has visto.</span></div>`;
+  const verdict = !Object.keys(progress.stats).length ? `<div class="advice calm"><b>Noch keine Daten</b><span>Mach ein paar Runden, dann siehst du hier deine starken und schwachen Themen.</span></div>`
+    : weak.length ? `<div class="advice"><b>Mehr üben:</b><span>${weak.slice(0, 4).map(o => `${o.k}. ${esc(TOPICS[o.k])} (${o.acc} %)`).join(" · ")}</span><div class="row"><button class="btn" data-act="practice-weak">Schwache Themen üben</button></div></div>`
+    : `<div class="advice calm"><b>Du bist auf einem guten Weg</b><span>Alle geübten Themen liegen über 75 %. Mach mit neuen Themen weiter.</span></div>`;
+  const ex = EXAMS.filter(e => progress.exams[e.id]).map(e => { const r = progress.exams[e.id]; const p = Math.round(r.best / r.max * 100); return `<div class="trow"><span>${esc(e.term)} <span class="muted" style="font-size:12px">· ${r.n || 1}× bearbeitet</span></span><span class="tb"><i style="width:${p}%;background:${p >= 67 ? "var(--good)" : p >= 50 ? "var(--warn)" : "var(--red)"}"></i></span><span class="pct">${p} %</span></div>`; }).join("");
   return `<div class="wrap" style="gap:22px">
-    <div class="section"><span class="eyebrow">Mi progreso</span><h2>Aciertos por tema</h2><p class="muted">Verde ≥ 80 % · ámbar 60–79 % · rojo &lt; 60 %</p></div>
+    <div class="section"><span class="eyebrow">Mein Fortschritt</span><h2>Richtig pro Thema</h2><p class="muted">Grün ≥ 80 % · Gelb 60–79 % · Rot &lt; 60 %</p></div>
     ${verdict}
     <div class="card"><div class="topics">${rows}</div></div>
-    <div class="section"><div class="confirm" id="resetBox"><button class="btn danger" data-act="reset-ask">Borrar mi progreso</button></div><p class="savestate" id="saveLabel"></p></div>
+    <div class="section"><h3>Alte Prüfungen (bestes Ergebnis)</h3>${ex ? `<div class="card"><div class="topics">${ex}</div></div>` : `<p class="muted">Noch keine Prüfung ausgewertet.</p>`}</div>
+    <div class="section"><h3>Pomodoro</h3><p class="muted">Heute ${pomoToday()} Lerneinheiten à 25 min.</p></div>
+    <div class="section"><div class="confirm" id="resetBox"><button class="btn danger" data-act="reset-ask">Statistik löschen</button></div><p class="savestate saveLabel"></p></div>
   </div>`;
 }
 
+// ---------- Prüfungen ----------
+function lvBadge(e) { return e.lv === "offiziell" ? `<span class="badge-lv ok">IHK-Lösung${e.rec ? " · Aufgaben rekonstruiert" : ""}</span>` : `<span class="badge-lv own">Eigene Lösung – prüfen</span>`; }
+function examsHTML() {
+  const list = EXAMS.slice().reverse().map(e => {
+    const r = progress.exams[e.id];
+    return `<div class="card exam-item"><div class="row" style="justify-content:space-between;align-items:flex-start"><div style="display:grid;gap:4px;min-width:0"><span class="eyebrow">${esc(e.term)} · ${e.tasks.length} Aufgaben · ${e.tasks.reduce((s, t) => s + t.p, 0)} Punkte</span><h3>${esc(e.title)}</h3><div class="row">${lvBadge(e)}${r ? `<span class="badge-lv">Bestes: ${Math.round(r.best / r.max * 100)} % · Note ${noteFor(r.best / r.max * 100).split(" ")[0]}</span>` : ""}</div></div></div>
+      <div class="row"><button class="btn primary" data-act="exam-open" data-exam="${e.id}" data-mode="practice">Üben</button><button class="btn" data-act="exam-open" data-exam="${e.id}" data-mode="sim">Simulation 60 min</button></div></div>`;
+  }).join("");
+  return `<div class="wrap" style="gap:18px">
+    <div class="section"><span class="eyebrow">IHK-Prüfungen · Sicherstellen der Energieversorgung</span><h2>Alte Prüfungen</h2>
+      <p class="muted"><b>Üben</b>: Lösung pro Aufgabe sofort aufdecken. <b>Simulation</b>: 60 Minuten, Lösungen erst nach Abgabe. Danach bewertest du dich selbst (10 bis 0 Punkte, wie die IHK).</p>
+      <div class="advice"><b>Wichtig zu den Lösungen</b><span>Bei <b>„Eigene Lösung – prüfen“</b> gab es keine offizielle IHK-Lösung. Diese Lösungen habe ich erarbeitet – sie können Fehler enthalten. Mit „✎ Lösung korrigieren“ kannst du sie ändern und als geprüft markieren.</span></div>
+    </div>
+    ${list}
+  </div>`;
+}
+function solKey(e, t) { return e.id + "_" + t.u; }
+function solHTMLFor(e, t) {
+  const o = CU().sol[solKey(e, t)];
+  const body = o && o.text != null ? esc(o.text).replace(/\n/g, "<br>") : t.sol;
+  const own = (e.lv !== "offiziell" || t.own) && !(o && o.ok);
+  const warn = own ? `<div class="warn">⚠ Eigene Lösung (keine IHK-Lösung vorhanden) – kann Fehler enthalten. Bitte prüfen und ggf. korrigieren.</div>` : (o && o.ok && e.lv !== "offiziell") ? `<div class="okmark">✓ Von dir geprüft${o.text != null ? " und angepasst" : ""}</div>` : (o && o.text != null ? `<div class="okmark">✎ Von dir angepasst</div>` : `<div class="okmark">IHK-Lösungsvorschlag${t.rec ? " (Aufgabentext rekonstruiert)" : ""}</div>`);
+  return `${warn}<div class="solbody">${body}</div>`;
+}
+function openExam(id, mode) {
+  const e = EXAM_BY_ID[id];
+  examRun = { id, mode, start: Date.now(), end: mode === "sim" ? Date.now() + 60 * 60 * 1000 : 0, ans: {}, shown: {}, rate: {}, done: false, editing: null, saved: false };
+  current.exam = id; setView("exam");
+}
+function examHTML() {
+  const e = EXAM_BY_ID[examRun.id]; const sim = examRun.mode === "sim";
+  const max = e.tasks.reduce((s, t) => s + t.p, 0);
+  const rated = e.tasks.filter(t => examRun.rate[t.u] !== undefined);
+  const pts = rated.reduce((s, t) => s + examRun.rate[t.u], 0);
+  const tasks = e.tasks.map(t => {
+    const show = examRun.shown[t.u] || (sim && examRun.done);
+    const r = examRun.rate[t.u];
+    const steps = [1, 0.8, 0.6, 0.4, 0.2, 0].map(f => Math.round(t.p * f));
+    const editing = examRun.editing === t.u;
+    const o = CU().sol[solKey(e, t)] || {};
+    return `<div class="card task" id="task-${t.u}">
+      <div class="row" style="justify-content:space-between"><span class="pill type">${t.u} · ${t.p} Punkte</span>${r !== undefined ? `<span class="pill">${r}/${t.p}</span>` : ""}</div>
+      <div class="tq">${t.q}</div>
+      <textarea class="ta" data-ans="${t.u}" rows="4" placeholder="Deine Antwort (Rechenweg: Formel – Ansatz – Ergebnis – Einheit)" ${sim && examRun.done ? "readonly" : ""}>${esc(examRun.ans[t.u] || "")}</textarea>
+      ${!sim && !show ? `<div class="row"><button class="btn" data-act="exam-show" data-u="${t.u}">Lösung zeigen</button></div>` : ""}
+      ${show ? `<div class="solution">${editing ? `<textarea class="ta" id="solEdit" rows="8">${esc(o.text != null ? o.text : plain(t.sol))}</textarea><label class="row" style="font-size:14px"><input type="checkbox" id="solOk" ${o.ok ? "checked" : ""}> Lösung ist geprüft (Warnhinweis ausblenden)</label><div class="row"><button class="btn primary" data-act="sol-save" data-u="${t.u}">Speichern</button><button class="btn" data-act="sol-cancel">Abbrechen</button>${o.text != null || o.ok ? `<button class="btn danger" data-act="sol-reset" data-u="${t.u}">Original wiederherstellen</button>` : ""}</div>` : `${solHTMLFor(e, t)}<div class="row"><button class="linkbtn" data-act="sol-edit" data-u="${t.u}">✎ Lösung korrigieren</button></div>`}
+        <div class="rate"><span class="muted" style="font-size:13px">Wie viele Punkte gibst du dir?</span><div class="chips">${steps.map(s => `<button class="chip" data-act="exam-rate" data-u="${t.u}" data-p="${s}" aria-pressed="${r === s}">${s}</button>`).join("")}</div></div></div>` : ""}
+    </div>`;
+  }).join("");
+  const timer = sim && !examRun.done ? `<div class="timerbar"><span>Restzeit</span><b id="simTimer">${mmss(Math.max(0, (examRun.end - Date.now()) / 1000))}</b><button class="btn primary" data-act="exam-submit">Abgeben</button></div>` : "";
+  const allRated = rated.length === e.tasks.length;
+  const pct = max ? Math.round(pts / max * 100) : 0;
+  return `<div class="wrap" style="gap:16px">
+    <div class="section"><button class="linkbtn" data-act="exam-back">← Alle Prüfungen</button><span class="eyebrow">${esc(e.term)} · ${sim ? "Simulation" : "Üben"}</span><h2>${esc(e.title)}</h2><div class="row">${lvBadge(e)}</div></div>
+    ${timer}
+    <div class="card scen"><span class="eyebrow">Prüfungsaufgaben-Beschreibung</span><div>${e.scen}</div><p class="muted" style="font-size:13px">Pläne und Anlagen findest du im Original-PDF. Die wichtigen Daten stehen in den Aufgaben.</p></div>
+    ${tasks}
+    <div class="card"><span class="eyebrow">Auswertung</span><div class="result-score"><b>${pts}/${max}</b><span class="muted">${rated.length}/${e.tasks.length} Aufgaben bewertet${allRated ? ` · ${pct} % · Note ${noteFor(pct)}` : ""}</span></div>
+      ${sim && !examRun.done ? `<p class="muted">Erst abgeben, dann Lösungen ansehen und bewerten.</p>` : allRated ? `<div class="row"><button class="btn primary" data-act="exam-save" ${examRun.saved ? "disabled" : ""}>${examRun.saved ? "Gespeichert ✓" : "Ergebnis speichern"}</button><button class="btn" data-act="exam-back">Zur Übersicht</button></div>` : `<p class="muted">Bewerte alle Aufgaben, um das Ergebnis zu speichern.</p>`}
+    </div>
+  </div>`;
+}
+
+// ---------- Editor ----------
+const EDIT_TYPES = { card: "Karteikarte", mc: "Multiple Choice", tf: "Richtig/Falsch", type: "Begriff eintippen", gap: "Lückentext" };
+function blankDraft() { return { id: null, base: false, type: "card", t: "1", q: "", text: "", opts: ["", "", "", ""], a: 0, tf: true, answers: "", gapOpts: "", gapA: "", ex: "" }; }
+function draftFrom(q, base) {
+  const d = blankDraft(); d.id = q.id; d.base = base; d.type = q.type; d.t = String(q.t); d.ex = base ? (q.ex || "") : (q.ex || "");
+  if (q.type === "mc") { d.q = q.q; d.opts = q.opts.slice(); while (d.opts.length < 4) d.opts.push(""); d.a = Math.max(0, q.opts.indexOf(q.a)); }
+  else if (q.type === "tf") { d.q = q.q; d.tf = q.a === "Richtig"; }
+  else if (q.type === "type" || q.type === "card") { d.q = q.q; d.answers = (q.answers || []).join(q.type === "card" ? "" : ", "); }
+  else if (q.type === "gap") { d.text = q.text; d.gapOpts = q.opts.join(", "); d.gapA = q.a; }
+  return d;
+}
+function editorFormHTML(d) {
+  const tSel = Object.entries(TOPICS).map(([k, n]) => `<option value="${k}" ${d.t === k ? "selected" : ""}>${k}. ${esc(n)}</option>`).join("");
+  const typeSel = d.base ? `<span class="pill type">${EDIT_TYPES[d.type] || d.type}</span>` : `<select id="edType" class="inp">${["card", "mc", "tf", "type"].map(k => `<option value="${k}" ${d.type === k ? "selected" : ""}>${EDIT_TYPES[k]}</option>`).join("")}</select>`;
+  let fields = "";
+  if (d.type === "gap") fields = `<label>Satz mit ___ als Lücke<textarea id="edText" class="inp" rows="2">${esc(d.text)}</textarea></label><label>Auswahl (mit Komma getrennt)<input id="edGapOpts" class="inp" value="${esc(d.gapOpts)}"></label><label>Richtiges Wort<input id="edGapA" class="inp" value="${esc(d.gapA)}"></label>`;
+  else {
+    fields = `<label>Frage<textarea id="edQ" class="inp" rows="2">${esc(d.q)}</textarea></label>`;
+    if (d.type === "mc") fields += `<fieldset class="optset"><legend>Antworten – richtige markieren</legend>${d.opts.map((o, i) => `<div class="row"><input type="radio" name="edA" value="${i}" ${d.a === i ? "checked" : ""} aria-label="Richtig: Antwort ${i + 1}"><input class="inp edOpt" data-i="${i}" value="${esc(o)}" placeholder="Antwort ${i + 1}" style="flex:1"></div>`).join("")}</fieldset>`;
+    if (d.type === "tf") fields += `<label>Die Aussage ist<select id="edTF" class="inp"><option value="1" ${d.tf ? "selected" : ""}>Richtig</option><option value="0" ${!d.tf ? "selected" : ""}>Falsch</option></select></label>`;
+    if (d.type === "card") fields += `<label>Antwort (Rückseite)<textarea id="edAns" class="inp" rows="3">${esc(d.answers)}</textarea></label>`;
+    if (d.type === "type") fields += `<label>Richtige Begriffe (mit Komma getrennt)<input id="edAns" class="inp" value="${esc(d.answers)}"></label>`;
+  }
+  return `<div class="card editor-form" id="edForm"><div class="row" style="justify-content:space-between"><h3>${d.id ? "Frage bearbeiten" : "Neue Frage"}</h3>${typeSel}</div>
+    <label>Thema<select id="edTopic" class="inp" ${d.base ? "disabled" : ""}>${tSel}</select></label>
+    ${fields}
+    <label>Erklärung${d.base ? " (HTML erlaubt)" : ""}<textarea id="edEx" class="inp" rows="3">${esc(d.ex)}</textarea></label>
+    <p class="muted" id="edMsg" style="font-size:13px"></p>
+    <div class="row"><button class="btn primary" data-act="ed-save">Speichern</button><button class="btn" data-act="ed-cancel">Abbrechen</button></div></div>`;
+}
+function editorHTML() {
+  const d = current.edit;
+  const mine = CU().questions.map(q => `<div class="li"><span class="t">${TYPE_LABEL[q.type] || q.type} · ${q.t}. ${esc(TOPICS[q.t] || "")}</span><span>${esc(q.q || q.text)}</span><div class="row"><button class="linkbtn" data-act="ed-edit" data-id="${q.id}">Bearbeiten</button><button class="linkbtn danger" data-act="ed-del" data-id="${q.id}">Löschen</button></div></div>`).join("");
+  const f = norm(current.edFilter || "");
+  const base = BASE_Q.filter(q => (current.edTopic === "all" || String(q.t) === current.edTopic) && (!f || norm(q.q || q.text || q.label || "").includes(f)));
+  const baseList = base.slice(0, 80).map(q => { const hid = !!CU().hidden[q.id]; const ov = !!CU().over[q.id]; const editable = ["mc", "tf", "type", "gap"].includes(q.type); return `<div class="li ${hid ? "dim" : ""}"><span class="t">${TYPE_LABEL[q.type]} · ${q.t}. ${esc(TOPICS[q.t])}${ov ? " · ✎ geändert" : ""}${hid ? " · ausgeblendet" : ""}</span><span>${esc(q.q || q.text || q.label || "")}</span><div class="row">${editable ? `<button class="linkbtn" data-act="ed-edit-base" data-id="${q.id}">Bearbeiten</button>` : ""}${ov ? `<button class="linkbtn" data-act="ed-reset-base" data-id="${q.id}">Original</button>` : ""}<button class="linkbtn ${hid ? "" : "danger"}" data-act="ed-hide" data-id="${q.id}">${hid ? "Einblenden" : "Ausblenden"}</button></div></div>`; }).join("");
+  return `<div class="wrap" style="gap:20px">
+    <div class="section"><span class="eyebrow">Editor</span><h2>Fragen verwalten</h2><p class="muted">Eigene Karteikarten und Fragen hinzufügen, vorhandene Fragen korrigieren oder ausblenden. Alles wird mit deinem Fortschritt gespeichert.</p></div>
+    ${d ? editorFormHTML(d) : `<button class="btn primary" data-act="ed-new">+ Neue Frage</button>`}
+    <div class="section"><h3>Meine Fragen (${CU().questions.length})</h3>${mine ? `<div class="list">${mine}</div>` : `<p class="muted">Noch keine eigenen Fragen.</p>`}</div>
+    <div class="section"><h3>Vorhandene Fragen</h3>
+      <div class="row"><input id="edSearch" class="inp" placeholder="Suchen …" value="${esc(current.edFilter)}" style="flex:1 1 200px"><select id="edTopicFilter" class="inp" style="flex:0 1 220px"><option value="all">Alle Themen</option>${Object.entries(TOPICS).map(([k, n]) => `<option value="${k}" ${current.edTopic === k ? "selected" : ""}>${k}. ${esc(n)}</option>`).join("")}</select></div>
+      <p class="muted" style="font-size:13px">${base.length} Treffer${base.length > 80 ? " – die ersten 80 werden angezeigt, Suche verfeinern" : ""}. Rechen-, Zuordnungs- und Reihenfolgeaufgaben kann man nur ausblenden.</p>
+      <div class="list">${baseList}</div></div>
+    <div class="section"><h3>Sichern & Übertragen</h3><p class="muted">Exportiere deinen Fortschritt und deine Fragen als Datei – z. B. um sie aufs Handy zu übertragen.</p>
+      <div class="row"><button class="btn" data-act="export">Exportieren (.json)</button><label class="btn" for="importFile">Importieren</label><input type="file" id="importFile" accept="application/json,.json" hidden></div>
+      <p class="savestate saveLabel"></p></div>
+  </div>`;
+}
+function readDraftFromForm(keepType) {
+  const d = Object.assign({}, current.edit);
+  const g = id => { const el = document.getElementById(id); return el ? el.value : ""; };
+  if (!keepType && !d.base && document.getElementById("edType")) d.type = g("edType");
+  d.t = g("edTopic") || d.t; d.ex = g("edEx");
+  if (d.type === "gap") { d.text = g("edText"); d.gapOpts = g("edGapOpts"); d.gapA = g("edGapA"); }
+  else {
+    d.q = g("edQ");
+    if (d.type === "mc") { d.opts = [...document.querySelectorAll(".edOpt")].map(i => i.value); const r = document.querySelector("input[name=edA]:checked"); d.a = r ? +r.value : 0; }
+    if (d.type === "tf") d.tf = g("edTF") === "1";
+    if (d.type === "card" || d.type === "type") d.answers = g("edAns");
+  }
+  return d;
+}
+function saveDraft() {
+  const d = readDraftFromForm(); const msg = $("#edMsg");
+  const fail = m => { msg.textContent = m; msg.style.color = "var(--red)"; };
+  let o = {};
+  if (d.type === "gap") {
+    const opts = d.gapOpts.split(",").map(s => s.trim()).filter(Boolean);
+    if (!d.text.includes("___")) return fail("Der Satz braucht ___ als Lücke.");
+    if (!opts.includes(d.gapA.trim())) return fail("Das richtige Wort muss in der Auswahl stehen.");
+    o = { text: d.text, opts, a: d.gapA.trim() };
+  } else {
+    if (!d.q.trim()) return fail("Bitte eine Frage eingeben.");
+    if (d.type === "mc") { const opts = d.opts.map(s => s.trim()); if (opts.filter(Boolean).length < 2 || !opts[d.a]) return fail("Mindestens zwei Antworten, und die markierte darf nicht leer sein."); const clean = opts.filter(Boolean); o = { q: d.q.trim(), opts: clean, a: opts[d.a] }; }
+    else if (d.type === "tf") o = { q: d.q.trim(), opts: ["Richtig", "Falsch"], a: d.tf ? "Richtig" : "Falsch" };
+    else if (d.type === "card") { if (!d.answers.trim()) return fail("Bitte eine Antwort eingeben."); o = { q: d.q.trim(), answers: [d.answers.trim()] }; }
+    else { const ans = d.answers.split(",").map(s => s.trim()).filter(Boolean); if (!ans.length) return fail("Bitte mindestens einen Begriff eingeben."); o = { q: d.q.trim(), answers: ans }; }
+  }
+  o.ex = d.ex;
+  if (d.base) CU().over[d.id] = o;
+  else {
+    const q = Object.assign({ id: d.id || ("u" + Date.now().toString(36)), t: +d.t, type: d.type }, o);
+    const i = CU().questions.findIndex(x => x.id === q.id);
+    if (i >= 0) CU().questions[i] = q; else CU().questions.push(q);
+  }
+  rebuildQ(); scheduleSave(); current.edit = null; render();
+}
+function exportData() {
+  try {
+    const blob = new Blob([JSON.stringify(progress, null, 2)], { type: "application/json" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "etech-trainer-backup.json"; document.body.appendChild(a); a.click(); a.remove();
+  } catch (e) { alert("Export nicht möglich."); }
+}
+function importData(file) {
+  const r = new FileReader();
+  r.onload = () => { try { const d = JSON.parse(r.result); if (!d || typeof d !== "object" || !d.stats) throw 0; progress = normalize(d); progress.updated = Date.now(); rebuildQ(); writeLocal(); if (docRef) flushSave(); updateFailBadge(); render(); alert("Import erfolgreich."); } catch (e) { alert("Die Datei konnte nicht gelesen werden."); } };
+  r.readAsText(file);
+}
+
+// ---------- Runde ----------
 function sessionHTML() {
   const s = session; const n = s.items.length;
   if (s.i >= n) return resultHTML();
   const q = s.items[s.i];
   return `<div class="card" id="qcard">
-    <div class="prog"><div class="meta"><span>${esc(s.title)}</span><span>${s.i + 1} / ${n}</span></div><div class="bar"><div class="fill" style="width:${(s.i) / n * 100}%"></div></div></div>
-    <div class="qtopic"><span class="pill type">${TYPE_LABEL[q.type]}</span><span class="pill">${q.t}. ${esc(TOPICS[q.t])}</span></div>
+    <div class="prog"><div class="meta"><span>${esc(s.title)}${s.exam ? ` · <span id="sessTimer">${mmss((Date.now() - s.start) / 1000)}</span>` : ""}</span><span>${s.i + 1} / ${n}</span></div><div class="bar"><div class="fill" style="width:${(s.i) / n * 100}%"></div></div></div>
+    <div class="qtopic"><span class="pill type">${TYPE_LABEL[q.type]}</span><span class="pill">${q.t}. ${esc(TOPICS[q.t] || "")}</span>${q.custom ? `<span class="pill">eigene Frage</span>` : ""}</div>
     <div id="qbody"></div>
     <div id="fb"></div>
-    <div class="row" style="justify-content:space-between"><button class="btn" data-act="quit">Terminar</button><span></span></div>
+    <div class="row" style="justify-content:space-between"><button class="btn" data-act="quit">Beenden</button><span></span></div>
   </div>`;
 }
-
 function resultHTML() {
   const s = session; const ok = s.results.filter(r => r.ok).length; const n = s.results.length;
   const pct = n ? Math.round(ok / n * 100) : 0;
   const wrong = s.results.filter(r => !r.ok);
-  const msg = pct >= 90 ? "Excelente. Esto ya lo dominas." : pct >= 70 ? "Bien. Repasa los fallos y estará listo." : pct >= 50 ? "Vas por buen camino, pero hay que repasar." : "Aquí hay que estudiar más. Empieza por los fallos.";
+  const msg = pct >= 90 ? "Ausgezeichnet – das sitzt." : pct >= 70 ? "Gut. Wiederhole die Fehler, dann passt es." : pct >= 50 ? "Auf dem richtigen Weg, aber noch üben." : "Hier musst du noch lernen. Fang mit den Fehlern an.";
+  const dur = s.exam ? ` · Zeit ${mmss((s.endAt || Date.now()) / 1000 - s.start / 1000)}` : "";
   return `<div class="card">
-    <span class="eyebrow">Ronda terminada · ${esc(s.title)}</span>
-    <div class="result-score"><b>${ok}/${n}</b><span class="muted">${pct} % correcto</span></div>
+    <span class="eyebrow">Runde beendet · ${esc(s.title)}</span>
+    <div class="result-score"><b>${ok}/${n}</b><span class="muted">${pct} % richtig${s.exam ? ` · Note ${noteFor(pct)}` : ""}${dur}</span></div>
     <p>${msg}</p>
-    ${wrong.length ? `<div class="section"><h3>Fallados en esta ronda</h3><div class="list">${wrong.map(r => `<div class="li"><span class="t">${r.t}. ${esc(TOPICS[r.t])} · ${TYPE_LABEL[r.type]}</span><span>${esc(r.q)}</span></div>`).join("")}</div></div>` : ""}
-    <div class="row">${wrong.length ? `<button class="btn primary" data-act="repeat-round">Repetir los ${wrong.length} fallados</button>` : ""}<button class="btn" data-act="again">Otra ronda</button><button class="btn" data-act="go-home">Inicio</button></div>
+    ${s.exam ? `<p class="muted" style="font-size:13px">IHK-Notenschlüssel: ab 92 % = 1 · 81 % = 2 · 67 % = 3 · 50 % = 4 · 30 % = 5</p>` : ""}
+    ${wrong.length ? `<div class="section"><h3>Falsch in dieser Runde</h3><div class="list">${wrong.map(r => `<div class="li"><span class="t">${r.t}. ${esc(TOPICS[r.t] || "")} · ${TYPE_LABEL[r.type]}</span><span>${esc(r.q)}</span>${r.sol ? `<span class="sol" style="font-size:14px">${r.sol}</span>` : ""}${s.exam && r.ex ? `<span class="muted" style="font-size:13px">${r.ex}</span>` : ""}</div>`).join("")}</div></div>` : ""}
+    <div class="row">${wrong.length ? `<button class="btn primary" data-act="repeat-round">Die ${wrong.length} falschen wiederholen</button>` : ""}<button class="btn" data-act="again">Neue Runde</button><button class="btn" data-act="go-home">Start</button></div>
   </div>`;
 }
 
-// ---------- Question rendering ----------
 function mountQuestion() {
   if (!session || session.i >= session.items.length) return;
   const q = session.items[session.i]; const body = $("#qbody"); session.answered = false;
   if (q.type === "mc" || q.type === "tf") {
     const opts = q.type === "tf" ? q.opts : shuffle(q.opts);
-    body.innerHTML = `<p class="question">${esc(q.q)}</p><div class="opts">${opts.map((o, i) => `<button class="opt" data-val="${esc(o)}"><span class="k">${"ABCD"[i] || ""}</span><span>${esc(o)}</span></button>`).join("")}</div>`;
+    body.innerHTML = `<p class="question">${esc(q.q)}</p><div class="opts">${opts.map((o, i) => `<button class="opt" data-i="${i}"><span class="k">${"ABCDEF"[i] || ""}</span><span>${esc(o)}</span></button>`).join("")}</div>`;
     body.querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => {
-      if (session.answered) return; const ok = b.dataset.val === q.a;
-      body.querySelectorAll(".opt").forEach(x => { x.disabled = true; if (x.dataset.val === q.a) x.classList.add("correct"); });
-      if (!ok) b.classList.add("wrong");
-      finish(ok, ok ? "" : `Correcto: <b>${esc(q.a)}</b>`);
+      if (session.answered) return; const val = opts[+b.dataset.i]; const ok = val === q.a;
+      body.querySelectorAll(".opt").forEach(x => { x.disabled = true; if (!session.exam && opts[+x.dataset.i] === q.a) x.classList.add("correct"); });
+      if (!ok && !session.exam) b.classList.add("wrong");
+      finish(ok, ok ? "" : `Richtig: <b>${esc(q.a)}</b>`);
     }));
   } else if (q.type === "gap") {
-    const parts = q.text.split("___");
-    body.innerHTML = `<p class="gaptext">${esc(parts[0])}<span class="blank" id="blank">?</span>${esc(parts[1] || "")}</p><div class="chips">${shuffle(q.opts).map(o => `<button class="chip" data-val="${esc(o)}">${esc(o)}</button>`).join("")}</div>`;
+    const parts = q.text.split("___"); const opts = shuffle(q.opts);
+    body.innerHTML = `<p class="gaptext">${esc(parts[0])}<span class="blank" id="blank">?</span>${esc(parts[1] || "")}</p><div class="chips">${opts.map((o, i) => `<button class="chip" data-i="${i}">${esc(o)}</button>`).join("")}</div>`;
     body.querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => {
-      if (session.answered) return; const ok = b.dataset.val === q.a; const bl = $("#blank");
-      bl.textContent = b.dataset.val; bl.classList.add(ok ? "ok" : "bad");
+      if (session.answered) return; const val = opts[+b.dataset.i]; const ok = val === q.a; const bl = $("#blank");
+      bl.textContent = val; if (!session.exam) bl.classList.add(ok ? "ok" : "bad");
       body.querySelectorAll(".chip").forEach(x => x.disabled = true);
-      finish(ok, ok ? "" : `Correcto: <b>${esc(q.a)}</b>`);
+      finish(ok, ok ? "" : `Richtig: <b>${esc(q.a)}</b>`);
     }));
   } else if (q.type === "type" || q.type === "calc") {
     const isCalc = q.type === "calc";
-    body.innerHTML = `<p class="question">${esc(q.q)}</p><form class="answer-row" id="ansForm" autocomplete="off"><input id="ans" ${isCalc ? 'inputmode="decimal" placeholder="Resultado"' : 'placeholder="Escribe el término en alemán"'} aria-label="Respuesta">${isCalc ? `<span class="unit">${esc(q.unit)}</span>` : ""}<button class="btn primary" type="submit">Comprobar</button></form>${isCalc ? `<p class="muted" style="font-size:13px">Usa coma o punto. Se acepta un margen de ±2 %.</p>` : ""}`;
+    body.innerHTML = `<p class="question">${esc(q.q)}</p><form class="answer-row" id="ansForm" autocomplete="off"><input id="ans" ${isCalc ? 'inputmode="decimal" placeholder="Ergebnis"' : 'placeholder="Fachbegriff eintippen"'} aria-label="Antwort">${isCalc ? `<span class="unit">${esc(q.unit)}</span>` : ""}<button class="btn primary" type="submit">Prüfen</button></form>${isCalc ? `<p class="muted" style="font-size:13px">Komma oder Punkt. Toleranz ±2 %.</p>` : ""}`;
     const inp = $("#ans"); setTimeout(() => inp.focus({ preventScroll: true }), 30);
     $("#ansForm").addEventListener("submit", e => {
       e.preventDefault(); if (session.answered) return; const v = inp.value.trim(); if (!v) return;
       let ok, sol;
-      if (isCalc) { const x = num(v); ok = x !== null && Math.abs(x - q.a) <= Math.max(Math.abs(q.a) * 0.02, 0.01); sol = `Resultado: <b>${de(q.a, q.a < 10 ? 2 : 1)} ${esc(q.unit)}</b>`; }
-      else { ok = q.answers.some(a => norm(a) === norm(v)); sol = `Respuesta: <b>${esc(q.answers[0])}</b>`; }
-      inp.disabled = true; inp.style.borderColor = ok ? "var(--good)" : "var(--red)";
+      if (isCalc) { const x = num(v); ok = x !== null && Math.abs(x - q.a) <= Math.max(Math.abs(q.a) * 0.02, 0.01); sol = `Ergebnis: <b>${de(q.a, q.a < 10 ? 3 : 1)} ${esc(q.unit)}</b>`; }
+      else { ok = q.answers.some(a => norm(a) === norm(v)); sol = `Antwort: <b>${esc(q.answers[0])}</b>`; }
+      inp.disabled = true; if (!session.exam) inp.style.borderColor = ok ? "var(--good)" : "var(--red)";
       finish(ok, ok && !isCalc ? "" : sol);
     });
   } else if (q.type === "match") {
     const left = q.pairs.map((p, i) => ({ i, txt: p[0] })); const right = shuffle(q.pairs.map((p, i) => ({ i, txt: p[1] })));
     const pairs = {}; let sel = null;
-    body.innerHTML = `<p class="question">${esc(q.q)}</p><p class="muted" style="font-size:13px">Toca un concepto de la izquierda y luego su pareja de la derecha.</p><div class="match"><div class="col" id="mL">${left.map(l => `<button class="mitem" data-l="${l.i}"><span class="tagn" id="tl${l.i}">${l.i + 1}</span><span>${esc(l.txt)}</span></button>`).join("")}</div><div class="col" id="mR">${right.map(r => `<button class="mitem" data-r="${r.i}"><span class="tagn" id="tr${r.i}">·</span><span>${esc(r.txt)}</span></button>`).join("")}</div></div><div class="row"><button class="btn primary" id="mCheck" disabled>Comprobar</button><button class="btn" id="mReset">Deshacer</button></div>`;
+    body.innerHTML = `<p class="question">${esc(q.q)}</p><p class="muted" style="font-size:13px">Links einen Begriff antippen, dann rechts das Passende.</p><div class="match"><div class="col">${left.map(l => `<button class="mitem" data-l="${l.i}"><span class="tagn">${l.i + 1}</span><span>${esc(l.txt)}</span></button>`).join("")}</div><div class="col">${right.map(r => `<button class="mitem" data-r="${r.i}"><span class="tagn">·</span><span>${esc(r.txt)}</span></button>`).join("")}</div></div><div class="row"><button class="btn primary" id="mCheck" disabled>Prüfen</button><button class="btn" id="mReset">Zurücksetzen</button></div>`;
     const paint = () => {
       body.querySelectorAll("[data-l]").forEach(b => { const i = +b.dataset.l; b.classList.toggle("sel", sel === i); b.classList.toggle("paired", pairs[i] !== undefined); });
       body.querySelectorAll("[data-r]").forEach(b => { const r = +b.dataset.r; const owner = Object.keys(pairs).find(k => pairs[k] === r); b.classList.toggle("paired", owner !== undefined); b.querySelector(".tagn").textContent = owner !== undefined ? (+owner + 1) : "·"; });
@@ -755,7 +1243,7 @@ function mountQuestion() {
     body.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => {
       if (session.answered || sel === null) return; const r = +b.dataset.r;
       Object.keys(pairs).forEach(k => { if (pairs[k] === r) delete pairs[k]; });
-      pairs[sel] = r; const next = left.find(l => pairs[l.i] === undefined); sel = next ? next.i : null; paint();
+      pairs[sel] = r; const nx = left.find(l => pairs[l.i] === undefined); sel = nx ? nx.i : null; paint();
     }));
     $("#mReset").addEventListener("click", () => { if (session.answered) return; Object.keys(pairs).forEach(k => delete pairs[k]); sel = null; paint(); });
     $("#mCheck").addEventListener("click", () => {
@@ -763,28 +1251,27 @@ function mountQuestion() {
       body.querySelectorAll("[data-l]").forEach(b => { const i = +b.dataset.l; const ok = pairs[i] === i; if (!ok) all = false; b.classList.add(ok ? "ok" : "bad"); b.disabled = true; });
       body.querySelectorAll("[data-r]").forEach(b => { b.disabled = true; });
       $("#mCheck").disabled = true; $("#mReset").disabled = true;
-      finish(all, all ? "" : `Parejas correctas:<br>${q.pairs.map(p => `${esc(p[0])} → <b>${esc(p[1])}</b>`).join("<br>")}`);
+      finish(all, all ? "" : `Richtige Paare:<br>${q.pairs.map(p => `${esc(p[0])} → <b>${esc(p[1])}</b>`).join("<br>")}`);
     });
     paint();
   } else if (q.type === "order") {
     const pool = shuffle(q.items.map((t, i) => ({ i, t }))); const chosen = [];
     const draw = () => {
-      body.innerHTML = `<p class="question">${esc(q.q)}</p><p class="muted" style="font-size:13px">Toca los pasos en el orden correcto. Toca uno ya elegido para quitarlo.</p><div class="order"><div class="slots" id="oSlots">${chosen.length ? chosen.map((c, k) => `<button class="oitem" data-c="${k}"><span class="n">${k + 1}</span><span>${esc(c.t)}</span></button>`).join("") : `<span class="ph">Tu orden aparece aquí</span>`}</div><div class="opts">${pool.filter(p => !chosen.includes(p)).map(p => `<button class="oitem" data-p="${p.i}"><span class="n">+</span><span>${esc(p.t)}</span></button>`).join("")}</div></div><div class="row"><button class="btn primary" id="oCheck" ${chosen.length === q.items.length ? "" : "disabled"}>Comprobar</button></div>`;
+      body.innerHTML = `<p class="question">${esc(q.q)}</p><p class="muted" style="font-size:13px">Schritte der Reihe nach antippen. Gewählten Schritt antippen, um ihn zu entfernen.</p><div class="order"><div class="slots" id="oSlots">${chosen.length ? chosen.map((c, k) => `<button class="oitem" data-c="${k}"><span class="n">${k + 1}</span><span>${esc(c.t)}</span></button>`).join("") : `<span class="ph">Deine Reihenfolge erscheint hier</span>`}</div><div class="opts">${pool.filter(p => !chosen.includes(p)).map(p => `<button class="oitem" data-p="${p.i}"><span class="n">+</span><span>${esc(p.t)}</span></button>`).join("")}</div></div><div class="row"><button class="btn primary" id="oCheck" ${chosen.length === q.items.length ? "" : "disabled"}>Prüfen</button></div>`;
       body.querySelectorAll("[data-p]").forEach(b => b.addEventListener("click", () => { chosen.push(pool.find(p => p.i === +b.dataset.p)); draw(); }));
       body.querySelectorAll("[data-c]").forEach(b => b.addEventListener("click", () => { chosen.splice(+b.dataset.c, 1); draw(); }));
       const ck = $("#oCheck"); if (ck) ck.addEventListener("click", () => {
         let all = true; body.querySelectorAll("#oSlots .oitem").forEach((b, k) => { const ok = chosen[k].i === k; if (!ok) all = false; b.classList.add(ok ? "ok" : "bad"); b.disabled = true; });
-        ck.disabled = true; finish(all, all ? "" : `Orden correcto:<br>${q.items.map((t, k) => `${k + 1}. ${esc(t)}`).join("<br>")}`);
+        ck.disabled = true; finish(all, all ? "" : `Richtige Reihenfolge:<br>${q.items.map((t, k) => `${k + 1}. ${esc(t)}`).join("<br>")}`);
       });
     };
     draw();
   } else if (q.type === "flash") {
-    body.innerHTML = `<div class="flash"><span class="eyebrow">Piensa la respuesta</span><p class="question">${esc(q.q)}</p><div id="back"></div></div><div class="row" id="flashBtns"><button class="btn primary" id="flip">Mostrar respuesta</button></div>`;
-    $("#flip").addEventListener("click", () => {
-      $("#back").innerHTML = `<div class="back">${esc(q.answers[0])}</div><p class="ex" style="font-size:14px">${q.ex}</p>`;
-      $("#flashBtns").innerHTML = `<button class="btn" id="fNo">No lo sabía</button><button class="btn primary" id="fYes">Lo sabía</button>`;
-      $("#fYes").addEventListener("click", () => finish(true, "", true));
-      $("#fNo").addEventListener("click", () => finish(false, "", true));
+    body.innerHTML = `<button class="flip" id="flipCard" aria-label="Karte umdrehen"><span class="flip-inner"><span class="face front"><span class="eyebrow">Frage · antippen zum Umdrehen</span><span class="question">${esc(q.q)}</span></span><span class="face back"><span class="eyebrow">Antwort</span><span class="backans">${esc(q.answers[0])}</span><span class="ex" style="font-size:14px">${exHTML(q)}</span></span></span></button><div class="row" id="flashBtns"><span class="muted" style="font-size:13px">Erst überlegen, dann umdrehen.</span></div>`;
+    const card = $("#flipCard");
+    card.addEventListener("click", () => {
+      card.classList.toggle("flipped");
+      if (!$("#fYes")) { $("#flashBtns").innerHTML = `<button class="btn" id="fNo">Nicht gewusst</button><button class="btn primary" id="fYes">Gewusst</button>`; $("#fYes").addEventListener("click", () => finish(true, "", true)); $("#fNo").addEventListener("click", () => finish(false, "", true)); }
     });
   }
 }
@@ -793,11 +1280,12 @@ function finish(ok, solHTML, silent) {
   if (session.answered) return; session.answered = true;
   const q = session.items[session.i];
   record(q.id, ok);
-  session.results.push({ id: q.id, ok, t: q.t, type: q.type, q: q.q || q.text });
+  session.results.push({ id: q.id, ok, t: q.t, type: q.type, q: q.q || q.text, sol: solHTML, ex: exHTML(q) });
   const last = session.i === session.items.length - 1;
-  const fb = $("#fb");
   if (silent) { next(); return; }
-  fb.innerHTML = `<div class="feedback ${ok ? "ok" : "bad"}" role="status"><span class="verdict">${ok ? "✓ Richtig" : "✗ Leider falsch"}</span>${solHTML ? `<span class="sol">${solHTML}</span>` : ""}<span class="ex">${q.ex}</span></div><div class="row" style="justify-content:flex-end"><button class="btn primary" id="nextBtn">${last ? "Ver resultado" : "Siguiente →"}</button></div>`;
+  if (session.exam) { if (last) session.endAt = Date.now(); setTimeout(next, 250); return; }
+  const fb = $("#fb");
+  fb.innerHTML = `<div class="feedback ${ok ? "ok" : "bad"}" role="status"><span class="verdict">${ok ? "✓ Richtig" : "✗ Leider falsch"}</span>${solHTML ? `<span class="sol">${solHTML}</span>` : ""}<span class="ex">${exHTML(q)}</span></div><div class="row" style="justify-content:flex-end"><button class="btn primary" id="nextBtn">${last ? "Ergebnis" : "Weiter →"}</button></div>`;
   const nb = $("#nextBtn"); nb.addEventListener("click", next); nb.focus({ preventScroll: true });
   fb.scrollIntoView({ block: "nearest", behavior: "smooth" });
 }
@@ -807,32 +1295,119 @@ document.addEventListener("keydown", e => {
   if (e.key === "Enter" && document.getElementById("nextBtn") && document.activeElement && document.activeElement.id !== "ans") { e.preventDefault(); next(); }
 });
 
-// ---------- Event binding ----------
+// ---------- Pomodoro ----------
+const POMO_KEY = "etech-pomo";
+const POMO_LEN = { work: 25 * 60, brk: 5 * 60 };
+let pomo = { mode: "work", running: false, end: 0, left: POMO_LEN.work };
+try { const s = JSON.parse(localStorage.getItem(POMO_KEY) || "null"); if (s && s.mode) pomo = s; } catch (e) { }
+const todayStr = () => new Date().toISOString().slice(0, 10);
+const pomoToday = () => progress.pomo && progress.pomo.day === todayStr() ? progress.pomo.n : 0;
+const pomoLabel = () => pomo.mode === "work" ? (pomo.running ? "Lernzeit läuft" : "Lernzeit – bereit") : (pomo.running ? "Pause läuft" : "Pause – bereit");
+function pomoSave() { try { localStorage.setItem(POMO_KEY, JSON.stringify(pomo)); } catch (e) { } }
+function beep() {
+  try { const C = window.AudioContext || window.webkitAudioContext; const ctx = new C(); [0, 0.35, 0.7].forEach(t => { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = 880; g.gain.setValueAtTime(0.2, ctx.currentTime + t); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.3); o.connect(g); g.connect(ctx.destination); o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + 0.3); }); } catch (e) { }
+  try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch (e) { }
+}
+function pomoSwitch(auto) {
+  if (pomo.mode === "work") {
+    if (auto) { const d = todayStr(); if (!progress.pomo || progress.pomo.day !== d) progress.pomo = { day: d, n: 0 }; progress.pomo.n++; scheduleSave(); }
+    pomo.mode = "brk"; pomo.left = POMO_LEN.brk; pomo.running = auto; pomo.end = Date.now() + pomo.left * 1000;
+  } else { pomo.mode = "work"; pomo.left = POMO_LEN.work; pomo.running = false; }
+  pomoSave(); pomoUI();
+}
+function pomoTick() {
+  if (pomo.running) { pomo.left = Math.max(0, Math.round((pomo.end - Date.now()) / 1000)); if (pomo.left === 0) { beep(); pomoSwitch(true); return; } }
+  pomoUI();
+  if (current.view === "exam" && examRun && examRun.mode === "sim" && !examRun.done) { const el = $("#simTimer"); const r = Math.max(0, (examRun.end - Date.now()) / 1000); if (el) el.textContent = mmss(r); if (r <= 0) { examRun.done = true; beep(); render(); } }
+  if (current.view === "session" && session && session.exam) { const el = $("#sessTimer"); if (el) el.textContent = mmss((Date.now() - session.start) / 1000); }
+}
+function pomoUI() {
+  const pill = $("#pomoPill"); if (pill) { pill.textContent = `${pomo.mode === "work" ? "Lernen" : "Pause"} ${mmss(pomo.left)}`; pill.classList.toggle("run", pomo.running); pill.classList.toggle("brk", pomo.mode === "brk"); pill.setAttribute("aria-label", `Pomodoro ${pomoLabel()}, ${mmss(pomo.left)}. Antippen zum ${pomo.running ? "Pausieren" : "Starten"}`); }
+  const big = $("#pomoBig"); if (big) big.textContent = mmss(pomo.left);
+  const st = $("#pomoState"); if (st) st.textContent = pomoLabel();
+  const btn = $("#pomoBtn"); if (btn) btn.textContent = pomo.running ? "Pause" : "Start";
+  const cnt = $("#pomoCount"); if (cnt) cnt.textContent = pomoToday();
+}
+function pomoToggle() { if (pomo.running) { pomo.left = Math.max(0, Math.round((pomo.end - Date.now()) / 1000)); pomo.running = false; } else { pomo.end = Date.now() + pomo.left * 1000; pomo.running = true; } pomoSave(); pomoUI(); }
+function pomoReset() { pomo = { mode: "work", running: false, end: 0, left: POMO_LEN.work }; pomoSave(); pomoUI(); }
+$("#pomoPill").addEventListener("click", pomoToggle);
+setInterval(pomoTick, 1000);
+
+// ---------- Hell/Dunkel ----------
+const THEME_KEY = "etech-theme";
+function applyTheme(t) { if (t) document.documentElement.setAttribute("data-theme", t); else document.documentElement.removeAttribute("data-theme"); }
+try { applyTheme(localStorage.getItem(THEME_KEY)); } catch (e) { }
+$("#themeBtn").addEventListener("click", () => {
+  const cur = document.documentElement.getAttribute("data-theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  const nt = cur === "dark" ? "light" : "dark"; applyTheme(nt); try { localStorage.setItem(THEME_KEY, nt); } catch (e) { }
+});
+
+// ---------- Ereignisse ----------
 function bindView() {
   const v = $("#view");
   v.querySelectorAll("[data-topic].chip").forEach(b => b.addEventListener("click", () => { const k = b.dataset.topic; current.topics.has(k) ? current.topics.delete(k) : current.topics.add(k); render(); }));
-  v.querySelectorAll("[data-mode]").forEach(b => b.addEventListener("click", () => startSession(b.dataset.mode)));
+  v.querySelectorAll("[data-mode].mode").forEach(b => b.addEventListener("click", () => startSession(b.dataset.mode)));
   const ls = $("#lenSel"); if (ls) ls.addEventListener("change", () => { current.len = +ls.value; });
   v.querySelectorAll("[data-act]").forEach(b => b.addEventListener("click", () => act(b.dataset.act, b)));
+  v.querySelectorAll("textarea[data-ans]").forEach(t => t.addEventListener("input", () => { if (examRun) examRun.ans[t.dataset.ans] = t.value; }));
+  const et = $("#edType"); if (et) et.addEventListener("change", () => { const d = readDraftFromForm(true); d.type = et.value; d.opts = (d.opts || []).slice(); while (d.opts.length < 4) d.opts.push(""); current.edit = d; render(); });
+  const es = $("#edSearch"); if (es) es.addEventListener("input", () => { current.edFilter = es.value; clearTimeout(es._t); es._t = setTimeout(() => { render(); const n = $("#edSearch"); if (n) { n.focus(); n.setSelectionRange(n.value.length, n.value.length); } }, 300); });
+  const etf = $("#edTopicFilter"); if (etf) etf.addEventListener("change", () => { current.edTopic = etf.value; render(); });
+  const imp = $("#importFile"); if (imp) imp.addEventListener("change", () => { if (imp.files[0]) importData(imp.files[0]); });
 }
 function act(a, b) {
   if (a === "all-topics") { current.topics = new Set(Object.keys(TOPICS)); render(); }
   else if (a === "no-topics") { current.topics = new Set(); render(); }
   else if (a === "go-home") setView("home");
-  else if (a === "repeat-all") startSession("fails", { ids: shuffle(failIds()), title: "Repetir fallos" });
-  else if (a === "repeat-topic") startSession("fails", { ids: shuffle(failIds().filter(id => String(BY_ID[id].t) === b.dataset.topic)), title: `Fallos · ${TOPICS[b.dataset.topic]}` });
-  else if (a === "repeat-round") startSession("fails", { ids: session.results.filter(r => !r.ok).map(r => r.id), title: "Repetir fallados" });
-  else if (a === "again") startSession(session.mode === "fails" ? "mix" : session.mode);
-  else if (a === "quit") { if (session.results.length) { session.items = session.items.slice(0, session.results.length); session.i = session.items.length; render(); } else setView("home"); }
-  else if (a === "practice-weak") { const w = weakTopics().slice(0, 3).map(o => o.k); const ids = shuffle(Q.filter(q => w.includes(String(q.t)))).slice(0, Math.max(current.len, 10)).map(q => q.id); startSession("weak", { ids, title: "Temas débiles" }); }
-  else if (a === "reset-ask") { $("#resetBox").innerHTML = `<span>¿Seguro? Se borran todas tus estadísticas.</span><button class="btn danger" data-act="reset-yes">Sí, borrar</button><button class="btn" data-act="reset-no">Cancelar</button>`; bindView(); }
+  else if (a === "go-exams") setView("exams");
+  else if (a === "repeat-all") startSession("fails", { ids: shuffle(failIds()), title: "Fehler wiederholen" });
+  else if (a === "repeat-topic") startSession("fails", { ids: shuffle(failIds().filter(id => String(BY_ID[id].t) === b.dataset.topic)), title: `Fehler · ${TOPICS[b.dataset.topic]}` });
+  else if (a === "repeat-round") startSession("fails", { ids: session.results.filter(r => !r.ok).map(r => r.id), title: "Falsche wiederholen" });
+  else if (a === "again") startSession(session.mode === "fails" || session.mode === "weak" ? "mix" : session.mode);
+  else if (a === "quit") { if (session.results.length) { session.items = session.items.slice(0, session.results.length); session.i = session.items.length; session.endAt = Date.now(); render(); } else setView("home"); }
+  else if (a === "practice-weak") { const w = weakTopics().slice(0, 3).map(o => o.k); const ids = shuffle(Q.filter(q => w.includes(String(q.t)))).slice(0, Math.max(current.len, 10)).map(q => q.id); startSession("weak", { ids, title: "Schwache Themen" }); }
+  else if (a === "reset-ask") { $("#resetBox").innerHTML = `<span>Sicher? Alle Statistiken und Prüfungsergebnisse werden gelöscht (eigene Fragen bleiben).</span><button class="btn danger" data-act="reset-yes">Ja, löschen</button><button class="btn" data-act="reset-no">Abbrechen</button>`; bindView(); }
   else if (a === "reset-no") render();
-  else if (a === "reset-yes") { progress = { stats: {}, updated: Date.now() }; writeLocal(); if (docRef) flushSave(); updateFailBadge(); render(); }
+  else if (a === "reset-yes") { progress.stats = {}; progress.exams = {}; progress.updated = Date.now(); writeLocal(); if (docRef) flushSave(); updateFailBadge(); render(); }
+  // Pomodoro
+  else if (a === "pomo-toggle") pomoToggle();
+  else if (a === "pomo-reset") pomoReset();
+  else if (a === "pomo-skip") { pomoSwitch(false); }
+  // Prüfungen
+  else if (a === "exam-open") openExam(b.dataset.exam, b.dataset.mode);
+  else if (a === "exam-back") { if (examRun && examRun.mode === "sim" && !examRun.done && !confirm("Simulation läuft. Wirklich verlassen?")) return; setView("exams"); }
+  else if (a === "exam-show") { examRun.shown[b.dataset.u] = true; rerenderKeep("task-" + b.dataset.u); }
+  else if (a === "exam-rate") { examRun.rate[b.dataset.u] = +b.dataset.p; examRun.saved = false; rerenderKeep("task-" + b.dataset.u); }
+  else if (a === "exam-submit") { if (confirm("Prüfung jetzt abgeben?")) { examRun.done = true; render(); } }
+  else if (a === "exam-save") {
+    const e = EXAM_BY_ID[examRun.id]; const max = e.tasks.reduce((s, t) => s + t.p, 0); const pts = e.tasks.reduce((s, t) => s + (examRun.rate[t.u] || 0), 0);
+    const r = progress.exams[e.id] || { best: 0, max, n: 0 }; r.max = max; r.best = Math.max(r.best, pts); r.last = pts; r.n = (r.n || 0) + 1; r.at = Date.now(); progress.exams[e.id] = r; scheduleSave(); examRun.saved = true; rerenderKeep();
+  }
+  else if (a === "sol-edit") { examRun.editing = b.dataset.u; rerenderKeep("task-" + b.dataset.u); }
+  else if (a === "sol-cancel") { const u = examRun.editing; examRun.editing = null; rerenderKeep("task-" + u); }
+  else if (a === "sol-save") { const e = EXAM_BY_ID[examRun.id]; const t = e.tasks.find(x => x.u === b.dataset.u); const txt = $("#solEdit").value; const changed = txt.trim() !== plain(t.sol).trim(); CU().sol[solKey(e, t)] = { text: changed ? txt : null, ok: $("#solOk").checked }; examRun.editing = null; scheduleSave(); rerenderKeep("task-" + t.u); }
+  else if (a === "sol-reset") { const e = EXAM_BY_ID[examRun.id]; const t = e.tasks.find(x => x.u === b.dataset.u); delete CU().sol[solKey(e, t)]; examRun.editing = null; scheduleSave(); rerenderKeep("task-" + t.u); }
+  // Editor
+  else if (a === "ed-new") { current.edit = blankDraft(); render(); }
+  else if (a === "ed-cancel") { current.edit = null; render(); }
+  else if (a === "ed-save") saveDraft();
+  else if (a === "ed-edit") { const q = CU().questions.find(x => x.id === b.dataset.id); if (q) { current.edit = draftFrom(q, false); render(); window.scrollTo({ top: 0 }); } }
+  else if (a === "ed-del") { if (confirm("Diese Frage löschen?")) { CU().questions = CU().questions.filter(x => x.id !== b.dataset.id); rebuildQ(); scheduleSave(); render(); } }
+  else if (a === "ed-edit-base") { const q = BY_ID[b.dataset.id] || BASE_BY_ID[b.dataset.id]; current.edit = draftFrom(Object.assign({}, BASE_BY_ID[b.dataset.id], CU().over[b.dataset.id] || {}), true); render(); window.scrollTo({ top: 0 }); }
+  else if (a === "ed-reset-base") { delete CU().over[b.dataset.id]; rebuildQ(); scheduleSave(); render(); }
+  else if (a === "ed-hide") { const id = b.dataset.id; if (CU().hidden[id]) delete CU().hidden[id]; else CU().hidden[id] = true; rebuildQ(); scheduleSave(); updateFailBadge(); render(); }
+  else if (a === "export") exportData();
+}
+function rerenderKeep(anchorId) {
+  const el = anchorId && document.getElementById(anchorId); const top = el ? el.getBoundingClientRect().top : null; const y = window.scrollY;
+  render();
+  const el2 = anchorId && document.getElementById(anchorId);
+  if (el2 && top !== null) window.scrollTo({ top: window.scrollY + el2.getBoundingClientRect().top - top }); else window.scrollTo({ top: y });
 }
 
-updateFailBadge(); render(); connectStore();
+updateFailBadge(); render(); pomoUI(); connectStore();
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) { window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {})); }
-</script>
 
+</script>
 </body>
 </html>

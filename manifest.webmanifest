@@ -1,7 +1,7 @@
 {
-  "name": "Energie-Trainer",
-  "short_name": "Energie",
-  "description": "Lern-App Sicherstellen der Energieversorgung (FaVT, IHK)",
+  "name": "E-Tech-Trainer",
+  "short_name": "E-Tech",
+  "description": "Lern-App Energieversorgung mit IHK-Prüfungen (FaVT)",
   "lang": "de",
   "start_url": "./",
   "scope": "./",
